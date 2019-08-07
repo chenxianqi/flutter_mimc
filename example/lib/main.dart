@@ -13,7 +13,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  final String appAccount = "888888";
+  FlutterMimc flutterMimc;
+  final String appAccount = "100";
   bool isOnline = false;
 
   @override
@@ -23,44 +24,40 @@ class _MyAppState extends State<MyApp> {
     // 初始化 FlutterMimc
     initFlutterMimc();
 
+    // 监听登录状态
+    print(flutterMimc);
+    flutterMimc.onStatusChangedListener().listen((status){
+      isOnline = status;
+      if(status){
+        debugPrint("登录成功");
+      }else{
+        debugPrint("登录失败");
+      }
+      setState(() {});
+    }).onError((err){
+      print(err);
+    });
+
   }
 
   // 初始化 FlutterMimc
   void initFlutterMimc() async{
-    bool initSuccess = await FlutterMimc.init({
+    flutterMimc = FlutterMimc.init({
       "appId": "2882303761517669588",
       "appKey": "5111766983588",
       "appSecret": "b0L3IOz/9Ob809v8H2FbVg==",
       "appAccount": appAccount
     });
-
-    // 初始化成功
-    if(initSuccess){
-      print("初始化成功");
-      login();
-    }
-
   }
 
   // 登录
   void login() async{
-    await FlutterMimc.login();
-    isOnline = await FlutterMimc.isOnline();
-    if(isOnline){
-      print("登录成功");
-    }else{
-      print("登录失败");
-    }
-    setState(() {});
+    await flutterMimc.login();
   }
 
   // 退出登录
   void logout() async{
     await FlutterMimc.logout();
-    print("退出登录");
-    // 获取登录状态
-    isOnline = await FlutterMimc.isOnline();
-    setState(() {});
   }
 
 
@@ -78,13 +75,24 @@ class _MyAppState extends State<MyApp> {
             children: <Widget>[
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text("当前账号：$appAccount,  当前状态：${isOnline ? '在线' : '离线'}"),
+                ],
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
                   RaisedButton(
                     color: Colors.blue,
-                    onPressed: isOnline ? logout : login,
-                    child: Text(isOnline ? "退出" :"登录", style: TextStyle(color: Colors.white),),
+                    onPressed: login,
+                    child: Text("登录", style: TextStyle(color: Colors.white),),
+                  ),
+                  RaisedButton(
+                    color: Colors.blue,
+                    onPressed: logout,
+                    child: Text("退出", style: TextStyle(color: Colors.white),),
                   ),
                 ],
               ),

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
+import com.keith.flutter_mimc.utils.ConstraintsMap;
 import com.xiaomi.mimc.MIMCGroupMessage;
 import com.xiaomi.mimc.MIMCMessage;
 import com.xiaomi.mimc.MIMCMessageHandler;
@@ -24,6 +25,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.List;
 
+import io.flutter.plugin.common.EventChannel;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -33,6 +35,13 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class MimcUserManager {
+
+    private static EventChannel.EventSink eventSink = null;
+    public static void setEventSink(EventChannel.EventSink sink){
+        eventSink = sink;
+    }
+
+
 
     // 配置信息
     private long appId;
@@ -353,9 +362,18 @@ public class MimcUserManager {
         @Override
         public void statusChange(MIMCConstant.OnlineStatus status, String type, String reason, String desc) {
             mStatus = status;
+            Log.d("OnlineStatus", status.toString());
+            if(eventSink != null){
+                ConstraintsMap params = new ConstraintsMap();
+                params.putString("eventType", "onlineStatusListener");
+                params.putBoolean("eventValue", MIMCConstant.OnlineStatus.ONLINE == status);
+                System.out.println("eventSink.success(params.toMap())");
+                eventSink.success(params.toMap());
+            }else{
+               System.out.println("eventSink is null");
+            }
             Log.d(TAG, String.format("statusChange status:%s errType:%s errReason:%s errDescription:%s", status, type, reason, desc));
 //            onHandleMIMCMsgListener.onHandleStatusChanged(status);
-//            Log.d(TAG, String.format("statusChange status:%s errType:%s errReason:%s errDescription:%s", status, type, reason, desc));
         }
     }
 
