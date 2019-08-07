@@ -12,44 +12,85 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Map<dynamic, dynamic> _platformVersion;
+
+  final String appAccount = "888888";
+  bool isOnline = false;
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+
+    // 初始化 FlutterMimc
+    initFlutterMimc();
+
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    Map<dynamic, dynamic> platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      platformVersion = await FlutterMimc.platformVersion;
-    } on PlatformException {
-      // platformVersion = 'Failed to get platform version.';
+  // 初始化 FlutterMimc
+  void initFlutterMimc() async{
+    bool initSuccess = await FlutterMimc.init({
+      "appId": "2882303761517669588",
+      "appKey": "5111766983588",
+      "appSecret": "b0L3IOz/9Ob809v8H2FbVg==",
+      "appAccount": appAccount
+    });
+
+    // 初始化成功
+    if(initSuccess){
+      print("初始化成功");
+      login();
     }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
   }
+
+  // 登录
+  void login() async{
+    await FlutterMimc.login();
+    isOnline = await FlutterMimc.isOnline();
+    if(isOnline){
+      print("登录成功");
+    }else{
+      print("登录失败");
+    }
+    setState(() {});
+  }
+
+  // 退出登录
+  void logout() async{
+    await FlutterMimc.logout();
+    print("退出登录");
+    // 获取登录状态
+    isOnline = await FlutterMimc.isOnline();
+    setState(() {});
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: const Text('FlutterMimc example app'),
         ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
-        ),
+        body: Padding(
+          padding: EdgeInsets.all(15.0),
+          child: Column(
+            children: <Widget>[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text("当前账号：$appAccount,  当前状态：${isOnline ? '在线' : '离线'}"),
+                  RaisedButton(
+                    color: Colors.blue,
+                    onPressed: isOnline ? logout : login,
+                    child: Text(isOnline ? "退出" :"登录", style: TextStyle(color: Colors.white),),
+                  ),
+                ],
+              ),
+            ],
+          )
+        )
       ),
     );
   }
