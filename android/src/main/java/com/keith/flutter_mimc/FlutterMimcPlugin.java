@@ -2,6 +2,11 @@ package com.keith.flutter_mimc;
 import android.os.Handler;
 import android.os.Looper;
 import android.content.Context;
+
+import com.alibaba.fastjson.JSONObject;
+
+import java.util.Map;
+
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -99,8 +104,12 @@ public class FlutterMimcPlugin implements MethodCallHandler{
         MimcUserManager.getInstance().initWithToken(context, tokenString);
         result.success(null);
     }else if(call.method.equals("sendMessage")) {
+        System.out.println(call.arguments);
         String toAccount = call.argument("toAccount");
-//        MimcUserManager.getInstance().sendMsg(toAccount, );
+        String bizType = call.argument("bizType");
+        Map<String, Object> message = call.argument("message");
+        byte[] payload = JSONObject.toJSONBytes(message);
+        MimcUserManager.getInstance().sendMsg(toAccount, payload, bizType);
         result.success(null);
     }else if(call.method.equals("login")) {
         MimcUserManager.getInstance().login();

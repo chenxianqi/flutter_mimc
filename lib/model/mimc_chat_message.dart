@@ -18,7 +18,7 @@ class MimcChatMessage {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<dynamic, dynamic>();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['toAccount'] = this.toAccount;
     data['bizType'] = this.bizType;
     data['fromAccount'] = this.fromAccount;
@@ -48,7 +48,7 @@ class MimcMessageBena {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<dynamic, dynamic>();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['payload'] = this.payload;
     data['msgId'] = this.msgId;
     data['timestamp'] = this.timestamp;

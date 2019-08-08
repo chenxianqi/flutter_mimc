@@ -11,9 +11,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 
   FlutterMimc flutterMimc;
-  final String appAccount = "10315";
+  final String appAccount = "100";
   bool isOnline = false;
   List<Map<String, String>> logs = [];
+  TextEditingController accountCtr = TextEditingController();
+  TextEditingController contentCtr = TextEditingController();
 
   @override
   void initState() {
@@ -96,6 +98,30 @@ class _MyAppState extends State<MyApp> {
     await FlutterMimc.logout();
   }
 
+  // 发送消息
+  void sendMessage(int type){
+    String id = accountCtr.value.text;
+    String content = contentCtr.value.text;
+    MimcChatMessage messageRes = MimcChatMessage();
+    MimcMessageBena messageBena = MimcMessageBena();
+    messageRes.timestamp = DateTime.now().millisecondsSinceEpoch;
+    messageRes.bizType = "bizType";
+    messageRes.fromAccount = appAccount;
+    messageBena.timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+    messageBena.payload = base64Encode(utf8.encode(content));
+    messageBena.version  = 0;
+    messageBena.msgId  = "msgId";
+    messageRes.message = messageBena;
+    if(type == 0){
+      messageRes.toAccount = id;
+      addLog("发送给$id: $content");
+      flutterMimc.sendMessage(messageRes);
+    }else{
+      messageRes.topicId = int.parse(id);
+    }
+    contentCtr.clear();
+  }
+
 
 
   @override
@@ -112,39 +138,74 @@ class _MyAppState extends State<MyApp> {
             ),
           ],
         ),
-        body: Padding(
-          padding: EdgeInsets.all(15.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+        body: Stack(
+          children: <Widget>[
+            Container(
+              width: double.infinity,
+              color: Colors.white70,
+              height: double.infinity,
+              padding: EdgeInsets.only(top: 200.0, left: 10.0, right:10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text("当前账号：$appAccount,  当前状态：${isOnline ? '在线' : '离线'}"),
-                ],
-              ),
-              Container(
-                width: double.infinity,
-                height: 300.0,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text("操作日志"),
-                    Divider(),
-                    Expanded(
-                      child: ListView.builder(
+                  Text("操作日志"),
+                  Divider(),
+                  Expanded(
+                    child: ListView.builder(
                         itemCount: logs.length,
                         itemBuilder: (context, index){
                           return ListTile(title: Text(logs[index]['content']), subtitle: Text(logs[index]['date']),);
                         }
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Container(
+              height: 200.0,
+              padding: EdgeInsets.all(20.0),
+              color: Colors.white,
+              child: Column(
+                children: <Widget>[
+                  Text("当前账号：$appAccount,  当前状态：${isOnline ? '在线' : '离线'}"),
+                  SizedBox(
+                    height: 35.0,
+                    child: TextField(
+                        controller: accountCtr,
+                        decoration: InputDecoration(
+                            hintText: "输入对方群ID、或对方账号"
+                        )
+                    ),
+                  ),
+                  SizedBox(
+                    height: 35.0,
+                    child: TextField(
+                        controller: contentCtr,
+                        decoration: InputDecoration(
+                            hintText: "输入发送的内容"
+                        )
+                    ),
+                  ),
+                  Row(
+                    children: <Widget>[
+                      RaisedButton(
+                        color: Colors.blue,
+                        onPressed:() => sendMessage(0),
+                        child: Text( "发送单聊", style: TextStyle(color: Colors.white),),
                       ),
-                    )
-                  ],
-                ),
-              )
-            ],
-          )
+                      VerticalDivider(width: 20.0,),
+                      RaisedButton(
+                        color: Colors.blue,
+                        onPressed:() => sendMessage(1),
+                        child: Text( "发送群聊", style: TextStyle(color: Colors.white),),
+                      ),
+                    ],
+                  ),
+                  Divider()
+                ],
+              ),
+            )
+          ],
         )
       ),
     );
