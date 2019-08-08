@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
-import com.keith.flutter_mimc.utils.ConstraintsMap;
 import com.xiaomi.mimc.MIMCGroupMessage;
 import com.xiaomi.mimc.MIMCMessage;
 import com.xiaomi.mimc.MIMCMessageHandler;
@@ -25,7 +24,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.List;
 
-import io.flutter.plugin.common.EventChannel;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -36,22 +34,17 @@ import okhttp3.Response;
 
 public class MimcUserManager {
 
-    private static EventChannel.EventSink eventSink = null;
-    public static void setEventSink(EventChannel.EventSink sink){
-        eventSink = sink;
-    }
-
-
-
     // 配置信息
     private long appId;
     private String appKey;
     private String appSecret;
-    private String appAccount;
+    public String appAccount;
     private String regionKey = "REGION_CN";
     private String domain = "https://mimc.chat.xiaomi.net/";
 
     private Context context; // 上下文
+
+    private  String tokenStringData; // 服务的生成的token data
 
     // 用户登录APP的帐号
     private String url;
@@ -67,21 +60,35 @@ public class MimcUserManager {
     public static int STATE_INTERRUPT = 3;
     private volatile int answer = STATE_TIMEOUT;
     private Object lock = new Object();
-    private static final String TAG = "UserManager";
+    private static final String TAG = "MimcUserManager";
 
-    // 初始化
-    public boolean init(Context context, String appId, String appKey,String appSecret, String appAccount){
+
+    //  参数 初始化
+    public void init(Context context, String appId, String appKey,String appSecret, String appAccount){
         try {
             this.appId = Long.parseLong(appId);
             this.appKey = appKey;
             this.appSecret = appSecret;
             this.appAccount = appAccount;
             this.context = context;
-            MIMCUser user = newMIMCUser();
-            return user != null;
+            newMIMCUser(false);
         }catch (Exception e){
             System.err.println(e.getMessage());
-            return false;
+        }
+    }
+
+    // token 初始化
+    public void initWithToken(Context context, String tokenStringData){
+        try {
+            com.alibaba.fastjson.JSONObject json = com.alibaba.fastjson.JSONObject.parseObject(tokenStringData);
+            com.alibaba.fastjson.JSONObject jsonData = json.getJSONObject("data");
+            this.appAccount = jsonData.getString("appAccount");
+            this.tokenStringData = tokenStringData;
+            this.appId = Long.parseLong(jsonData.getString("appId"));
+            this.context = context;
+            newMIMCUser(true);
+        }catch (Exception e){
+            System.err.println(e.getMessage());
         }
     }
 
@@ -112,13 +119,13 @@ public class MimcUserManager {
 
 
     // 设置消息监听
-    public void setHandleMIMCMsgListener(OnHandleMIMCMsgListener onHandleMIMCMsgListener) {
-        this.onHandleMIMCMsgListener = onHandleMIMCMsgListener;
+    public void setHandleMIMCMsgListener(OnHandleMIMCMsgListener listener) {
+       this.onHandleMIMCMsgListener = listener;
     }
 
     public interface OnHandleMIMCMsgListener {
-        void onHandleMessage(MimcChatMsg chatMsg);
-        void onHandleGroupMessage(MimcChatMsg chatMsg);
+        void onHandleMessage(MIMCMessage chatMsg);
+        void onHandleGroupMessage(MIMCGroupMessage chatMsg);
         void onHandleStatusChanged(MIMCConstant.OnlineStatus status);
         void onHandleServerAck(MIMCServerAck serverAck);
         void onHandleCreateGroup(String json, boolean isSuccess);
@@ -153,58 +160,22 @@ public class MimcUserManager {
         return getMIMCUser() != null ? getMIMCUser().getAppAccount() : "";
     }
 
-    /**
-     * 获取用户在线状态
-     * @return STATUS_LOGIN_SUCCESS 在线，STATUS_LOGOUT 下线，STATUS_LOGIN_FAIL 登录失败
-     */
-    public MIMCConstant.OnlineStatus getStatus() {
-        return mStatus;
-    }
 
-    public void addMsg(MimcChatMsg chatMsg) {
+    public void addMsg(MIMCMessage chatMsg) {
         onHandleMIMCMsgListener.onHandleMessage(chatMsg);
     }
 
-    public void addGroupMsg(MimcChatMsg chatMsg) {
+    public void addGroupMsg(MIMCGroupMessage chatMsg) {
         onHandleMIMCMsgListener.onHandleGroupMessage(chatMsg);
     }
 
-    public void sendMsg(String toAppAccount, byte[] payload, String bizType) {
-        MimcMsg msg = new MimcMsg();
-        msg.setVersion(MimcConstant.VERSION);
-        msg.setMsgId(msg.getMsgId());
-        msg.setTimestamp(System.currentTimeMillis());
-        msg.setPayload(payload);
-        String json = JSON.toJSONString(msg);
-        mimcUser.sendMessage(toAppAccount, json.getBytes(), bizType);
-        if (bizType.equals(MimcConstant.TEXT) || bizType.equals(MimcConstant.PIC_FILE)) {
-            MimcChatMsg chatMsg = new MimcChatMsg();
-            chatMsg.setFromAccount(mimcUser.getAppAccount());
-            chatMsg.setMsg(msg);
-            chatMsg.setSingle(true);
-            addMsg(chatMsg);
-        }
+    public String sendMsg(String toAppAccount, byte[] payload, String bizType) {
+        return mimcUser.sendMessage(toAppAccount, payload, bizType);
     }
 
     public void sendGroupMsg(long groupID, byte[] content, String bizType, boolean isUnlimitedGroup) {
-        MimcMsg msg = new MimcMsg();
-        msg.setVersion(MimcConstant.VERSION);
-        msg.setMsgId(msg.getMsgId());
-        msg.setTimestamp(System.currentTimeMillis());
-        msg.setPayload(content);
-        String json = JSON.toJSONString(msg);
-        if (isUnlimitedGroup) {
-            mimcUser.sendUnlimitedGroupMessage(groupID, json.getBytes(), bizType);
-        } else {
-            mimcUser.sendGroupMessage(groupID, json.getBytes(), bizType);
-        }
-        if (bizType.equals(MimcConstant.TEXT) || bizType.equals(MimcConstant.PIC_FILE)) {
-            MimcChatMsg chatMsg = new MimcChatMsg();
-            chatMsg.setFromAccount(mimcUser.getAppAccount());
-            chatMsg.setMsg(msg);
-            chatMsg.setSingle(false);
-            addMsg(chatMsg);
-        }
+//        mimcUser.sendUnlimitedGroupMessage(groupID, json.getBytes(), bizType);
+//        mimcUser.sendGroupMessage(groupID, json.getBytes(), bizType);
     }
 
     /**
@@ -219,7 +190,7 @@ public class MimcUserManager {
      * 创建用户
      * @return 返回新创建的用户
      */
-    public MIMCUser newMIMCUser(){
+    public MIMCUser newMIMCUser(boolean isServerToken){
         if (appAccount == null || appAccount.isEmpty() || context == null){
             System.err.println("参数错误");
             return null;
@@ -235,7 +206,9 @@ public class MimcUserManager {
         mimcUser = MIMCUser.newInstance(appId, appAccount, context.getExternalFilesDir(null).getAbsolutePath());
 
         // 注册相关监听，必须
-        mimcUser.registerTokenFetcher(new TokenFetcher());
+        mimcUser.registerTokenFetcher(
+            isServerToken ? new ServerTokenFetcher() : new TokenFetcher()
+        );
         mimcUser.registerMessageHandler(new MessageHandler());
         mimcUser.registerOnlineStatusListener(new OnlineStatusListener());
         mimcUser.registerRtsCallHandler(new RTSHandler());
@@ -247,8 +220,7 @@ public class MimcUserManager {
     class UnlimitedGroupHandler implements MIMCUnlimitedGroupHandler {
         @Override
         public void handleCreateUnlimitedGroup(long topicId, String topicName, int code, String desc, Object obj) {
-            Log.i(TAG, String.format("handleCreateUnlimitedGroup topicId:%d topicName:%s code:%d errMsg:%s"
-                    , topicId, topicName, code, desc));
+            Log.i(TAG, String.format("handleCreateUnlimitedGroup topicId:%d topicName:%s code:%d errMsg:%s", topicId, topicName, code, desc));
         }
 
         @Override
@@ -362,18 +334,7 @@ public class MimcUserManager {
         @Override
         public void statusChange(MIMCConstant.OnlineStatus status, String type, String reason, String desc) {
             mStatus = status;
-            Log.d("OnlineStatus", status.toString());
-            if(eventSink != null){
-                ConstraintsMap params = new ConstraintsMap();
-                params.putString("eventType", "onlineStatusListener");
-                params.putBoolean("eventValue", MIMCConstant.OnlineStatus.ONLINE == status);
-                System.out.println("eventSink.success(params.toMap())");
-                eventSink.success(params.toMap());
-            }else{
-               System.out.println("eventSink is null");
-            }
-            Log.d(TAG, String.format("statusChange status:%s errType:%s errReason:%s errDescription:%s", status, type, reason, desc));
-//            onHandleMIMCMsgListener.onHandleStatusChanged(status);
+            onHandleMIMCMsgListener.onHandleStatusChanged(status);
         }
     }
 
@@ -393,25 +354,9 @@ public class MimcUserManager {
             for (int i = 0; i < packets.size(); ++i) {
                 MIMCMessage mimcMessage = packets.get(i);
                 try {
-                    MimcMsg msg = JSON.parseObject(new String(mimcMessage.getPayload()), MimcMsg.class);
-                    MimcChatMsg chatMsg = new MimcChatMsg();
-                    chatMsg.setBizType(mimcMessage.getBizType());
-                    chatMsg.setFromAccount(mimcMessage.getFromAccount());
-                    chatMsg.setMsg(msg);
-                    chatMsg.setSingle(true);
-                    Log.d("收到消息====", msg.toString());
-                    addMsg(chatMsg);
+                    addMsg(mimcMessage);
                 } catch (Exception e) {
-                    MimcMsg msg = new MimcMsg();
-                    msg.setTimestamp(System.currentTimeMillis());
-                    msg.setPayload(mimcMessage.getPayload());
-                    MimcChatMsg chatMsg = new MimcChatMsg();
-                    chatMsg.setBizType(mimcMessage.getBizType());
-                    chatMsg.setFromAccount(mimcMessage.getFromAccount());
-                    chatMsg.setMsg(msg);
-                    chatMsg.setSingle(true);
-                    Log.d("收到消息====", msg.toString());
-                    addMsg(chatMsg);
+                    addMsg(mimcMessage);
                 }
             }
         }
@@ -431,23 +376,9 @@ public class MimcUserManager {
             for (int i = 0; i < packets.size(); i++) {
                 MIMCGroupMessage mimcGroupMessage = packets.get(i);
                 try {
-                    MimcMsg msg = JSON.parseObject(new String(packets.get(i).getPayload()), MimcMsg.class);
-                    MimcChatMsg chatMsg = new MimcChatMsg();
-                    chatMsg.setBizType(mimcGroupMessage.getBizType());
-                    chatMsg.setFromAccount(mimcGroupMessage.getFromAccount());
-                    chatMsg.setMsg(msg);
-                    chatMsg.setSingle(false);
-                    addGroupMsg(chatMsg);
+                    addGroupMsg(mimcGroupMessage);
                 } catch (Exception e) {
-                    MimcMsg msg = new MimcMsg();
-                    msg.setTimestamp(System.currentTimeMillis());
-                    msg.setPayload(packets.get(i).getPayload());
-                    MimcChatMsg chatMsg = new MimcChatMsg();
-                    chatMsg.setBizType(mimcGroupMessage.getBizType());
-                    chatMsg.setFromAccount(mimcGroupMessage.getFromAccount());
-                    chatMsg.setMsg(msg);
-                    chatMsg.setSingle(false);
-                    addGroupMsg(chatMsg);
+                    addGroupMsg(mimcGroupMessage);
                 }
             }
         }
@@ -492,28 +423,24 @@ public class MimcUserManager {
             for (int i = 0; i < packets.size(); i++) {
                 MIMCGroupMessage mimcGroupMessage = packets.get(i);
                 try {
-                    MimcMsg msg = JSON.parseObject(new String(packets.get(i).getPayload()), MimcMsg.class);
-                    MimcChatMsg chatMsg = new MimcChatMsg();
-                    chatMsg.setBizType(mimcGroupMessage.getBizType());
-                    chatMsg.setFromAccount(mimcGroupMessage.getFromAccount());
-                    chatMsg.setMsg(msg);
-                    chatMsg.setSingle(false);
-                    addGroupMsg(chatMsg);
+                    addGroupMsg(mimcGroupMessage);
                 } catch (Exception e) {
-                    MimcMsg msg = new MimcMsg();
-                    msg.setTimestamp(System.currentTimeMillis());
-                    msg.setPayload(packets.get(i).getPayload());
-                    MimcChatMsg chatMsg = new MimcChatMsg();
-                    chatMsg.setBizType(mimcGroupMessage.getBizType());
-                    chatMsg.setFromAccount(mimcGroupMessage.getFromAccount());
-                    chatMsg.setMsg(msg);
-                    chatMsg.setSingle(false);
-                    addGroupMsg(chatMsg);
+                    addGroupMsg(mimcGroupMessage);
                 }
             }
         }
     }
 
+    // 服务端生成的token传递过来
+    class ServerTokenFetcher implements MIMCTokenFetcher {
+        @Override
+        public String fetchToken() {
+            System.out.println(tokenStringData);
+            return tokenStringData;
+        }
+    }
+
+    // 参数形式获取token
     class TokenFetcher implements MIMCTokenFetcher {
         @Override
         public String fetchToken() {

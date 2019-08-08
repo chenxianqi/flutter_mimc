@@ -1,13 +1,17 @@
 import 'dart:async';
 
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'model/mimc_chat_message.dart';
+export 'model/mimc_chat_message.dart';
 
 class MIMCEvents{
   static const String onlineStatusListener = "onlineStatusListener";              // 状态变更
   static const String onHandleSendMessageTimeout = "onHandleSendMessageTimeout";  // 发送单聊消息超时
   static const String onHandleMessage = "onHandleMessage";                        // 接收单聊
   static const String onHandleGroupMessage = "onHandleGroupMessage";              // 接收群聊
+  static const String onHandleSendGroupMessageTimeout = "onHandleSendGroupMessageTimeout"; // 发送群聊消息超时
   static const String onHandleServerAck = "onHandleServerAck";                    // 接收服务端已收到发送消息确认
 }
 
@@ -22,10 +26,23 @@ class FlutterMimc {
   static const String   _ON_TOKEN_INIT  =     'initWithToken'; // token形式初始化
   static const String   _ON_LOGIN       =     'login';         // 登录
   static const String   _ON_LOGOUT      =     'logout';        // 退出登录
-  static const String   _ON_IS_ONLINE   =     'is_online';     // 获取登录状态（可能不准）请以事件回调为准
+  static const String   _ON_GET_ACCOUNT =     'getAccount';    // 获取当前账号
+  static const String   _ON_IS_ONLINE   =     'isOnline';     // 获取登录状态（可能不准）请以事件回调为准
+  static const String   _ON_SEND_MESSAGE   =  'sendMessage';  // 发送单聊消息
+  static const String   _ON_SEND_GROUP_MESSAGE   =  'sendGroupMessage';  // 发送群聊消息
 
-  // addEventListener
+  // 状态变更
   final StreamController<bool> _onlineStatusListenerStreamController = StreamController<bool>.broadcast();
+  // 接收单聊
+  final StreamController<MimcChatMessage> _onHandleMessageStreamController = StreamController<MimcChatMessage>.broadcast();
+  // 接收群聊
+  final StreamController<MimcChatMessage> _onHandleGroupMessageStreamController = StreamController<MimcChatMessage>.broadcast();
+  // 接收服务端已收到发送消息确认
+  final StreamController<String> _onHandleServerAckStreamController = StreamController<String>.broadcast();
+  // 发送单聊消息超时
+  final StreamController<MimcChatMessage> _onHandleSendMessageTimeoutStreamController = StreamController<MimcChatMessage>.broadcast();
+  // 发送群聊消息超时
+  final StreamController<MimcChatMessage> _onHandleSendGroupMessageTimeoutStreamController = StreamController<MimcChatMessage>.broadcast();
 
   // 以下两种实例化方法使用一种即可，要么写死，要么服务的请求原样传输进去
 
@@ -39,9 +56,11 @@ class FlutterMimc {
     _initEvent();
   }
 
-  // 通过服务端生成原样返回的数据token，实例化
+  //  * 通过服务端生成原样返回的数据token，实例化
+  //  *  String appAccount 会话账号（或业务平台唯一ID）
+  //  * String tokenString 服务的签名原样字符串
   FlutterMimc.initWithToken(String tokenString) {
-    _channel.invokeMethod(_ON_TOKEN_INIT, tokenString);
+    _channel.invokeMethod(_ON_TOKEN_INIT, {"token": tokenString});
     _initEvent();
   }
 
@@ -57,35 +76,49 @@ class FlutterMimc {
     return await _channel.invokeMethod(_ON_LOGOUT);
   }
 
-  // 登录状态
+  // 登录状态  （慎用）
   // @return bool
   Future<bool> isOnline() async {
     return await _channel.invokeMethod(_ON_IS_ONLINE);
   }
 
   // 初始化事件
-  void _initEvent() {
+  void _initEvent() async{
     EventChannel eventChannel = EventChannel('flutter_mimc.event');
     eventChannel.receiveBroadcastStream().listen(_eventListener, onError: _errorListener);
   }
 
+  // 发送单聊消息
+  Future<String> sendMessage(MimcChatMessage message) async{
+    return await _channel.invokeMethod(_ON_SEND_MESSAGE, message.toJson());
+  }
+
   // eventListener
-  void _eventListener(dynamic event) {
+  void _eventListener(event) {
+    print(event);
     String eventType = event['eventType'];
     dynamic eventValue = event['eventValue'];
     debugPrint("eventType===$eventType");
     debugPrint("eventValue===$eventValue");
+    print(jsonEncode(eventValue));
    switch(eventType){
      case MIMCEvents.onlineStatusListener:
        _onlineStatusListenerStreamController.add(eventValue as bool);
        break;
-     case MIMCEvents.onHandleSendMessageTimeout:
-       break;
      case MIMCEvents.onHandleMessage:
+       _onHandleMessageStreamController.add(MimcChatMessage.fromJson(eventValue));
+       break;
+     case MIMCEvents.onHandleSendMessageTimeout:
+       _onHandleSendMessageTimeoutStreamController.add(MimcChatMessage.fromJson(eventValue));
        break;
      case MIMCEvents.onHandleGroupMessage:
+       _onHandleGroupMessageStreamController.add(MimcChatMessage.fromJson(eventValue));
+       break;
+     case MIMCEvents.onHandleSendGroupMessageTimeout:
+       _onHandleSendGroupMessageTimeoutStreamController.add(MimcChatMessage.fromJson(eventValue));
        break;
      case MIMCEvents.onHandleServerAck:
+       _onHandleServerAckStreamController.add(eventValue as String);
        break;
      default:
        print("notfund event");
@@ -93,14 +126,40 @@ class FlutterMimc {
   }
 
   // 状态改变回调
-  Stream<bool> onStatusChangedListener(){
+  Stream<bool> addEventListenerStatusChanged(){
     return _onlineStatusListenerStreamController.stream;
+  }
+
+  // 接收单聊消息
+  Stream<MimcChatMessage> addEventListenerHandleMessage(){
+    return _onHandleMessageStreamController.stream;
+  }
+
+  // 接收群聊
+  Stream<MimcChatMessage> addEventListenerHandleGroupMessage(){
+    return _onHandleGroupMessageStreamController.stream;
+  }
+
+  // 接收服务端已收到发送消息确认
+  Stream<String> addEventListenerServerAck(){
+    return _onHandleServerAckStreamController.stream;
+  }
+
+  // 发送单聊消息超时
+  Stream<MimcChatMessage> addEventListenerSendMessageTimeout(){
+    return _onHandleSendMessageTimeoutStreamController.stream;
+  }
+
+  // 发送群聊消息超时
+  Stream<MimcChatMessage> addEventListenerSendGroupMessageTimeout(){
+    return _onHandleSendGroupMessageTimeoutStreamController.stream;
   }
 
 
   // event error
   void _errorListener(Object obj) {
     final PlatformException e = obj;
+    debugPrint("eventError===$obj");
     throw e;
   }
 
