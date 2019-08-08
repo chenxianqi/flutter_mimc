@@ -99,11 +99,17 @@ public class FlutterMimcPlugin implements MethodCallHandler{
       MimcUserManager.getInstance().init(context, appId, appKey, appSecret, appAccount);
       result.success(null);
 
-    }else if(call.method.equals("initWithToken")) {
+    }
+    else if(call.method.equals("initWithToken")) {
+
         String tokenString = call.argument("token");
         MimcUserManager.getInstance().initWithToken(context, tokenString);
         result.success(null);
-    }else if(call.method.equals("sendMessage")) {
+
+    }
+    else if(call.method.equals("sendMessage"))
+    {
+
         System.out.println(call.arguments);
         String toAccount = call.argument("toAccount");
         String bizType = call.argument("bizType");
@@ -111,17 +117,29 @@ public class FlutterMimcPlugin implements MethodCallHandler{
         byte[] payload = JSONObject.toJSONBytes(message);
         MimcUserManager.getInstance().sendMsg(toAccount, payload, bizType);
         result.success(null);
-    }else if(call.method.equals("login")) {
+
+    }
+    else if(call.method.equals("login"))
+    {
+
         MimcUserManager.getInstance().login();
         result.success(null);
-    }else if(call.method.equals("logout")) {
+
+    }
+    else if(call.method.equals("logout"))
+    {
+
       MimcUserManager.getInstance().logout();
       result.success(null);
-    }else if(call.method.equals("isOnline")) {
+
+    }
+    else if(call.method.equals("isOnline"))
+    {
 
       result.success(MimcUserManager.getInstance().isOnline());
 
-    }else {
+    }
+    else {
       result.notImplemented();
     }
   }

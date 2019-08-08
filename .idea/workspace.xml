@@ -2,10 +2,271 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7e06dfe4-4392-4629-bb11-f046efcdedd6" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/example/ios/Podfile.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/example/ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Classes/XMUserManager.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Classes/XMUserManager.mm" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/Any.pbobjc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/Api.pbobjc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/Duration.pbobjc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/Empty.pbobjc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/FieldMask.pbobjc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/GPBArray.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/GPBBootstrap.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/GPBCodedInputStream.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/GPBCodedOutputStream.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/GPBDescriptor.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/GPBDescriptor_PackagePrivate.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/GPBDictionary.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/GPBExtensionInternals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/GPBExtensionRegistry.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/GPBMessage.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/GPBMessage_PackagePrivate.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/GPBProtocolBuffers.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/GPBProtocolBuffers_RuntimeSupport.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/GPBRootObject.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/GPBRootObject_PackagePrivate.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/GPBRuntimeTypes.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/GPBUnknownField.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/GPBUnknownFieldSet.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/GPBUtilities.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/GPBUtilities_PackagePrivate.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/GPBWellKnownTypes.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/GPBWireFormat.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/MIMCProtoBuffer.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/SourceContext.pbobjc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/Struct.pbobjc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/Timestamp.pbobjc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/Type.pbobjc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Headers/Wrappers.pbobjc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Info.plist" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/MIMCProtoBuffer" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MIMCProtoBuffer.framework/Modules/module.modulemap" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MMCSDK.framework/Headers/MCUser.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MMCSDK.framework/Headers/MIMCChannelUser.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MMCSDK.framework/Headers/MIMCGroupMessage.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MMCSDK.framework/Headers/MIMCLaunchedResponse.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MMCSDK.framework/Headers/MIMCLoggerWrapper.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MMCSDK.framework/Headers/MIMCMessage.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MMCSDK.framework/Headers/MIMCRtsChannelType.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MMCSDK.framework/Headers/MIMCRtsDataType.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MMCSDK.framework/Headers/MIMCServerAck.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MMCSDK.framework/Headers/MIMCStreamConfig.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MMCSDK.framework/Headers/MMCSDK.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MMCSDK.framework/Info.plist" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MMCSDK.framework/MMCSDK" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/MMCSDK.framework/Modules/module.modulemap" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/aes.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/asn1.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/asn1_mac.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/asn1t.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/bio.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/blowfish.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/bn.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/buffer.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/camellia.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/cast.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/cmac.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/cms.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/comp.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/conf.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/conf_api.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/crypto.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/des.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/des_old.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/dh.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/dsa.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/dso.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/dtls1.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/e_os2.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/ebcdic.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/ec.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/ecdh.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/ecdsa.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/engine.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/err.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/evp.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/hmac.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/idea.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/krb5_asn.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/kssl.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/lhash.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/md4.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/md5.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/mdc2.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/modes.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/obj_mac.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/objects.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/ocsp.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/opensslconf.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/opensslconf_ios_arm64.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/opensslconf_ios_armv7.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/opensslconf_ios_armv7s.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/opensslconf_ios_i386.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/opensslconf_ios_x86_64.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/opensslconf_tvos_arm64.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/opensslconf_tvos_x86_64.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/opensslv.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/ossl_typ.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/pem.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/pem2.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/pkcs12.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/pkcs7.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/pqueue.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/rand.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/rc2.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/rc4.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/ripemd.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/rsa.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/safestack.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/seed.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/sha.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/srp.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/srtp.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/ssl.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/ssl2.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/ssl23.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/ssl3.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/stack.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/symhacks.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/tls1.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/ts.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/txt_db.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/ui.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/ui_compat.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/whrlpool.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/x509.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/x509_vfy.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Headers/x509v3.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/Info.plist" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/Frameworks/openssl.framework/openssl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/Any.pbobjc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/Api.pbobjc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/Duration.pbobjc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/Empty.pbobjc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/FieldMask.pbobjc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBArray.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBBootstrap.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBCodedInputStream.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBCodedOutputStream.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBDescriptor.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBDescriptor_PackagePrivate.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBDictionary.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBExtensionInternals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBExtensionRegistry.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBMessage.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBMessage_PackagePrivate.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBProtocolBuffers.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBProtocolBuffers_RuntimeSupport.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBRootObject.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBRootObject_PackagePrivate.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBRuntimeTypes.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBUnknownField.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBUnknownFieldSet.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBUtilities.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBUtilities_PackagePrivate.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBWellKnownTypes.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBWireFormat.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/MIMCProtoBuffer.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/SourceContext.pbobjc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/Struct.pbobjc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/Timestamp.pbobjc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/Type.pbobjc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/Wrappers.pbobjc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Info.plist" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/MIMCProtoBuffer" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Modules/module.modulemap" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/aes.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/asn1.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/asn1_mac.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/asn1t.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/bio.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/blowfish.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/bn.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/buffer.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/camellia.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/cast.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/cmac.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/cms.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/comp.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/conf.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/conf_api.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/crypto.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/des.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/des_old.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/dh.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/dsa.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/dso.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/dtls1.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/e_os2.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/ebcdic.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/ec.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/ecdh.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/ecdsa.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/engine.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/err.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/evp.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/hmac.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/idea.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/krb5_asn.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/kssl.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/lhash.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/md4.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/md5.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/mdc2.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/modes.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/obj_mac.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/objects.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/ocsp.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/opensslconf.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/opensslconf_ios_arm64.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/opensslconf_ios_armv7.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/opensslconf_ios_armv7s.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/opensslconf_ios_i386.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/opensslconf_ios_x86_64.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/opensslconf_tvos_arm64.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/opensslconf_tvos_x86_64.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/opensslv.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/ossl_typ.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/pem.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/pem2.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/pkcs12.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/pkcs7.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/pqueue.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/rand.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/rc2.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/rc4.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/ripemd.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/rsa.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/safestack.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/seed.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/sha.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/srp.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/srtp.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/ssl.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/ssl2.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/ssl23.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/ssl3.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/stack.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/symhacks.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/tls1.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/ts.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/txt_db.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/ui.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/ui_compat.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/whrlpool.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/x509.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/x509_vfy.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Headers/x509v3.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/Info.plist" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ios/openssl.framework/openssl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/FlutterMimcPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/FlutterMimcPlugin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/model/mimc_chat_message.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/model/mimc_chat_message.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/ios/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/Runner.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/ios/Runner.xcworkspace/contents.xcworkspacedata" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/Runner.xcworkspace/contents.xcworkspacedata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Classes/FlutterMimcPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Classes/FlutterMimcPlugin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Classes/FlutterMimcPlugin.m" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Classes/FlutterMimcPlugin.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/flutter_mimc.podspec" beforeDir="false" afterPath="$PROJECT_DIR$/ios/flutter_mimc.podspec" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -30,14 +291,16 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/example/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="655">
-              <caret line="116" column="20" selection-start-line="116" selection-start-column="20" selection-end-line="116" selection-end-column="20" />
+            <state relative-caret-position="125">
+              <caret line="53" column="3" selection-start-line="53" selection-start-column="3" selection-end-line="53" selection-end-column="3" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
                 <element signature="e#595#842#0" />
                 <element signature="e#907#1889#0" />
                 <element signature="e#1914#1955#0" />
                 <element signature="e#1994#2121#0" />
+                <element signature="e#2162#2797#0" />
+                <element signature="e#2825#2867#0" />
                 <element signature="e#3395#4250#0" />
                 <element signature="e#3731#4001#0" />
               </folding>
@@ -81,7 +344,9 @@
     <option name="width" value="1793" />
     <option name="height" value="1057" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -98,24 +363,7 @@
             <path>
               <item name="flutter_mimc" type="b2602c69:ProjectViewProjectNode" />
               <item name="flutter_mimc" type="462c0819:PsiDirectoryNode" />
-              <item name="example" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="flutter_mimc" type="b2602c69:ProjectViewProjectNode" />
-              <item name="flutter_mimc" type="462c0819:PsiDirectoryNode" />
-              <item name="example" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="flutter_mimc" type="b2602c69:ProjectViewProjectNode" />
-              <item name="flutter_mimc" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="flutter_mimc" type="b2602c69:ProjectViewProjectNode" />
-              <item name="flutter_mimc" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="model" type="462c0819:PsiDirectoryNode" />
+              <item name="ios" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -130,11 +378,12 @@
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/example" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/lib" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/ios/Frameworks" />
+      <recent name="$PROJECT_DIR$/example" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -173,15 +422,30 @@
       <option name="project" value="LOCAL" />
       <updated>1565258992850</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="安卓端收发单聊消息完成">
+      <created>1565273943977</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1565273943977</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
   </component>
   <component name="ToolWindowManager">
     <frame x="12" y="23" width="1793" height="1057" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info id="Captures" order="0" weight="0.25" />
-      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.1513421" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.1513421" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Designer" order="4" />
@@ -189,10 +453,10 @@
       <window_info id="Capture Tool" order="6" />
       <window_info id="Favorites" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Dart Analysis" order="0" weight="0.32769832" />
-      <window_info anchor="bottom" id="Run" order="1" weight="0.38988408" />
-      <window_info anchor="bottom" id="TODO" order="2" />
+      <window_info anchor="bottom" id="Run" order="1" weight="0.49315068" />
+      <window_info anchor="bottom" id="TODO" order="2" weight="0.32982087" />
       <window_info anchor="bottom" id="Debug" order="3" />
-      <window_info anchor="bottom" id="Terminal" order="4" weight="0.32665965" />
+      <window_info anchor="bottom" id="Terminal" order="4" visible="true" weight="0.6090622" />
       <window_info anchor="bottom" id="Event Log" order="5" side_tool="true" />
       <window_info anchor="bottom" id="Flutter Performance" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="7" />
@@ -207,7 +471,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="事件监听" />
-    <option name="LAST_COMMIT_MESSAGE" value="事件监听" />
+    <MESSAGE value="安卓端收发单聊消息完成" />
+    <option name="LAST_COMMIT_MESSAGE" value="安卓端收发单聊消息完成" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/test/flutter_mimc_test.dart">
@@ -290,14 +555,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/example/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="655">
-          <caret line="116" column="20" selection-start-line="116" selection-start-column="20" selection-end-line="116" selection-end-column="20" />
+        <state relative-caret-position="125">
+          <caret line="53" column="3" selection-start-line="53" selection-start-column="3" selection-end-line="53" selection-end-column="3" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
             <element signature="e#595#842#0" />
             <element signature="e#907#1889#0" />
             <element signature="e#1914#1955#0" />
             <element signature="e#1994#2121#0" />
+            <element signature="e#2162#2797#0" />
+            <element signature="e#2825#2867#0" />
             <element signature="e#3395#4250#0" />
             <element signature="e#3731#4001#0" />
           </folding>
