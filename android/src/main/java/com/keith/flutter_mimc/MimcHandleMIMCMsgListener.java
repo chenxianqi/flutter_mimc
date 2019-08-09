@@ -40,7 +40,6 @@ public class MimcHandleMIMCMsgListener implements MimcUserManager.OnHandleMIMCMs
                 fromAccount = message.getFromAccount();
             }
             paramsChild.putString("toAccount", toAccount);
-            paramsChild.putString("topicId", toAccount);
             paramsChild.putString("fromAccount", fromAccount);
             paramsChild.putString("bizType", bizType);
             paramsChild.putMap("message", payload);

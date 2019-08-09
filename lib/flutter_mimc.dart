@@ -18,12 +18,10 @@ class MIMCEvents{
 
 class FlutterMimc {
 
-  static const MethodChannel _channel = const MethodChannel('flutter_mimc');
+  final  MethodChannel _channel = const MethodChannel('flutter_mimc');
+  final EventChannel _eventChannel = EventChannel('flutter_mimc.event');
 
-
-  // 以下两种实例化方法使用一种即可，要么写死参数，要么服务端签名返回原样数据
   static const String   _ON_INIT        =     'init';          // 参数形式初始化
-  static const String   _ON_TOKEN_INIT  =     'initWithToken'; // token形式初始化
   static const String   _ON_LOGIN       =     'login';         // 登录
   static const String   _ON_LOGOUT      =     'logout';        // 退出登录
   static const String   _ON_GET_ACCOUNT =     'getAccount';    // 获取当前账号
@@ -44,8 +42,6 @@ class FlutterMimc {
   // 发送群聊消息超时
   final StreamController<MimcChatMessage> _onHandleSendGroupMessageTimeoutStreamController = StreamController<MimcChatMessage>.broadcast();
 
-  // 以下两种实例化方法使用一种即可，要么写死，要么服务的请求原样传输进去
-
   //  * 初始化
   //  * String appId        应用ID，小米开放平台申请分配的appId
   //  * String appKey       应用appKey，小米开放平台申请分配的appKey
@@ -56,13 +52,6 @@ class FlutterMimc {
     _initEvent();
   }
 
-  //  * 通过服务端生成原样返回的数据token，实例化
-  //  *  String appAccount 会话账号（或业务平台唯一ID）
-  //  * String tokenString 服务的签名原样字符串
-  FlutterMimc.initWithToken(String tokenString) {
-    _channel.invokeMethod(_ON_TOKEN_INIT, {"token": tokenString});
-    _initEvent();
-  }
 
   // 登录
   // @return bool
@@ -72,7 +61,7 @@ class FlutterMimc {
 
   // 退出登录
   // @return null 无返回值
-  static  Future<void> logout() async {
+  Future<void> logout() async {
     return await _channel.invokeMethod(_ON_LOGOUT);
   }
 
@@ -84,8 +73,7 @@ class FlutterMimc {
 
   // 初始化事件
   void _initEvent() async{
-    EventChannel eventChannel = EventChannel('flutter_mimc.event');
-    eventChannel.receiveBroadcastStream().listen(_eventListener, onError: _errorListener);
+    _eventChannel.receiveBroadcastStream().listen(_eventListener, onError: _errorListener);
   }
 
   // 发送单聊消息

@@ -23,28 +23,19 @@ class _MyAppState extends State<MyApp> {
 
     // 初始化 FlutterMimc
     initFlutterMimc();
-//    initWithTokenFlutterMimc();
 
   }
 
   // 通过参数实例化
   void initFlutterMimc() async{
     flutterMimc = FlutterMimc.init({
+      "debug": false,
       "appId": "2882303761517669588",
       "appKey": "5111766983588",
       "appSecret": "b0L3IOz/9Ob809v8H2FbVg==",
       "appAccount": appAccount
     });
     addLog("init==实例化完成");
-    listener();
-  }
-
-  // 通过服务端生成原样返回的数据token，实例化
-  void initWithTokenFlutterMimc() async{
-    // http get token
-    String tokenString = '{"code":200,"message":"success","data":{"appId":"2882303761517669588","appPackage":"com.xiaomi.mimcdemo","appAccount":"10315","miChid":9,"miUserId":"21304982171287553","miUserSecurityKey":"RkIyO1qaN1YB0omFM4E5tQ==","token":"bJRLeg7AgtSh0T13YjL\/IFDdK0JTjCJG4KdSfB9L7c0N56uq0EiflNyh2H5qmlOwqeOEcudSjEicejSfy+BJz2ui\/bkYYYPpT9rKkuChjVDMAXpIv1L7ItYzsCaYjygYQD\/FuVQ+0xiiFJqDudzL2vHwjH\/X7NJbH7JCqycZkfVvhFrrVJatrUOKHDsHlZZuzSdaTD9EZTsCIN7heUaKLHqRxyFGPmynxpmkAYj\/HCOOb\/mVNa\/tFeafWqArXAv57V4MH+X2Bk6V7gIXJNvNk+am9l9KtVFqfTomqU4pkpypMHyUfD1H2qBQPO63xOEN4yFfutQx4SX2qREZJ0nAi77s7tGl8YkTBv\/KxMr8Js2nZljqe3TODbeatLigYI8+xzY6PyqfigT4+KNOFzmrFRina623MclbU9vYLJM7672KprimiNg\/YC3+qUCsWJKcqXtHSVb0GrYH9JVcZcU1Hg==","regionBucket":154,"feDomainName":"app.chat.xiaomi.net","relayDomainName":"relay.mimc.chat.xiaomi.net"}}';
-    flutterMimc = FlutterMimc.initWithToken(tokenString);
-    addLog("initWithToken==实例化完成");
     listener();
   }
 
@@ -95,7 +86,7 @@ class _MyAppState extends State<MyApp> {
 
   // 退出登录
   void logout() async{
-    await FlutterMimc.logout();
+    await flutterMimc.logout();
   }
 
   // 发送消息

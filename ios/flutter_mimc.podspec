@@ -15,10 +15,10 @@ A new flutter plugin project.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  
+  s.libraries = 'c++'
+  s.frameworks = 'CoreTelephony','SystemConfiguration'
   # 导入第三方资源库
-  s.vendored_frameworks = 'Frameworks/MMCSDK.framework','Frameworks/openssl.framework','Frameworks/MIMCProtoBuffer.framework'
-
+  s.vendored_frameworks = 'Frameworks/openssl.framework','Frameworks/MIMCProtoBuffer.framework','Frameworks/MMCSDK.framework'
   s.ios.deployment_target = '8.0'
 end
 

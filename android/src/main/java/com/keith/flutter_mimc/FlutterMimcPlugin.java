@@ -100,17 +100,8 @@ public class FlutterMimcPlugin implements MethodCallHandler{
       result.success(null);
 
     }
-    else if(call.method.equals("initWithToken")) {
-
-        String tokenString = call.argument("token");
-        MimcUserManager.getInstance().initWithToken(context, tokenString);
-        result.success(null);
-
-    }
     else if(call.method.equals("sendMessage"))
     {
-
-        System.out.println(call.arguments);
         String toAccount = call.argument("toAccount");
         String bizType = call.argument("bizType");
         Map<String, Object> message = call.argument("message");

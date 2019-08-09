@@ -71,26 +71,12 @@ public class MimcUserManager {
             this.appSecret = appSecret;
             this.appAccount = appAccount;
             this.context = context;
-            newMIMCUser(false);
+            newMIMCUser();
         }catch (Exception e){
             System.err.println(e.getMessage());
         }
     }
 
-    // token 初始化
-    public void initWithToken(Context context, String tokenStringData){
-        try {
-            com.alibaba.fastjson.JSONObject json = com.alibaba.fastjson.JSONObject.parseObject(tokenStringData);
-            com.alibaba.fastjson.JSONObject jsonData = json.getJSONObject("data");
-            this.appAccount = jsonData.getString("appAccount");
-            this.tokenStringData = tokenStringData;
-            this.appId = Long.parseLong(jsonData.getString("appId"));
-            this.context = context;
-            newMIMCUser(true);
-        }catch (Exception e){
-            System.err.println(e.getMessage());
-        }
-    }
 
     // 登录
     public void login(){
@@ -190,7 +176,7 @@ public class MimcUserManager {
      * 创建用户
      * @return 返回新创建的用户
      */
-    public MIMCUser newMIMCUser(boolean isServerToken){
+    public MIMCUser newMIMCUser(){
         if (appAccount == null || appAccount.isEmpty() || context == null){
             System.err.println("参数错误");
             return null;
@@ -206,9 +192,7 @@ public class MimcUserManager {
         mimcUser = MIMCUser.newInstance(appId, appAccount, context.getExternalFilesDir(null).getAbsolutePath());
 
         // 注册相关监听，必须
-        mimcUser.registerTokenFetcher(
-            isServerToken ? new ServerTokenFetcher() : new TokenFetcher()
-        );
+        mimcUser.registerTokenFetcher(new TokenFetcher());
         mimcUser.registerMessageHandler(new MessageHandler());
         mimcUser.registerOnlineStatusListener(new OnlineStatusListener());
         mimcUser.registerRtsCallHandler(new RTSHandler());
@@ -316,19 +300,6 @@ public class MimcUserManager {
         }
     }
 
-    public void answerCall() {
-        synchronized (lock) {
-            answer = STATE_AGREE;
-            lock.notify();
-        }
-    }
-
-    public void rejectCall() {
-        synchronized (lock) {
-            answer = STATE_REJECT;
-            lock.notify();
-        }
-    }
 
     class OnlineStatusListener implements MIMCOnlineStatusListener {
         @Override
@@ -431,16 +402,7 @@ public class MimcUserManager {
         }
     }
 
-    // 服务端生成的token传递过来
-    class ServerTokenFetcher implements MIMCTokenFetcher {
-        @Override
-        public String fetchToken() {
-            System.out.println(tokenStringData);
-            return tokenStringData;
-        }
-    }
-
-    // 参数形式获取token
+    // 获取token
     class TokenFetcher implements MIMCTokenFetcher {
         @Override
         public String fetchToken() {
