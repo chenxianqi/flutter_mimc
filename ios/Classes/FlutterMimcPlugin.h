@@ -1,6 +1,6 @@
 #import <Flutter/Flutter.h>
 #import <MMCSDK/MCUser.h>
-@interface FlutterMimcPlugin : NSObject<FlutterPlugin, onlineStatusDelegate, handleMessageDelegate>
+@interface FlutterMimcPlugin : NSObject<FlutterPlugin, onlineStatusDelegate, handleMessageDelegate, handleUnlimitedGroupDelegate>
 - (void)statusChange:(MCUser *)user status:(int)status type:(NSString *)type reason:(NSString *)reason desc:(NSString *)desc;
 - (void)handleMessage:(NSArray<MIMCMessage*> *)packets user:(MCUser *)user;
 - (void)handleGroupMessage:(NSArray<MIMCGroupMessage*> *)packets;

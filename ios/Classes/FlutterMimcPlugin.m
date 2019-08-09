@@ -114,6 +114,7 @@ XMUserManager *mimcUserManager;
 }
 
 
+
 // 发送单聊消息超时
 - (void)handleSendMessageTimeout:(MIMCMessage *)message {
     NSLog(@"handleSendMessageTimeout, message.packetId=%@, message.sequence=%lld, message.timestamp=%lld, message.fromAccount=%@, message.toAccount=%@, message.payload=%@, message.bizType=%@", message.getPacketId, message.getSequence, message.getTimestamp, message.getFromAccount, message.getToAccount, message.getPayload, message.getBizType);
@@ -134,5 +135,25 @@ XMUserManager *mimcUserManager;
     NSLog(@"handleSendUnlimitedGroupMessageTimeout, groupMessage=%@", groupMessage);
 }
 
+
+- (void)handleCreateUnlimitedGroup:(int64_t)topicId topicName:(NSString *)topicName success:(Boolean)success desc:(NSString *)desc context:(id)context {
+    <#code#>
+}
+
+- (void)handleDismissUnlimitedGroup:(int64_t)topicId {
+    <#code#>
+}
+
+- (void)handleDismissUnlimitedGroup:(Boolean)success desc:(NSString *)desc context:(id)context {
+    <#code#>
+}
+
+- (void)handleJoinUnlimitedGroup:(int64_t)topicId code:(int)code message:(NSString *)message context:(id)context {
+    <#code#>
+}
+
+- (void)handleQuitUnlimitedGroup:(int64_t)topicId code:(int)code message:(NSString *)message context:(id)context {
+    <#code#>
+}
 
 @end

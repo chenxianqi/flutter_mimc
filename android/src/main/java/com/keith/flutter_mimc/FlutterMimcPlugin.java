@@ -96,6 +96,10 @@ public class FlutterMimcPlugin implements MethodCallHandler{
       String appKey = call.argument("appKey");
       String appSecret = call.argument("appSecret");
       String appAccount = call.argument("appAccount");
+      Boolean isDebug = call.argument("debug");
+      if(isDebug){
+          MimcUserManager.getInstance().openLog();
+      }
       MimcUserManager.getInstance().init(context, appId, appKey, appSecret, appAccount);
       result.success(null);
 
@@ -128,6 +132,18 @@ public class FlutterMimcPlugin implements MethodCallHandler{
     {
 
       result.success(MimcUserManager.getInstance().isOnline());
+
+    }
+    else if(call.method.equals("getToken"))
+    {
+
+        result.success(MimcUserManager.getInstance().getToken());
+
+    }
+    else if(call.method.equals("getAccount"))
+    {
+
+        result.success(MimcUserManager.getInstance().getAccount());
 
     }
     else {

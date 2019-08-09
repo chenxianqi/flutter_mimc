@@ -103,55 +103,6 @@ public class MimcHandleMIMCMsgListener implements MimcUserManager.OnHandleMIMCMs
         FlutterMimcPlugin.eventSink.success(params.toMap());
     }
 
-    @Override
-    public void onHandleCreateGroup(String json, boolean isSuccess) {
-
-    }
-
-    @Override
-    public void onHandleQueryGroupInfo(String json, boolean isSuccess) {
-
-    }
-
-    @Override
-    public void onHandleQueryGroupsOfAccount(String json, boolean isSuccess) {
-
-    }
-
-    @Override
-    public void onHandleJoinGroup(String json, boolean isSuccess) {
-
-    }
-
-    @Override
-    public void onHandleQuitGroup(String json, boolean isSuccess) {
-
-    }
-
-    @Override
-    public void onHandleKickGroup(String json, boolean isSuccess) {
-
-    }
-
-    @Override
-    public void onHandleUpdateGroup(String json, boolean isSuccess) {
-
-    }
-
-    @Override
-    public void onHandleDismissGroup(String json, boolean isSuccess) {
-
-    }
-
-    @Override
-    public void onHandlePullP2PHistory(String json, boolean isSuccess) {
-
-    }
-
-    @Override
-    public void onHandlePullP2THistory(String json, boolean isSuccess) {
-
-    }
 
     @Override
     public void onHandleSendMessageTimeout(MIMCMessage message) {
@@ -185,21 +136,6 @@ public class MimcHandleMIMCMsgListener implements MimcUserManager.OnHandleMIMCMs
 
     @Override
     public void onHandleDismissUnlimitedGroup(String json, boolean isSuccess) {
-
-    }
-
-    @Override
-    public void onHandleQueryUnlimitedGroupMembers(String json, boolean isSuccess) {
-
-    }
-
-    @Override
-    public void onHandleQueryUnlimitedGroups(String json, boolean isSuccess) {
-
-    }
-
-    @Override
-    public void onHandleQueryUnlimitedGroupOnlineUsers(String json, boolean isSuccess) {
 
     }
 }

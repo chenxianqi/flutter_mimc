@@ -26,7 +26,7 @@ class _MyAppState extends State<MyApp> {
 
   }
 
-  // 通过参数实例化
+  // 初始化
   void initFlutterMimc() async{
     flutterMimc = FlutterMimc.init({
       "debug": false,
@@ -46,6 +46,7 @@ class _MyAppState extends State<MyApp> {
 
   // add log
   addLog(String content){
+    print(content);
     logs.insert(0,{
       "date": DateTime.now().toIso8601String(),
       "content": content
@@ -113,6 +114,17 @@ class _MyAppState extends State<MyApp> {
     contentCtr.clear();
   }
 
+  // 获取token
+  void getToken() async{
+    String token = await flutterMimc.getToken();
+    addLog("获取token成功：$token");
+  }
+
+  // 获取当前账号
+  void getAccount() async{
+    String account = await flutterMimc.getAccount();
+    addLog("获取当前账号成功：$account");
+  }
 
 
   @override
@@ -135,7 +147,7 @@ class _MyAppState extends State<MyApp> {
               width: double.infinity,
               color: Colors.white70,
               height: double.infinity,
-              padding: EdgeInsets.only(top: 200.0, left: 10.0, right:10.0),
+              padding: EdgeInsets.only(top: 300.0, left: 10.0, right:10.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -145,7 +157,7 @@ class _MyAppState extends State<MyApp> {
                     child: ListView.builder(
                         itemCount: logs.length,
                         itemBuilder: (context, index){
-                          return ListTile(title: Text(logs[index]['content']), subtitle: Text(logs[index]['date']),);
+                          return ListTile(title: Text(logs[index]['content'], maxLines: 3, overflow: TextOverflow.ellipsis,), subtitle: Text(logs[index]['date']),);
                         }
                     ),
                   )
@@ -153,7 +165,7 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
             Container(
-              height: 200.0,
+              height: 300.0,
               padding: EdgeInsets.all(20.0),
               color: Colors.white,
               child: Column(
@@ -189,6 +201,21 @@ class _MyAppState extends State<MyApp> {
                         color: Colors.blue,
                         onPressed:() => sendMessage(1),
                         child: Text( "发送群聊", style: TextStyle(color: Colors.white),),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      RaisedButton(
+                        color: Colors.blue,
+                        onPressed: getToken,
+                        child: Text( "获取token", style: TextStyle(color: Colors.white),),
+                      ),
+                      VerticalDivider(width: 20.0,),
+                      RaisedButton(
+                        color: Colors.blue,
+                        onPressed: getAccount,
+                        child: Text( "获取当前账号", style: TextStyle(color: Colors.white),),
                       ),
                     ],
                   ),

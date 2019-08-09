@@ -25,6 +25,7 @@ class FlutterMimc {
   static const String   _ON_LOGIN       =     'login';         // 登录
   static const String   _ON_LOGOUT      =     'logout';        // 退出登录
   static const String   _ON_GET_ACCOUNT =     'getAccount';    // 获取当前账号
+  static const String   _ON_GET_TOKEN   =     'getToken';      // 获取token
   static const String   _ON_IS_ONLINE   =     'isOnline';     // 获取登录状态（可能不准）请以事件回调为准
   static const String   _ON_SEND_MESSAGE   =  'sendMessage';  // 发送单聊消息
   static const String   _ON_SEND_GROUP_MESSAGE   =  'sendGroupMessage';  // 发送群聊消息
@@ -74,6 +75,18 @@ class FlutterMimc {
   // 初始化事件
   void _initEvent() async{
     _eventChannel.receiveBroadcastStream().listen(_eventListener, onError: _errorListener);
+  }
+
+  // 获取token
+  // @return String
+  Future<String> getToken() async {
+    return await _channel.invokeMethod(_ON_GET_TOKEN);
+  }
+
+  // 获取当前账号
+  // @return String
+  Future<String> getAccount() async {
+    return await _channel.invokeMethod(_ON_GET_ACCOUNT);
   }
 
   // 发送单聊消息

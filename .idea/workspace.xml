@@ -2,139 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7e06dfe4-4392-4629-bb11-f046efcdedd6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/ios/Classes/FlutterMimcEvent.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ios/Classes/FlutterMimcEvent.m" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/FlutterMimcPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/FlutterMimcPlugin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcConstant.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcHandleMIMCMsgListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcHandleMIMCMsgListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcMsgHelper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcOnCallStateListener.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcUserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcUserManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/ios/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/Podfile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ios/Classes/FlutterMimcPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Classes/FlutterMimcPlugin.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ios/Classes/FlutterMimcPlugin.m" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Classes/FlutterMimcPlugin.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Classes/XMUserManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Classes/XMUserManager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Classes/XMUserManager.mm" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Classes/XMUserManager.mm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/Any.pbobjc.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/Api.pbobjc.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/Duration.pbobjc.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/Empty.pbobjc.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/FieldMask.pbobjc.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBArray.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBBootstrap.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBCodedInputStream.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBCodedOutputStream.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBDescriptor.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBDescriptor_PackagePrivate.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBDictionary.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBExtensionInternals.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBExtensionRegistry.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBMessage.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBMessage_PackagePrivate.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBProtocolBuffers.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBProtocolBuffers_RuntimeSupport.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBRootObject.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBRootObject_PackagePrivate.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBRuntimeTypes.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBUnknownField.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBUnknownFieldSet.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBUtilities.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBUtilities_PackagePrivate.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBWellKnownTypes.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/GPBWireFormat.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/MIMCProtoBuffer.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/SourceContext.pbobjc.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/Struct.pbobjc.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/Timestamp.pbobjc.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/Type.pbobjc.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Headers/Wrappers.pbobjc.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Info.plist" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/MIMCProtoBuffer" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/MIMCProtoBuffer.framework/Modules/module.modulemap" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/flutter_mimc.podspec" beforeDir="false" afterPath="$PROJECT_DIR$/ios/flutter_mimc.podspec" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/aes.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/asn1.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/asn1_mac.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/asn1t.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/bio.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/blowfish.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/bn.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/buffer.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/camellia.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/cast.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/cmac.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/cms.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/comp.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/conf.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/conf_api.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/crypto.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/des.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/des_old.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/dh.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/dsa.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/dso.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/dtls1.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/e_os2.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/ebcdic.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/ec.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/ecdh.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/ecdsa.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/engine.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/err.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/evp.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/hmac.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/idea.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/krb5_asn.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/kssl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/lhash.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/md4.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/md5.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/mdc2.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/modes.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/obj_mac.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/objects.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/ocsp.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/opensslconf.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/opensslconf_ios_arm64.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/opensslconf_ios_armv7.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/opensslconf_ios_armv7s.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/opensslconf_ios_i386.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/opensslconf_ios_x86_64.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/opensslconf_tvos_arm64.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/opensslconf_tvos_x86_64.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/opensslv.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/ossl_typ.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/pem.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/pem2.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/pkcs12.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/pkcs7.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/pqueue.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/rand.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/rc2.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/rc4.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/ripemd.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/rsa.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/safestack.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/seed.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/sha.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/srp.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/srtp.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/ssl.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/ssl2.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/ssl23.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/ssl3.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/stack.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/symhacks.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/tls1.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/ts.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/txt_db.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/ui.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/ui_compat.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/whrlpool.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/x509.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/x509_vfy.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Headers/x509v3.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/Info.plist" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/openssl.framework/openssl" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/flutter_mimc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/flutter_mimc.dart" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -145,11 +24,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/example/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="52">
-              <caret line="31" column="20" selection-start-line="31" selection-start-column="20" selection-end-line="31" selection-end-column="20" />
+            <state relative-caret-position="179">
+              <caret line="149" column="45" selection-start-line="149" selection-start-column="45" selection-end-line="149" selection-end-column="45" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -157,13 +36,14 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/flutter_mimc.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="275">
-              <caret line="51" column="17" selection-start-line="51" selection-start-column="17" selection-end-line="51" selection-end-column="17" />
+            <state relative-caret-position="1581">
+              <caret line="87" column="27" selection-start-line="87" selection-start-column="17" selection-end-line="87" selection-end-column="27" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
+                <element signature="e#3351#4510#0" />
               </folding>
             </state>
           </provider>
@@ -208,9 +88,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="y" value="23" />
-    <option name="width" value="1382" />
-    <option name="height" value="877" />
+    <option name="x" value="10" />
+    <option name="y" value="24" />
+    <option name="width" value="1793" />
+    <option name="height" value="1057" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -220,6 +101,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -230,27 +113,23 @@
             <path>
               <item name="flutter_mimc" type="b2602c69:ProjectViewProjectNode" />
               <item name="flutter_mimc" type="462c0819:PsiDirectoryNode" />
-              <item name="android" type="462c0819:PsiDirectoryNode" />
+              <item name="example" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="flutter_mimc" type="b2602c69:ProjectViewProjectNode" />
               <item name="flutter_mimc" type="462c0819:PsiDirectoryNode" />
-              <item name="android" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="example" type="462c0819:PsiDirectoryNode" />
+              <item name="lib" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="flutter_mimc" type="b2602c69:ProjectViewProjectNode" />
               <item name="flutter_mimc" type="462c0819:PsiDirectoryNode" />
-              <item name="android" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="flutter_mimc" type="462c0819:PsiDirectoryNode" />
+              <item name="lib" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -323,11 +202,11 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1382" height="877" extended-state="0" />
+    <frame x="11" y="23" width="1793" height="1057" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Captures" order="0" weight="0.25" />
-      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.2947761" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.22330096" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Designer" order="4" />
@@ -335,7 +214,7 @@
       <window_info id="Capture Tool" order="6" />
       <window_info id="Favorites" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Dart Analysis" order="0" weight="0.32769832" />
-      <window_info active="true" anchor="bottom" id="Run" order="1" visible="true" weight="0.5825748" />
+      <window_info active="true" anchor="bottom" id="Run" order="1" visible="true" weight="0.35721812" />
       <window_info anchor="bottom" id="TODO" order="2" weight="0.32982087" />
       <window_info anchor="bottom" id="Debug" order="3" />
       <window_info anchor="bottom" id="Terminal" order="4" weight="0.5305592" />
@@ -446,22 +325,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/flutter_mimc.dart">
+    <entry file="file://$PROJECT_DIR$/example/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="275">
-          <caret line="51" column="17" selection-start-line="51" selection-start-column="17" selection-end-line="51" selection-end-column="17" />
+        <state relative-caret-position="179">
+          <caret line="149" column="45" selection-start-line="149" selection-start-column="45" selection-end-line="149" selection-end-column="45" />
           <folding>
-            <element signature="e#0#20#0" expanded="true" />
+            <element signature="e#0#39#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/example/lib/main.dart">
+    <entry file="file://$PROJECT_DIR$/lib/flutter_mimc.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="52">
-          <caret line="31" column="20" selection-start-line="31" selection-start-column="20" selection-end-line="31" selection-end-column="20" />
+        <state relative-caret-position="1581">
+          <caret line="87" column="27" selection-start-line="87" selection-start-column="17" selection-end-line="87" selection-end-column="27" />
           <folding>
-            <element signature="e#0#39#0" expanded="true" />
+            <element signature="e#0#20#0" expanded="true" />
+            <element signature="e#3351#4510#0" />
           </folding>
         </state>
       </provider>
