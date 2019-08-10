@@ -2,18 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7e06dfe4-4392-4629-bb11-f046efcdedd6" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/lib/model/mimc_servera_ack.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/FlutterMimcPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/FlutterMimcPlugin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcConstant.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcHandleMIMCMsgListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcHandleMIMCMsgListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcMsgHelper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcOnCallStateListener.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcUserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcUserManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/Podfile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/utils/ConstraintsMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/utils/ConstraintsMap.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Classes/FlutterMimcPlugin.h" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Classes/FlutterMimcPlugin.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Classes/FlutterMimcPlugin.m" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Classes/FlutterMimcPlugin.m" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/flutter_mimc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/flutter_mimc.dart" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -23,27 +19,44 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="false">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/example/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="179">
-              <caret line="149" column="45" selection-start-line="149" selection-start-column="45" selection-end-line="149" selection-end-column="45" />
+            <state relative-caret-position="197">
+              <caret line="34" column="46" selection-start-line="34" selection-start-column="46" selection-end-line="34" selection-end-column="46" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
+                <element signature="e#1986#2776#0" />
+                <element signature="e#3111#4118#0" />
+                <element signature="e#4698#4995#0" />
+                <element signature="e#5023#5314#0" />
+                <element signature="e#5337#5968#0" />
+                <element signature="e#6362#7267#0" />
+                <element signature="e#7290#8205#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/flutter_mimc.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1581">
-              <caret line="87" column="27" selection-start-line="87" selection-start-column="17" selection-end-line="87" selection-end-column="27" />
+            <state relative-caret-position="1745">
+              <caret line="179" column="58" selection-start-line="179" selection-start-column="51" selection-end-line="179" selection-end-column="58" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
-                <element signature="e#3351#4510#0" />
+                <element signature="e#2653#2722#0" />
+                <element signature="e#2727#2732#0" />
+                <element signature="e#2895#2958#0" />
+                <element signature="e#3020#3086#0" />
+                <element signature="e#3119#3221#0" />
+                <element signature="e#3284#3350#0" />
+                <element signature="e#3414#3482#0" />
+                <element signature="e#4298#4426#0" />
+                <element signature="e#4555#4661#0" />
+                <element signature="e#4782#4860#0" />
+                <element signature="e#3686#4845#0" />
               </folding>
             </state>
           </provider>
@@ -59,6 +72,11 @@
       <find>statusChange</find>
       <find>onHandleMessage</find>
       <find>_ON_SEND_MESSAGE</find>
+      <find>21351913249832960</find>
+      <find>21351318392668160</find>
+      <find>102</find>
+      <find>21352937364652032</find>
+      <find>15416498726633513</find>
     </findStrings>
     <replaceStrings>
       <replace>MimcChatResource</replace>
@@ -82,16 +100,18 @@
         <option value="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/FlutterMimcPlugin.java" />
         <option value="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcUserManager.java" />
         <option value="$PROJECT_DIR$/ios/Classes/FlutterMimcPlugin.m" />
+        <option value="$PROJECT_DIR$/lib/model/mimc_servera_ack.dart" />
+        <option value="$PROJECT_DIR$/lib/model/mimc_topic_info.dart" />
         <option value="$PROJECT_DIR$/lib/flutter_mimc.dart" />
         <option value="$PROJECT_DIR$/example/lib/main.dart" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="10" />
-    <option name="y" value="24" />
-    <option name="width" value="1793" />
-    <option name="height" value="1057" />
+    <option name="x" value="-44" />
+    <option name="y" value="23" />
+    <option name="width" value="1404" />
+    <option name="height" value="877" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -101,7 +121,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -113,23 +132,19 @@
             <path>
               <item name="flutter_mimc" type="b2602c69:ProjectViewProjectNode" />
               <item name="flutter_mimc" type="462c0819:PsiDirectoryNode" />
-              <item name="example" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="flutter_mimc" type="b2602c69:ProjectViewProjectNode" />
-              <item name="flutter_mimc" type="462c0819:PsiDirectoryNode" />
-              <item name="example" type="462c0819:PsiDirectoryNode" />
               <item name="lib" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="flutter_mimc" type="b2602c69:ProjectViewProjectNode" />
               <item name="flutter_mimc" type="462c0819:PsiDirectoryNode" />
               <item name="lib" type="462c0819:PsiDirectoryNode" />
+              <item name="model" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -202,11 +217,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="11" y="23" width="1793" height="1057" extended-state="0" />
-    <editor active="true" />
+    <frame x="-44" y="23" width="1404" height="877" extended-state="0" />
     <layout>
       <window_info id="Captures" order="0" weight="0.25" />
-      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.22330096" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.20851688" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Designer" order="4" />
@@ -214,7 +228,7 @@
       <window_info id="Capture Tool" order="6" />
       <window_info id="Favorites" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Dart Analysis" order="0" weight="0.32769832" />
-      <window_info active="true" anchor="bottom" id="Run" order="1" visible="true" weight="0.35721812" />
+      <window_info anchor="bottom" id="Run" order="1" weight="0.6788036" />
       <window_info anchor="bottom" id="TODO" order="2" weight="0.32982087" />
       <window_info anchor="bottom" id="Debug" order="3" />
       <window_info anchor="bottom" id="Terminal" order="4" weight="0.5305592" />
@@ -311,13 +325,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/flutter/packages/flutter/lib/src/services/platform_channel.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="91">
-          <caret line="313" column="6" selection-start-line="313" selection-start-column="6" selection-end-line="313" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcUserManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="253">
@@ -325,23 +332,68 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/example/lib/main.dart">
+    <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
-          <caret line="149" column="45" selection-start-line="149" selection-start-column="45" selection-end-line="149" selection-end-column="45" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="161">
+          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/model/mimc_servera_ack.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="46">
+          <caret line="2" column="5" selection-start-line="2" selection-start-column="2" selection-end-line="2" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/flutter/packages/flutter/lib/src/services/platform_channel.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="62">
+          <caret line="315" column="12" selection-start-line="315" selection-start-column="12" selection-end-line="315" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/model/mimc_topic_info.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="113">
+          <caret line="10" column="36" selection-start-line="10" selection-start-column="36" selection-end-line="10" selection-end-column="36" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/flutter_mimc.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1581">
-          <caret line="87" column="27" selection-start-line="87" selection-start-column="17" selection-end-line="87" selection-end-column="27" />
+        <state relative-caret-position="1745">
+          <caret line="179" column="58" selection-start-line="179" selection-start-column="51" selection-end-line="179" selection-end-column="58" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
-            <element signature="e#3351#4510#0" />
+            <element signature="e#2653#2722#0" />
+            <element signature="e#2727#2732#0" />
+            <element signature="e#2895#2958#0" />
+            <element signature="e#3020#3086#0" />
+            <element signature="e#3119#3221#0" />
+            <element signature="e#3284#3350#0" />
+            <element signature="e#3414#3482#0" />
+            <element signature="e#4298#4426#0" />
+            <element signature="e#4555#4661#0" />
+            <element signature="e#4782#4860#0" />
+            <element signature="e#3686#4845#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/example/lib/main.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="197">
+          <caret line="34" column="46" selection-start-line="34" selection-start-column="46" selection-end-line="34" selection-end-column="46" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+            <element signature="e#1986#2776#0" />
+            <element signature="e#3111#4118#0" />
+            <element signature="e#4698#4995#0" />
+            <element signature="e#5023#5314#0" />
+            <element signature="e#5337#5968#0" />
+            <element signature="e#6362#7267#0" />
+            <element signature="e#7290#8205#0" />
           </folding>
         </state>
       </provider>

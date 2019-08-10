@@ -70,6 +70,7 @@ public class MimcHandleMIMCMsgListener implements MimcUserManager.OnHandleMIMCMs
             System.out.println("eventSink  null");
             return;
         }
+        System.out.println("收到群消息" + message.toString());
         eventSinkPushMessage("onHandleGroupMessage", null, message);
     }
 
@@ -98,11 +99,16 @@ public class MimcHandleMIMCMsgListener implements MimcUserManager.OnHandleMIMCMs
             return;
         }
         ConstraintsMap params = new ConstraintsMap();
+        ConstraintsMap paramsChild = new ConstraintsMap();
+        paramsChild.putString("packetId", serverAck.getPacketId());
+        paramsChild.putLong("sequence", serverAck.getSequence());
+        paramsChild.putLong("timestamp", serverAck.getTimestamp());
+        paramsChild.putInt("code", serverAck.getCode());
+        paramsChild.putString("desc", serverAck.getDesc());
         params.putString("eventType", "onHandleServerAck");
-        params.putString("eventValue", serverAck.toString());
+        params.putMap("eventValue", paramsChild.toMap());
         FlutterMimcPlugin.eventSink.success(params.toMap());
     }
-
 
     @Override
     public void onHandleSendMessageTimeout(MIMCMessage message) {

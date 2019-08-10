@@ -1,5 +1,7 @@
 package com.keith.flutter_mimc.utils;
 
+import com.alibaba.fastjson.JSONArray;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -107,7 +109,7 @@ public class ConstraintsMap {
         mMap.putAll(value);
     }
 
-    public void putArray(String key, ArrayList<Object> value) {
+    public void putArray(String key, JSONArray value) {
         mMap.put(key, value);
     }
 

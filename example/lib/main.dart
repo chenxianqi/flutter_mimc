@@ -54,6 +54,125 @@ class _MyAppState extends State<MyApp> {
     setState(() {});
   }
 
+  // 退出登录
+  void logout() async{
+    await flutterMimc.logout();
+  }
+
+  // 发送消息
+  void sendMessage(int type){
+    String id = accountCtr.value.text;
+    String content = contentCtr.value.text;
+    MimcChatMessage messageRes = MimcChatMessage();
+    MimcMessageBena messageBena = MimcMessageBena();
+    messageRes.timestamp = DateTime.now().millisecondsSinceEpoch;
+    messageRes.bizType = "bizType";
+    messageRes.fromAccount = appAccount;
+    messageBena.timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+    messageBena.payload = base64Encode(utf8.encode(content));
+    messageBena.version  = 0;
+    messageBena.msgId  = "msgId";
+    messageRes.message = messageBena;
+    if(type == 0){
+      messageRes.toAccount = id;
+      addLog("发送给$id: $content");
+      flutterMimc.sendMessage(messageRes);
+    }else if(type == 1){
+      messageRes.topicId = int.parse(id);
+      addLog("发送普通群消息: $content");
+      flutterMimc.sendGroupMsg(messageRes);
+    }else{
+      messageRes.topicId = int.parse(id);
+      addLog("发送无限群消息: $content");
+      flutterMimc.sendGroupMsg(messageRes, isUnlimitedGroup: true);
+    }
+    contentCtr.clear();
+  }
+
+  // 获取token
+  void getToken() async{
+    String token = await flutterMimc.getToken();
+    addLog("获取token成功：$token");
+  }
+
+  // 获取当前账号
+  void getAccount() async{
+    String account = await flutterMimc.getAccount();
+    addLog("获取当前账号成功：$account");
+  }
+
+  // 创建一个群
+  void createGroup() async{
+    var res = await flutterMimc.createGroup("骚群", appAccount);
+    if(res['error'] != null){
+      addLog("创建群失败:${res['error']}" );
+    }else{
+      addLog("创建群成功：${res['data']}");
+    }
+
+  }
+
+  // 查询群
+  void queryGroupInfo() async{
+    var res = await flutterMimc.queryGroupInfo("21354536967340032");
+    if(res['error'] != null){
+      addLog("查询群失败:${res['error']}" );
+    }else{
+      addLog("查询群成功：${res['data']}");
+    }
+  }
+
+  // 查询所属群信息
+  void queryGroupsOfAccount() async{
+    var res = await flutterMimc.queryGroupsOfAccount();
+    if(res['error'] != null){
+      addLog("查询所属群失败:${res['error']}" );
+    }else{
+      addLog("查询所属群成功：${res['data']}");
+    }
+  }
+
+  // 邀请用户加入群
+  void joinGroup() async{
+    var res = await flutterMimc.joinGroup("21354536967340032", "101,102,103");
+    if(res['error'] != null){
+      addLog("邀请用户加入群执行失败:${res['error']}" );
+    }else{
+      addLog("邀请用户加入群执行成功：${res['data']}");
+    }
+  }
+
+  // 非群主用户退群
+  void quitGroup() async{
+    var res = await flutterMimc.quitGroup("21354536967340032");
+    if(res['error'] != null){
+      addLog("非群主用户退群执行失败:${res['error']}" );
+    }else{
+      addLog("非群主用户退群执行成功：${res['data']}");
+    }
+  }
+
+  // 群主踢成员出群
+  void kickGroup() async{
+    var res = await flutterMimc.kickGroup("21354536967340032", "101,102,103");
+    if(res['error'] != null){
+      addLog("群主踢成员出群执行失败:${res['error']}" );
+    }else{
+      addLog("群主踢成员出群执行成功：${res['data']}");
+    }
+  }
+
+  // 群主更新群信息
+  void updateGroup() async{
+    var res = await flutterMimc.updateGroup("21354536967340032", newOwnerAccount: "", newGroupName: "新群名", newGroupBulletin: "新公告");
+    print(res);
+    if(res['error'] != null){
+      addLog("群主更新群信息执行失败:${res['error']}" );
+    }else{
+      addLog("群主更新群信息执行成功：${res['data']}");
+    }
+  }
+
   // addEventListener
   void listener(){
 
@@ -81,49 +200,32 @@ class _MyAppState extends State<MyApp> {
       print(err);
     });
 
+    // 接收群聊
+    flutterMimc.addEventListenerHandleGroupMessage().listen((MimcChatMessage resource){
+      print(resource);
+      String content =utf8.decode(base64.decode(resource.message.payload));
+      addLog("收到群${resource.topicId}消息: $content");
+      setState(() {});
+    }).onError((err){
+      print(err);
+    });
+
+    // 发送单聊回调
+    flutterMimc.addEventListenerServerAck().listen((MimcServeraAck ack){
+      print("发送单聊回调==${ack.toJson()}");
+    }).onError((err){
+      print(err);
+    });
+
+    // 发送单聊超时
+    flutterMimc.addEventListenerSendMessageTimeout().listen((MimcChatMessage resource){
+      print("发送单聊超时==${resource.toJson()}");
+    }).onError((err){
+      print(err);
+    });
 
 
-  }
 
-  // 退出登录
-  void logout() async{
-    await flutterMimc.logout();
-  }
-
-  // 发送消息
-  void sendMessage(int type){
-    String id = accountCtr.value.text;
-    String content = contentCtr.value.text;
-    MimcChatMessage messageRes = MimcChatMessage();
-    MimcMessageBena messageBena = MimcMessageBena();
-    messageRes.timestamp = DateTime.now().millisecondsSinceEpoch;
-    messageRes.bizType = "bizType";
-    messageRes.fromAccount = appAccount;
-    messageBena.timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-    messageBena.payload = base64Encode(utf8.encode(content));
-    messageBena.version  = 0;
-    messageBena.msgId  = "msgId";
-    messageRes.message = messageBena;
-    if(type == 0){
-      messageRes.toAccount = id;
-      addLog("发送给$id: $content");
-      flutterMimc.sendMessage(messageRes);
-    }else{
-      messageRes.topicId = int.parse(id);
-    }
-    contentCtr.clear();
-  }
-
-  // 获取token
-  void getToken() async{
-    String token = await flutterMimc.getToken();
-    addLog("获取token成功：$token");
-  }
-
-  // 获取当前账号
-  void getAccount() async{
-    String account = await flutterMimc.getAccount();
-    addLog("获取当前账号成功：$account");
   }
 
 
@@ -147,7 +249,7 @@ class _MyAppState extends State<MyApp> {
               width: double.infinity,
               color: Colors.white70,
               height: double.infinity,
-              padding: EdgeInsets.only(top: 300.0, left: 10.0, right:10.0),
+              padding: EdgeInsets.only(top: 350.0, left: 10.0, right:10.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -157,7 +259,7 @@ class _MyAppState extends State<MyApp> {
                     child: ListView.builder(
                         itemCount: logs.length,
                         itemBuilder: (context, index){
-                          return ListTile(title: Text(logs[index]['content'], maxLines: 3, overflow: TextOverflow.ellipsis,), subtitle: Text(logs[index]['date']),);
+                          return ListTile(title: Text(logs[index]['content']), subtitle: Text(logs[index]['date']),);
                         }
                     ),
                   )
@@ -165,7 +267,7 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
             Container(
-              height: 300.0,
+              height: 350.0,
               padding: EdgeInsets.all(20.0),
               color: Colors.white,
               child: Column(
@@ -196,7 +298,7 @@ class _MyAppState extends State<MyApp> {
                         onPressed:() => sendMessage(0),
                         child: Text( "发送单聊", style: TextStyle(color: Colors.white),),
                       ),
-                      VerticalDivider(width: 20.0,),
+                      VerticalDivider(width: 5.0,),
                       RaisedButton(
                         color: Colors.blue,
                         onPressed:() => sendMessage(1),
@@ -211,11 +313,59 @@ class _MyAppState extends State<MyApp> {
                         onPressed: getToken,
                         child: Text( "获取token", style: TextStyle(color: Colors.white),),
                       ),
-                      VerticalDivider(width: 20.0,),
+                      VerticalDivider(width: 5.0,),
                       RaisedButton(
                         color: Colors.blue,
                         onPressed: getAccount,
                         child: Text( "获取当前账号", style: TextStyle(color: Colors.white),),
+                      ),
+                      VerticalDivider(width: 5.0,),
+                      RaisedButton(
+                        color: Colors.blue,
+                        onPressed: createGroup,
+                        child: Text( "创建群", style: TextStyle(color: Colors.white),),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      RaisedButton(
+                        color: Colors.blue,
+                        onPressed: queryGroupInfo,
+                        child: Text( "查询群", style: TextStyle(color: Colors.white),),
+                      ),
+                      VerticalDivider(width: 5.0,),
+                      RaisedButton(
+                        color: Colors.blue,
+                        onPressed: queryGroupsOfAccount,
+                        child: Text( "查询所属", style: TextStyle(color: Colors.white),),
+                      ),
+                      VerticalDivider(width: 5.0,),
+                      RaisedButton(
+                        color: Colors.blue,
+                        onPressed: joinGroup,
+                        child: Text( "邀请加入群", style: TextStyle(color: Colors.white),),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      RaisedButton(
+                        color: Colors.blue,
+                        onPressed: quitGroup,
+                        child: Text( "非群主退群", style: TextStyle(color: Colors.white),),
+                      ),
+                      VerticalDivider(width: 5.0,),
+                      RaisedButton(
+                        color: Colors.blue,
+                        onPressed: kickGroup,
+                        child: Text( "踢成员出群", style: TextStyle(color: Colors.white),),
+                      ),
+                      VerticalDivider(width: 5.0,),
+                      RaisedButton(
+                        color: Colors.blue,
+                        onPressed: updateGroup,
+                        child: Text( "更新群信息", style: TextStyle(color: Colors.white),),
                       ),
                     ],
                   ),

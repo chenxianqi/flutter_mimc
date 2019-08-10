@@ -4,7 +4,9 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'model/mimc_chat_message.dart';
+import 'model/mimc_servera_ack.dart';
 export 'model/mimc_chat_message.dart';
+export 'model/mimc_servera_ack.dart';
 
 class MIMCEvents{
   static const String onlineStatusListener = "onlineStatusListener";              // 状态变更
@@ -27,8 +29,15 @@ class FlutterMimc {
   static const String   _ON_GET_ACCOUNT =     'getAccount';    // 获取当前账号
   static const String   _ON_GET_TOKEN   =     'getToken';      // 获取token
   static const String   _ON_IS_ONLINE   =     'isOnline';     // 获取登录状态（可能不准）请以事件回调为准
+  static const String   _ON_CREATE_GROUP   =  'createGroup';  // 创建群
+  static const String   _ON_QUERY_GROUP_INFO    =  'queryGroupInfo';  // 查询指定群信息
+  static const String   _ON_QUERY_GROUP_OF_ACCOUNT    =  'queryGroupsOfAccount';  // 查询所属群信息
+  static const String   _ON_JOIN_GROUP     =  'joinGroup';    // 邀请用户加入群
+  static const String   _ON_QUIT_GROUP     =  'quitGroup';    // 非群主用户退群
+  static const String   _ON_KICK_GROUP     =  'kickGroup';    // 群主踢成员出群
+  static const String   _ON_UPDATE_GROUP   =  'updateGroup';    // 群主更新群信息
   static const String   _ON_SEND_MESSAGE   =  'sendMessage';  // 发送单聊消息
-  static const String   _ON_SEND_GROUP_MESSAGE   =  'sendGroupMessage';  // 发送群聊消息
+  static const String   _ON_SEND_GROUP_MESSAGE   =  'sendGroupMsg';  // 发送群聊消息
 
   // 状态变更
   final StreamController<bool> _onlineStatusListenerStreamController = StreamController<bool>.broadcast();
@@ -37,7 +46,7 @@ class FlutterMimc {
   // 接收群聊
   final StreamController<MimcChatMessage> _onHandleGroupMessageStreamController = StreamController<MimcChatMessage>.broadcast();
   // 接收服务端已收到发送消息确认
-  final StreamController<String> _onHandleServerAckStreamController = StreamController<String>.broadcast();
+  final StreamController<MimcServeraAck> _onHandleServerAckStreamController = StreamController<MimcServeraAck>.broadcast();
   // 发送单聊消息超时
   final StreamController<MimcChatMessage> _onHandleSendMessageTimeoutStreamController = StreamController<MimcChatMessage>.broadcast();
   // 发送群聊消息超时
@@ -94,9 +103,96 @@ class FlutterMimc {
     return await _channel.invokeMethod(_ON_SEND_MESSAGE, message.toJson());
   }
 
+  // 发送群聊
+  // @ message 消息体
+  // @ isUnlimitedGroup 是否是无限大群
+  Future<String> sendGroupMsg(MimcChatMessage message, {bool isUnlimitedGroup = false}) async{
+    return await _channel.invokeMethod(_ON_SEND_GROUP_MESSAGE, {
+      "message": message.toJson(),
+      "isUnlimitedGroup": isUnlimitedGroup
+    });
+  }
+
+  //  * 创建群
+  //  * @param groupName 群名
+  //  * @param users 群成员，多个成员之间用英文逗号(,)分隔
+  //  * @return  Map
+  Future<Map<dynamic, dynamic>> createGroup(String groupName, String users) async{
+    return await _channel.invokeMethod(_ON_CREATE_GROUP, {
+      "groupName": groupName,
+      "users": users
+    });
+  }
+
+  //  * 查询指定群信息
+  //  * @param groupId 群ID
+  //  * @return  Map
+  Future<Map<dynamic, dynamic>> queryGroupInfo(String groupId) async{
+    return await _channel.invokeMethod(_ON_QUERY_GROUP_INFO, {
+      "groupId": groupId
+    });
+  }
+
+  //  * 查询所属群信息
+  //  * @param groupId 群ID
+  //  * @return  Map
+  Future<Map<dynamic, dynamic>> queryGroupsOfAccount() async{
+    return await _channel.invokeMethod(_ON_QUERY_GROUP_OF_ACCOUNT);
+  }
+
+  //  * 邀请用户加入群
+  //  * @param groupId 群ID
+  //  * @param users 群成员，多个成员之间用英文逗号(,)分隔
+  //  * @return  Map
+  Future<Map<dynamic, dynamic>> joinGroup(String groupId, String users) async{
+    return await _channel.invokeMethod(_ON_JOIN_GROUP, {
+    "groupId": groupId,
+    "users": users
+    });
+  }
+
+  //  * 非群主用户退群
+  //  * @param groupId 群ID
+  //  * @return Map
+  Future<Map<dynamic, dynamic>> quitGroup(String groupId) async{
+    return await _channel.invokeMethod(_ON_QUIT_GROUP, {
+      "groupId": groupId
+    });
+  }
+
+  //  * 群主踢成员出群
+  //  * @param  groupId 群ID
+  // *  @users 群成员，多个成员之间用英文逗号(,)分隔
+  // * @return Map
+  Future<Map<dynamic, dynamic>> kickGroup(String groupId, String users) async{
+    return await _channel.invokeMethod(_ON_KICK_GROUP, {
+      "groupId": groupId,
+      "users": users
+    });
+  }
+
+  //  * 群主更新群信息
+  //  * @param groupId 群ID
+  //  * @param newOwnerAccount 若为群成员则指派新的群主
+  //  * @param newGroupName 群名
+  //  * @param newGroupBulletin 群公告
+  // * @return Map
+  Future<Map<dynamic, dynamic>> updateGroup(String groupId,{
+    String newOwnerAccount = "",
+    String newGroupName = "",
+    String newGroupBulletin = ""
+  }) async{
+    return await _channel.invokeMethod(_ON_UPDATE_GROUP, {
+      "groupId": groupId,
+      "newOwnerAccount": newOwnerAccount,
+      "newGroupName": newGroupName,
+      "newGroupBulletin": newGroupBulletin
+    });
+  }
+
+
   // eventListener
   void _eventListener(event) {
-    print(event);
     String eventType = event['eventType'];
     dynamic eventValue = event['eventValue'];
     debugPrint("eventType===$eventType");
@@ -119,7 +215,7 @@ class FlutterMimc {
        _onHandleSendGroupMessageTimeoutStreamController.add(MimcChatMessage.fromJson(eventValue));
        break;
      case MIMCEvents.onHandleServerAck:
-       _onHandleServerAckStreamController.add(eventValue as String);
+       _onHandleServerAckStreamController.add(MimcServeraAck.fromJson(eventValue as Map<dynamic, dynamic>));
        break;
      default:
        print("notfund event");
@@ -142,7 +238,7 @@ class FlutterMimc {
   }
 
   // 接收服务端已收到发送消息确认
-  Stream<String> addEventListenerServerAck(){
+  Stream<MimcServeraAck> addEventListenerServerAck(){
     return _onHandleServerAckStreamController.stream;
   }
 

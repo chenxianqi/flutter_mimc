@@ -3,8 +3,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.content.Context;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.keith.flutter_mimc.utils.ConstraintsMap;
 
+import java.io.IOException;
 import java.util.Map;
 
 import io.flutter.plugin.common.EventChannel;
@@ -13,12 +16,15 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /** FlutterMimcPlugin */
 public class FlutterMimcPlugin implements MethodCallHandler{
   private final Context context;
-  private final Registrar registrar;
-  private final MethodChannel channel;
+  private static Registrar registrar;
+  private static MethodChannel channel;
   public static EventChannel.EventSink eventSink = null;
 
   private static class MainThreadEventSink implements EventChannel.EventSink    {
@@ -55,6 +61,51 @@ public class FlutterMimcPlugin implements MethodCallHandler{
       }
   }
 
+    // MethodChannel.Result wrapper that responds on the platform thread.
+    private static class MethodResultWrapper implements Result {
+        private Result methodResult;
+        private Handler handler;
+
+        MethodResultWrapper(Result result) {
+            methodResult = result;
+            handler = new Handler(Looper.getMainLooper());
+        }
+
+        @Override
+        public void success(final Object result) {
+            handler.post(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            methodResult.success(result);
+                        }
+                    });
+        }
+
+        @Override
+        public void error(
+                final String errorCode, final String errorMessage, final Object errorDetails) {
+            handler.post(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            methodResult.error(errorCode, errorMessage, errorDetails);
+                        }
+                    });
+        }
+
+        @Override
+        public void notImplemented() {
+            handler.post(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            methodResult.notImplemented();
+                        }
+                    });
+        }
+    }
+
 
   private EventChannel.StreamHandler streamHandler = new EventChannel.StreamHandler() {
     @Override
@@ -88,8 +139,11 @@ public class FlutterMimcPlugin implements MethodCallHandler{
   }
 
   @Override
-  public void onMethodCall(MethodCall call, Result result)
+  public void onMethodCall(MethodCall call, Result rawResult)
   {
+    final Result result = new MethodResultWrapper(rawResult);
+
+    // 初始化
     if (call.method.equals("init")) {
 
       String appId = call.argument("appId");
@@ -104,6 +158,8 @@ public class FlutterMimcPlugin implements MethodCallHandler{
       result.success(null);
 
     }
+
+    // 发送单聊
     else if(call.method.equals("sendMessage"))
     {
         String toAccount = call.argument("toAccount");
@@ -114,6 +170,21 @@ public class FlutterMimcPlugin implements MethodCallHandler{
         result.success(null);
 
     }
+
+    // 发送群聊
+    else if(call.method.equals("sendGroupMsg"))
+    {
+        String groupId = call.argument("groupId");
+        String bizType = call.argument("bizType");
+        boolean isUnlimitedGroup = call.argument("isUnlimitedGroup");
+        Map<String, Object> message = call.argument("message");
+        byte[] payload = JSONObject.toJSONBytes(message);
+        MimcUserManager.getInstance().sendGroupMsg(Long.parseLong(groupId), payload, bizType, isUnlimitedGroup);
+        result.success(null);
+
+    }
+
+    // 登录
     else if(call.method.equals("login"))
     {
 
@@ -121,6 +192,8 @@ public class FlutterMimcPlugin implements MethodCallHandler{
         result.success(null);
 
     }
+
+    // 退出登录
     else if(call.method.equals("logout"))
     {
 
@@ -128,24 +201,298 @@ public class FlutterMimcPlugin implements MethodCallHandler{
       result.success(null);
 
     }
+
+    // 在线状态
     else if(call.method.equals("isOnline"))
     {
 
       result.success(MimcUserManager.getInstance().isOnline());
 
     }
+
+    // 获取token
     else if(call.method.equals("getToken"))
     {
 
         result.success(MimcUserManager.getInstance().getToken());
 
     }
+
+    // 获取账号
     else if(call.method.equals("getAccount"))
     {
 
         result.success(MimcUserManager.getInstance().getAccount());
 
     }
+
+    //创建一个普通群
+    else if(call.method.equals("createGroup"))
+    {
+        final  ConstraintsMap params = new ConstraintsMap();
+        try {
+            String groupName = call.argument("groupName");
+            String users = call.argument("users");
+            if (groupName == null || groupName.isEmpty() || users == null || users.isEmpty()) {
+                params.putString("error", "groupName或users不能为空！");
+                params.putNull("data");
+                result.success(params.toMap());
+                return;
+            }
+            MimcUserManager.getInstance().createGroup(groupName,users,new Callback() {
+                @Override
+                public void onFailure(Call c, IOException e) {
+                    params.putString("error", e.getMessage());
+                    params.putNull("data");
+                    result.success(params.toMap());
+                }
+                @Override
+                public void onResponse(Call c, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        JSONObject json = JSONObject.parseObject(response.body().string());
+                        JSONObject data =  json.getJSONObject("data");
+                         params.putNull("error");
+                        params.putMap("data", data);
+                        result.success(params.toMap());
+                    }
+                }
+                }
+            );
+        }catch (Exception e){
+            params.putString("error", e.getMessage());
+            params.putNull("data");
+            result.success(params.toMap());
+        }
+
+    }
+
+    //查询指定群信息
+    else if(call.method.equals("queryGroupInfo"))
+    {
+        final  ConstraintsMap params = new ConstraintsMap();
+        try {
+            String groupId = call.argument("groupId");
+            if (groupId == null || groupId.isEmpty()) {
+                params.putString("error", "groupId不能为空！");
+                params.putNull("data");
+                result.success(params.toMap());
+                return;
+            }
+            MimcUserManager.getInstance().queryGroupInfo(groupId,new Callback() {
+                @Override
+                public void onFailure(Call c, IOException e) {
+                    params.putString("error", e.getMessage());
+                    params.putNull("data");
+                    result.success(params.toMap());
+                }
+                @Override
+                public void onResponse(Call c, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        JSONObject json = JSONObject.parseObject(response.body().string());
+                        JSONObject data =  json.getJSONObject("data");
+                         params.putNull("error");
+                        params.putMap("data", data);
+                        result.success(params.toMap());
+                    }
+                }}
+            );
+        }catch (Exception e){
+            params.putString("error", e.getMessage());
+            params.putNull("data");
+            result.success(params.toMap());
+        }
+
+    }
+
+    //查询所属群信息
+    else if(call.method.equals("queryGroupsOfAccount"))
+    {
+        final  ConstraintsMap params = new ConstraintsMap();
+        try {
+            MimcUserManager.getInstance().queryGroupsOfAccount(new Callback() {
+                @Override
+                public void onFailure(Call c, IOException e) {
+                    params.putString("error", e.getMessage());
+                    params.putNull("data");
+                    result.success(params.toMap());
+                }
+                @Override
+                public void onResponse(Call c, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        JSONObject json = JSONObject.parseObject(response.body().string());
+                        JSONArray data =  json.getJSONArray("data");
+                         params.putNull("error");
+                        params.putArray("data", data);
+                        result.success(params.toMap());
+                    }
+                }}
+            );
+        }catch (Exception e){
+            params.putString("error", e.getMessage());
+            params.putNull("data");
+            result.success(params.toMap());
+        }
+
+    }
+
+    //邀请用户加入群
+    else if(call.method.equals("joinGroup"))
+    {
+        final  ConstraintsMap params = new ConstraintsMap();
+        try {
+            String groupId = call.argument("groupId");
+            String users = call.argument("users");
+            if (groupId == null || groupId.isEmpty() || users == null || users.isEmpty()) {
+                params.putString("error", "groupId或users不能为空！");
+                params.putNull("data");
+                result.success(params.toMap());
+                return;
+            }
+            MimcUserManager.getInstance().joinGroup(groupId,users,new Callback() {
+                @Override
+                public void onFailure(Call c, IOException e) {
+                    params.putString("error", e.getMessage());
+                    params.putNull("data");
+                    result.success(params.toMap());
+                }
+                @Override
+                public void onResponse(Call c, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        JSONObject json = JSONObject.parseObject(response.body().string());
+                        JSONObject data =  json.getJSONObject("data");
+                         params.putNull("error");
+                        params.putMap("data", data);
+                        result.success(params.toMap());
+                    }
+                }}
+            );
+        }catch (Exception e){
+            params.putString("error", e.getMessage());
+            params.putNull("data");
+            result.success(params.toMap());
+        }
+
+    }
+
+    //非群主成员退群
+    else if(call.method.equals("quitGroup"))
+    {
+        final  ConstraintsMap params = new ConstraintsMap();
+        try {
+            String groupId = call.argument("groupId");
+            if (groupId == null || groupId.isEmpty()) {
+                params.putString("error", "groupId不能为空！");
+                params.putNull("data");
+                result.success(params.toMap());
+                return;
+            }
+            MimcUserManager.getInstance().quitGroup(groupId,new Callback() {
+                @Override
+                public void onFailure(Call c, IOException e) {
+                    params.putString("error", e.getMessage());
+                    params.putNull("data");
+                    result.success(params.toMap());
+                }
+                @Override
+                public void onResponse(Call c, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                         params.putNull("error");
+                        params.putNull("data");
+                        result.success(params.toMap());
+                    }
+                }}
+            );
+        }catch (Exception e){
+            params.putString("error", e.getMessage());
+            params.putNull("data");
+            result.success(params.toMap());
+        }
+
+    }
+
+    // 群主踢成员出群
+    else if(call.method.equals("kickGroup"))
+    {
+        final  ConstraintsMap params = new ConstraintsMap();
+        try {
+            String groupId = call.argument("groupId");
+            String users = call.argument("users");
+            if (groupId == null || groupId.isEmpty() || users == null || users.isEmpty()) {
+                params.putString("error", "groupId或users不能为空！");
+                params.putNull("data");
+                result.success(params.toMap());
+                return;
+            }
+            MimcUserManager.getInstance().kickGroup(groupId, users,new Callback() {
+                @Override
+                public void onFailure(Call c, IOException e) {
+                    params.putString("error", e.getMessage());
+                    params.putNull("data");
+                    result.success(params.toMap());
+                }
+                @Override
+                public void onResponse(Call c, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        JSONObject json = JSONObject.parseObject(response.body().string());
+                        JSONObject data =  json.getJSONObject("data");
+                         params.putNull("error");
+                        params.putMap("data", data);
+                        result.success(params.toMap());
+                    }
+                }}
+            );
+        }catch (Exception e){
+            params.putString("error", e.getMessage());
+            params.putNull("data");
+            result.success(params.toMap());
+        }
+
+    }
+
+    // 群主更新群信息
+    else if(call.method.equals("updateGroup"))
+    {
+        final  ConstraintsMap params = new ConstraintsMap();
+        try {
+            String groupId = call.argument("groupId");
+            String newOwnerAccount = call.argument("newOwnerAccount");
+            String newGroupName = call.argument("newGroupName");
+            String newGroupBulletin = call.argument("newGroupBulletin");
+            if (groupId == null || groupId.isEmpty()) {
+                params.putString("error", "groupId不能为空！");
+                params.putNull("data");
+                result.success(params.toMap());
+                return;
+            }
+            System.out.println(call.arguments);
+            MimcUserManager.getInstance().updateGroup(groupId, newOwnerAccount, newGroupName, newGroupBulletin, new Callback() {
+                @Override
+                public void onFailure(Call c, IOException e) {
+                    params.putString("error", e.getMessage());
+                    params.putNull("data");
+                    result.success(params.toMap());
+                }
+                @Override
+                public void onResponse(Call c, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        System.out.println(response.body().string());
+                        JSONObject json = JSONObject.parseObject(response.body().string());
+                        JSONObject data =  json.getJSONObject("data");
+                        params.putNull("error");
+                        params.putMap("data", data);
+                        result.success(params.toMap());
+                    }
+                }}
+            );
+        }catch (Exception e){
+            params.putString("error", e.getMessage());
+            params.putNull("data");
+            result.success(params.toMap());
+        }
+
+    }
+
+    // 其他
     else {
       result.notImplemented();
     }

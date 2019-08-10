@@ -1,6 +1,8 @@
 package com.keith.flutter_mimc;
 import android.content.Context;
 import android.util.Log;
+
+import com.keith.flutter_mimc.utils.ConstraintsMap;
 import com.xiaomi.mimc.MIMCGroupMessage;
 import com.xiaomi.mimc.MIMCMessage;
 import com.xiaomi.mimc.MIMCMessageHandler;
@@ -16,6 +18,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -131,7 +134,7 @@ public class MimcUserManager {
 
     // 设置消息监听
     public void setHandleMIMCMsgListener(OnHandleMIMCMsgListener listener) {
-       this.onHandleMIMCMsgListener = listener;
+        this.onHandleMIMCMsgListener = listener;
     }
 
     public interface OnHandleMIMCMsgListener {
@@ -183,11 +186,13 @@ public class MimcUserManager {
     }
 
     // 发送群聊
-    public void sendGroupMsg(long groupID, byte[] content, String bizType, boolean isUnlimitedGroup) {
-//        mimcUser.sendUnlimitedGroupMessage(groupID, json.getBytes(), bizType);
-//        mimcUser.sendGroupMessage(groupID, json.getBytes(), bizType);
+    public String sendGroupMsg(long groupID, byte[] payload, String bizType, boolean isUnlimitedGroup) {
+        if(isUnlimitedGroup){
+            return mimcUser.sendUnlimitedGroupMessage(groupID, payload, bizType);
+        }else{
+            return  mimcUser.sendGroupMessage(groupID, payload, bizType);
+        }
     }
-
 
     /** 创建无限大群
      * @param topicName 群名
@@ -220,7 +225,7 @@ public class MimcUserManager {
      * @param context  用户自定义传入的对象，通过回调函数原样传出
      */
     public void dismissUnlimitedGroup(long topicId, Object context) {
-         mimcUser.dismissUnlimitedGroup(topicId, context);
+        mimcUser.dismissUnlimitedGroup(topicId, context);
     }
 
 
@@ -408,10 +413,10 @@ public class MimcUserManager {
             MediaType JSON = MediaType.parse("application/json;charset=utf-8");
             OkHttpClient client = new OkHttpClient();
             Request request = new Request
-                    .Builder()
-                    .url(url)
-                    .post(RequestBody.create(JSON, json))
-                    .build();
+                .Builder()
+                .url(url)
+                .post(RequestBody.create(JSON, json))
+                .build();
             Call call = client.newCall(request);
             JSONObject data = null;
             try {
@@ -427,6 +432,182 @@ public class MimcUserManager {
             }
             Log.d("token====", data.toString());
             return data != null ? data.toString() : null;
+        }
+    }
+
+    /**
+     * 创建群
+     * @param groupName 群名
+     * @param users 群成员，多个成员之间用英文逗号(,)分隔
+     */
+    public void createGroup(final String groupName, final String users, Callback responseCallback) {
+        url = domain + "api/topic/" + appId;
+        String json = "{\"topicName\":\"" + groupName + "\", \"accounts\":\"" + users + "\"}";
+        MediaType JSON = MediaType.parse("application/json");
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request
+                .Builder()
+                .url(url)
+                .addHeader("token", mimcUser.getToken())
+                .post(RequestBody.create(JSON, json))
+                .build();
+        try {
+            Call call = client.newCall(request);
+            call.enqueue(responseCallback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 查询指定群信息
+     * @param groupId 群ID
+     */
+    public void queryGroupInfo(final String groupId, Callback responseCallback) {
+        url = domain + "api/topic/" + appId + "/" + groupId;
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request
+                .Builder()
+                .url(url)
+                .addHeader("token", mimcUser.getToken())
+                .get()
+                .build();
+        try {
+            Call call = client.newCall(request);
+            call.enqueue(responseCallback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 查询所属群信息
+     */
+    public void queryGroupsOfAccount(Callback responseCallback) {
+        url = domain + "api/topic/" + appId + "/account";
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request
+                .Builder()
+                .url(url)
+                .addHeader("token", mimcUser.getToken())
+                .get()
+                .build();
+        try {
+            Call call = client.newCall(request);
+            call.enqueue(responseCallback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 邀请用户加入群
+     * @param groupId 群ID
+     * @param users 加入成员，多个成员之间用英文逗号(,)分隔
+     */
+    public void joinGroup(final String groupId, final String users, Callback responseCallback) {
+        url = domain + "api/topic/" + appId + "/" + groupId + "/accounts";
+        String json = "{\"accounts\":\"" + users + "\"}";
+        MediaType JSON = MediaType.parse("application/json");
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request
+                .Builder()
+                .url(url)
+                .addHeader("token", mimcUser.getToken())
+                .post(RequestBody.create(JSON, json))
+                .build();
+        try {
+            Call call = client.newCall(request);
+            call.enqueue(responseCallback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 非群主成员退群
+     * @param groupId 群ID
+     */
+    public void quitGroup(final String groupId, Callback responseCallback) {
+        url = domain + "api/topic/" + appId + "/" + groupId + "/account";
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request
+                .Builder()
+                .url(url)
+                .addHeader("token", mimcUser.getToken())
+                .delete()
+                .build();
+        try {
+            Call call = client.newCall(request);
+            call.enqueue(responseCallback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 群主踢成员出群
+     * @param groupId 群ID
+     * @param users 群成员，多个成员之间用英文逗号(,)分隔
+     */
+    public void kickGroup(final String groupId, final String users, Callback responseCallback) {
+        url = domain + "api/topic/" + appId + "/" + groupId + "/accounts?accounts=" + users;
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request
+                .Builder()
+                .url(url)
+                .addHeader("token", mimcUser.getToken())
+                .delete()
+                .build();
+        try {
+            Call call = client.newCall(request);
+            call.enqueue(responseCallback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 群主更新群信息
+     * @param groupId 群ID
+     * @param newOwnerAccount 若为群成员则指派新的群主
+     * @param newGroupName 群名
+     * @param newGroupBulletin 群公告
+     */
+    public void updateGroup(final String groupId, final String newOwnerAccount,  final String newGroupName, final String newGroupBulletin, Callback responseCallback) {
+        try {
+            url = domain + "api/topic/" + appId + "/" + groupId;
+            // 注意：不指定的信息则不更新（键值对一起不指定）
+            final ConstraintsMap params = new ConstraintsMap();
+            if (!newOwnerAccount.isEmpty()) {
+                params.putString("ownerAccount", newOwnerAccount);
+            }
+            if (!newGroupName.isEmpty()) {
+                params.putString("topicName", newGroupName);
+            }
+            if (!newGroupBulletin.isEmpty()) {
+                params.putString("bulletin", newGroupBulletin);
+            }
+            System.out.println(url);
+            System.out.println(params.toMap());
+            String json = "";
+            JSONObject.
+            MediaType JSON = MediaType.parse("application/json");
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request
+                    .Builder()
+                    .url(url)
+                    .addHeader("token", mimcUser.getToken())
+                    .put(RequestBody.create(JSON, json))
+                    .build();
+            try {
+                Call call = client.newCall(request);
+                call.enqueue(responseCallback);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
