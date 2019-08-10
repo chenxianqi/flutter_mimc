@@ -2,6 +2,8 @@ package com.keith.flutter_mimc;
 import android.content.Context;
 import android.util.Log;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.JSONSerializable;
 import com.keith.flutter_mimc.utils.ConstraintsMap;
 import com.xiaomi.mimc.MIMCGroupMessage;
 import com.xiaomi.mimc.MIMCMessage;
@@ -146,8 +148,8 @@ public class MimcUserManager {
         void onHandleSendGroupMessageTimeout(MIMCGroupMessage groupMessage);
         void onHandleJoinUnlimitedGroup(long topicId, int code, String errMsg);
         void onHandleQuitUnlimitedGroup(long topicId, int code, String errMsg);
-        void onHandleDismissUnlimitedGroup(String json, boolean isSuccess);
-
+        void onHandleDismissUnlimitedGroup(long topicId, int code, String errMsg);
+        void onHandleCreateUnlimitedGroup(long topicId,String topicName, int code, String errMsg);
 
     }
 
@@ -194,40 +196,6 @@ public class MimcUserManager {
         }
     }
 
-    /** 创建无限大群
-     * @param topicName 群名
-     * @param context 用户自定义传入的对象，通过回调函数原样传出
-     */
-    public void createUnlimitedGroup(String topicName, Object context) {
-        mimcUser.createUnlimitedGroup(topicName, context);
-    }
-
-    /** 加入无限大群
-     * @param topicId 群ID
-     * @param context 用户自定义传入的对象，通过回调函数原样传出
-     * @return String 客户端生成的消息ID
-     */
-    public String joinUnlimitedGroup(long topicId, Object context) {
-        return mimcUser.joinUnlimitedGroup(topicId, context);
-    }
-
-    /** 退出无限大群
-     * @param topicId 群ID
-     * @param context 用户自定义传入的对象，通过回调函数原样传出
-     * @return 客户端生成的消息ID
-     */
-    public String quitUnlimitedGroup(long topicId, Object context) {
-        return mimcUser.quitUnlimitedGroup(topicId, context);
-    }
-
-    /** 解散无限大群
-     * @param topicId 群ID
-     * @param context  用户自定义传入的对象，通过回调函数原样传出
-     */
-    public void dismissUnlimitedGroup(long topicId, Object context) {
-        mimcUser.dismissUnlimitedGroup(topicId, context);
-    }
-
 
     /**
      * 获取用户
@@ -269,7 +237,7 @@ public class MimcUserManager {
     class UnlimitedGroupHandler implements MIMCUnlimitedGroupHandler {
         @Override
         public void handleCreateUnlimitedGroup(long topicId, String topicName, int code, String desc, Object obj) {
-            Log.i(TAG, String.format("handleCreateUnlimitedGroup topicId:%d topicName:%s code:%d errMsg:%s", topicId, topicName, code, desc));
+            onHandleMIMCMsgListener.onHandleCreateUnlimitedGroup(topicId, topicName, code, desc);
         }
 
         @Override
@@ -284,7 +252,7 @@ public class MimcUserManager {
 
         @Override
         public void handleDismissUnlimitedGroup(long topicId, int code, String errMsg, Object obj) {
-            onHandleMIMCMsgListener.onHandleDismissUnlimitedGroup(errMsg, false);
+            onHandleMIMCMsgListener.onHandleDismissUnlimitedGroup(topicId, code, errMsg);
         }
 
         @Override
@@ -400,16 +368,14 @@ public class MimcUserManager {
     class TokenFetcher implements MIMCTokenFetcher {
         @Override
         public String fetchToken() {
-            /**
-             * fetchToken()由SDK内部线程调用，获取小米Token服务器返回的JSON字符串
-             * 本MimcDemo直接从小米Token服务器获取JSON串，只解析出键data对应的值返回即可，切记！！！
-             * 强烈建议，APP从自己服务器获取data对应的JSON串，APP自己的服务器再从小米Token服务器获取，以防appKey和appSecret泄漏
-             */
-
             url = domain + "api/account/token";
-            String appAccount = getAccount();
-            String json = "{\"appId\":" + appId + ",\"appKey\":\"" + appKey + "\",\"appSecret\":\"" +
-                    appSecret + "\",\"appAccount\":\"" + appAccount + "\",\"regionKey\":\"" + regionKey + "\"}";
+            final ConstraintsMap params = new ConstraintsMap();
+            params.putLong("appId", appId);
+            params.putString("appKey", appKey);
+            params.putString("appSecret", appSecret);
+            params.putString("appAccount", getAccount());
+            params.putString("regionKey", regionKey);
+            String json = JSON.toJSONString(params.toMap());
             MediaType JSON = MediaType.parse("application/json;charset=utf-8");
             OkHttpClient client = new OkHttpClient();
             Request request = new Request
@@ -430,7 +396,6 @@ public class MimcUserManager {
             } catch (Exception e) {
                 System.err.println("Get token exception: " + e);
             }
-            Log.d("token====", data.toString());
             return data != null ? data.toString() : null;
         }
     }
@@ -442,7 +407,10 @@ public class MimcUserManager {
      */
     public void createGroup(final String groupName, final String users, Callback responseCallback) {
         url = domain + "api/topic/" + appId;
-        String json = "{\"topicName\":\"" + groupName + "\", \"accounts\":\"" + users + "\"}";
+        final ConstraintsMap params = new ConstraintsMap();
+        params.putString("topicName", groupName);
+        params.putString("accounts", users);
+        String json = JSON.toJSONString(params.toMap());
         MediaType JSON = MediaType.parse("application/json");
         OkHttpClient client = new OkHttpClient();
         Request request = new Request
@@ -507,7 +475,9 @@ public class MimcUserManager {
      */
     public void joinGroup(final String groupId, final String users, Callback responseCallback) {
         url = domain + "api/topic/" + appId + "/" + groupId + "/accounts";
-        String json = "{\"accounts\":\"" + users + "\"}";
+        final ConstraintsMap params = new ConstraintsMap();
+        params.putString("accounts", users);
+        String json = JSON.toJSONString(params.toMap());
         MediaType JSON = MediaType.parse("application/json");
         OkHttpClient client = new OkHttpClient();
         Request request = new Request
@@ -575,40 +545,155 @@ public class MimcUserManager {
      * @param newGroupBulletin 群公告
      */
     public void updateGroup(final String groupId, final String newOwnerAccount,  final String newGroupName, final String newGroupBulletin, Callback responseCallback) {
+        url = domain + "api/topic/" + appId + "/" + groupId;
+        final ConstraintsMap params = new ConstraintsMap();
+        if (!newOwnerAccount.isEmpty()) {
+            params.putString("ownerAccount", newOwnerAccount);
+        }
+        if (!newGroupName.isEmpty()) {
+            params.putString("topicName", newGroupName);
+        }
+        if (!newGroupBulletin.isEmpty()) {
+            params.putString("bulletin", newGroupBulletin);
+        }
+        String json = JSON.toJSONString(params.toMap());
+        MediaType JSON = MediaType.parse("application/json");
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request
+                .Builder()
+                .url(url)
+                .addHeader("token", mimcUser.getToken())
+                .put(RequestBody.create(JSON, json))
+                .build();
         try {
-            url = domain + "api/topic/" + appId + "/" + groupId;
-            // 注意：不指定的信息则不更新（键值对一起不指定）
-            final ConstraintsMap params = new ConstraintsMap();
-            if (!newOwnerAccount.isEmpty()) {
-                params.putString("ownerAccount", newOwnerAccount);
-            }
-            if (!newGroupName.isEmpty()) {
-                params.putString("topicName", newGroupName);
-            }
-            if (!newGroupBulletin.isEmpty()) {
-                params.putString("bulletin", newGroupBulletin);
-            }
-            System.out.println(url);
-            System.out.println(params.toMap());
-            String json = "";
-            JSONObject.
-            MediaType JSON = MediaType.parse("application/json");
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request
-                    .Builder()
-                    .url(url)
-                    .addHeader("token", mimcUser.getToken())
-                    .put(RequestBody.create(JSON, json))
-                    .build();
-            try {
-                Call call = client.newCall(request);
-                call.enqueue(responseCallback);
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
+            Call call = client.newCall(request);
+            call.enqueue(responseCallback);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
+
+    /**
+     * 群主销毁群
+     * @param groupId 群ID
+     */
+    public void dismissGroup(final String groupId, Callback responseCallback) {
+        url = domain + "api/topic/" + appId + "/" + groupId;
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request
+                .Builder()
+                .url(url)
+                .addHeader("token", mimcUser.getToken())
+                .delete()
+                .build();
+        try {
+            Call call = client.newCall(request);
+            call.enqueue(responseCallback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 拉取单聊消息记录
+     * @param toAccount 接收方帐号
+     * @param fromAccount 发送方帐号
+     * @param utcFromTime 开始时间
+     * @param utcToTime 结束时间
+     * 注意：utcFromTime和utcToTime的时间间隔不能超过24小时，查询状态为[utcFromTime,utcToTime)，单位毫秒，UTC时间
+     */
+    public void pullP2PHistory(String toAccount, String fromAccount, String utcFromTime, String utcToTime, Callback responseCallback) {
+        url = domain + "api/msg/p2p/query/";
+        final ConstraintsMap params = new ConstraintsMap();
+        params.putString("toAccount", toAccount);
+        params.putString("fromAccount", fromAccount);
+        params.putString("utcFromTime", utcFromTime);
+        params.putString("utcToTime", utcToTime);
+        String json = JSON.toJSONString(params.toMap());
+        MediaType JSON = MediaType.parse("application/json;charset=UTF-8");
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request
+                .Builder()
+                .url(url)
+                .addHeader("Accept", "application/json;charset=UTF-8")
+                .addHeader("token", mimcUser.getToken())
+                .post(RequestBody.create(JSON, json))
+                .build();
+        try {
+            Call call = client.newCall(request);
+            call.enqueue(responseCallback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 拉取群聊消息记录
+     * @param account 拉取者帐号
+     * @param topicId 群ID
+     * @param utcFromTime 开始时间
+     * @param utcToTime 结束时间
+     * 注意：utcFromTime和utcToTime的时间间隔不能超过24小时，查询状态为[utcFromTime,utcToTime)，单位毫秒，UTC时间
+     */
+    public void pullP2THistory(String account, String topicId, String utcFromTime, String utcToTime, Callback responseCallback) {
+        url = domain + "api/msg/p2t/query/";
+        final ConstraintsMap params = new ConstraintsMap();
+        params.putString("account", account);
+        params.putString("topicId", topicId);
+        params.putString("utcFromTime", utcFromTime);
+        params.putString("utcToTime", utcToTime);
+        String json = JSON.toJSONString(params.toMap());
+        MediaType JSON = MediaType.parse("application/json;charset=UTF-8");
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request
+                .Builder()
+                .url(url)
+                .addHeader("Accept", "application/json;charset=UTF-8")
+                .addHeader("token", mimcUser.getToken())
+                .post(RequestBody.create(JSON, json))
+                .build();
+        try {
+            Call call = client.newCall(request);
+            call.enqueue(responseCallback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /** 创建无限大群
+     * @param topicName 群名
+     * @param context 用户自定义传入的对象，通过回调函数原样传出
+     */
+    public void createUnlimitedGroup(String topicName, Object context) {
+        mimcUser.createUnlimitedGroup(topicName, context);
+    }
+
+    /** 加入无限大群
+     * @param topicId 群ID
+     * @param context 用户自定义传入的对象，通过回调函数原样传出
+     * @return String 客户端生成的消息ID
+     */
+    public String joinUnlimitedGroup(long topicId, Object context) {
+        return mimcUser.joinUnlimitedGroup(topicId, context);
+    }
+
+    /** 退出无限大群
+     * @param topicId 群ID
+     * @param context 用户自定义传入的对象，通过回调函数原样传出
+     * @return 客户端生成的消息ID
+     */
+    public String quitUnlimitedGroup(long topicId, Object context) {
+        return mimcUser.quitUnlimitedGroup(topicId, context);
+    }
+
+    /** 解散无限大群
+     * @param topicId 群ID
+     * @param context  用户自定义传入的对象，通过回调函数原样传出
+     */
+    public void dismissUnlimitedGroup(long topicId, Object context) {
+        mimcUser.dismissUnlimitedGroup(topicId, context);
+    }
+
 
 }

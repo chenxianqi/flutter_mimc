@@ -132,16 +132,86 @@ public class MimcHandleMIMCMsgListener implements MimcUserManager.OnHandleMIMCMs
 
     @Override
     public void onHandleJoinUnlimitedGroup(long topicId, int code, String errMsg) {
-
+        if(FlutterMimcPlugin.eventSink == null)
+        {
+            System.out.println("eventSink  null");
+            return;
+        }
+        try {
+            ConstraintsMap params = new ConstraintsMap();
+            ConstraintsMap paramsChild = new ConstraintsMap();
+            paramsChild.putLong("topicId", topicId);
+            paramsChild.putInt("code", code);
+            paramsChild.putString("errMsg", errMsg);
+            params.putString("eventType", "onHandleJoinUnlimitedGroup");
+            params.putMap("eventValue", paramsChild.toMap());
+            FlutterMimcPlugin.eventSink.success(params.toMap());
+        }catch (Exception e){
+            System.out.println("eventSink  Error:" + e.getMessage());
+        }
     }
 
     @Override
     public void onHandleQuitUnlimitedGroup(long topicId, int code, String errMsg) {
-
+        if(FlutterMimcPlugin.eventSink == null)
+        {
+            System.out.println("eventSink  null");
+            return;
+        }
+        try {
+            ConstraintsMap params = new ConstraintsMap();
+            ConstraintsMap paramsChild = new ConstraintsMap();
+            paramsChild.putLong("topicId", topicId);
+            paramsChild.putInt("code", code);
+            paramsChild.putString("errMsg", errMsg);
+            params.putString("eventType", "onHandleQuitUnlimitedGroup");
+            params.putMap("eventValue", paramsChild.toMap());
+            FlutterMimcPlugin.eventSink.success(params.toMap());
+        }catch (Exception e){
+            System.out.println("eventSink  Error:" + e.getMessage());
+        }
     }
 
     @Override
-    public void onHandleDismissUnlimitedGroup(String json, boolean isSuccess) {
+    public void onHandleDismissUnlimitedGroup(long topicId, int code, String errMsg) {
+        if(FlutterMimcPlugin.eventSink == null)
+        {
+            System.out.println("eventSink  null");
+            return;
+        }
+        try {
+            ConstraintsMap params = new ConstraintsMap();
+            ConstraintsMap paramsChild = new ConstraintsMap();
+            paramsChild.putLong("topicId", topicId);
+            paramsChild.putInt("code", code);
+            paramsChild.putString("errMsg", errMsg);
+            params.putString("eventType", "onHandleDismissUnlimitedGroup");
+            params.putMap("eventValue", paramsChild.toMap());
+            FlutterMimcPlugin.eventSink.success(params.toMap());
+        }catch (Exception e){
+            System.out.println("eventSink  Error:" + e.getMessage());
+        }
+    }
 
+    @Override
+    public void onHandleCreateUnlimitedGroup(long topicId, String topicName, int code, String errMsg) {
+        if(FlutterMimcPlugin.eventSink == null)
+        {
+            System.out.println("eventSink  null");
+            return;
+        }
+        try {
+            ConstraintsMap params = new ConstraintsMap();
+            ConstraintsMap paramsChild = new ConstraintsMap();
+            paramsChild.putLong("topicId", topicId);
+            paramsChild.putString("topicName", topicName);
+            paramsChild.putInt("code", code);
+            paramsChild.putString("errMsg", errMsg);
+            params.putString("eventType", "onHandleCreateUnlimitedGroup");
+            params.putMap("eventValue", paramsChild.toMap());
+            FlutterMimcPlugin.eventSink.success(params.toMap());
+        }catch (Exception e){
+            System.out.println("eventSink  Error:" + e.getMessage());
+        }
     }
 }

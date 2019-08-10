@@ -2,13 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7e06dfe4-4392-4629-bb11-f046efcdedd6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/model/mimc_servera_ack.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/FlutterMimcPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/FlutterMimcPlugin.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcHandleMIMCMsgListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcHandleMIMCMsgListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcUserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcUserManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/utils/ConstraintsMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/utils/ConstraintsMap.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/flutter_mimc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/flutter_mimc.dart" afterDir="false" />
     </list>
@@ -20,43 +17,33 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/example/lib/main.dart">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/flutter_mimc.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="197">
-              <caret line="34" column="46" selection-start-line="34" selection-start-column="46" selection-end-line="34" selection-end-column="46" />
+            <state relative-caret-position="180">
+              <caret line="364" selection-start-line="364" selection-end-line="364" />
               <folding>
-                <element signature="e#0#39#0" expanded="true" />
-                <element signature="e#1986#2776#0" />
-                <element signature="e#3111#4118#0" />
-                <element signature="e#4698#4995#0" />
-                <element signature="e#5023#5314#0" />
-                <element signature="e#5337#5968#0" />
-                <element signature="e#6362#7267#0" />
-                <element signature="e#7290#8205#0" />
+                <element signature="e#0#20#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/flutter_mimc.dart">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/example/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1745">
-              <caret line="179" column="58" selection-start-line="179" selection-start-column="51" selection-end-line="179" selection-end-column="58" />
+            <state relative-caret-position="91">
+              <caret line="52" column="10" selection-start-line="52" selection-start-column="10" selection-end-line="52" selection-end-column="10" />
               <folding>
-                <element signature="e#0#20#0" expanded="true" />
-                <element signature="e#2653#2722#0" />
-                <element signature="e#2727#2732#0" />
-                <element signature="e#2895#2958#0" />
-                <element signature="e#3020#3086#0" />
-                <element signature="e#3119#3221#0" />
-                <element signature="e#3284#3350#0" />
-                <element signature="e#3414#3482#0" />
-                <element signature="e#4298#4426#0" />
-                <element signature="e#4555#4661#0" />
-                <element signature="e#4782#4860#0" />
-                <element signature="e#3686#4845#0" />
+                <element signature="e#0#39#0" expanded="true" />
+                <element signature="e#7852#8644#0" />
+                <element signature="e#8946#9243#0" />
+                <element signature="e#9271#9562#0" />
+                <element signature="e#9584#10515#0" />
+                <element signature="e#10538#11443#0" />
+                <element signature="e#11466#12381#0" />
+                <element signature="e#12404#13308#0" />
+                <element signature="e#13331#14248#0" />
               </folding>
             </state>
           </provider>
@@ -77,10 +64,16 @@
       <find>102</find>
       <find>21352937364652032</find>
       <find>15416498726633513</find>
+      <find>&quot;21354536967340032&quot;</find>
+      <find>VerticalDivider(width: 5.0,),</find>
+      <find>print</find>
     </findStrings>
     <replaceStrings>
       <replace>MimcChatResource</replace>
       <replace>MimcChatMessage</replace>
+      <replace>groupID</replace>
+      <replace>VerticalDivider(width: 2.0,),</replace>
+      <replace>addLog</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -108,10 +101,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-44" />
-    <option name="y" value="23" />
-    <option name="width" value="1404" />
-    <option name="height" value="877" />
+    <option name="x" value="10" />
+    <option name="y" value="24" />
+    <option name="width" value="1793" />
+    <option name="height" value="1057" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -121,7 +114,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -132,18 +124,24 @@
             <path>
               <item name="flutter_mimc" type="b2602c69:ProjectViewProjectNode" />
               <item name="flutter_mimc" type="462c0819:PsiDirectoryNode" />
+              <item name="example" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="flutter_mimc" type="b2602c69:ProjectViewProjectNode" />
+              <item name="flutter_mimc" type="462c0819:PsiDirectoryNode" />
+              <item name="example" type="462c0819:PsiDirectoryNode" />
               <item name="lib" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="flutter_mimc" type="b2602c69:ProjectViewProjectNode" />
               <item name="flutter_mimc" type="462c0819:PsiDirectoryNode" />
               <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="model" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -217,10 +215,11 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-44" y="23" width="1404" height="877" extended-state="0" />
+    <frame x="10" y="24" width="1793" height="1057" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Captures" order="0" weight="0.25" />
-      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.20851688" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.22558539" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Designer" order="4" />
@@ -228,7 +227,7 @@
       <window_info id="Capture Tool" order="6" />
       <window_info id="Favorites" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Dart Analysis" order="0" weight="0.32769832" />
-      <window_info anchor="bottom" id="Run" order="1" weight="0.6788036" />
+      <window_info active="true" anchor="bottom" id="Run" order="1" visible="true" weight="0.743941" />
       <window_info anchor="bottom" id="TODO" order="2" weight="0.32982087" />
       <window_info anchor="bottom" id="Debug" order="3" />
       <window_info anchor="bottom" id="Terminal" order="4" weight="0.5305592" />
@@ -311,13 +310,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/model/mimc_chat_message.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="875">
-          <caret line="50" column="52" selection-start-line="50" selection-start-column="52" selection-end-line="50" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ios/flutter_mimc.podspec">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="421">
@@ -339,13 +331,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/model/mimc_servera_ack.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46">
-          <caret line="2" column="5" selection-start-line="2" selection-start-column="2" selection-end-line="2" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/flutter/packages/flutter/lib/src/services/platform_channel.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="62">
@@ -353,47 +338,66 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/model/mimc_topic_info.dart">
+    <entry file="file://$PROJECT_DIR$/lib/model/mimc_topic_info.dart" />
+    <entry file="file://$USER_HOME$/flutter/packages/flutter/lib/src/material/snack_bar.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="113">
-          <caret line="10" column="36" selection-start-line="10" selection-start-column="36" selection-end-line="10" selection-end-column="36" />
+        <state relative-caret-position="186">
+          <caret line="166" column="8" selection-start-line="166" selection-start-column="8" selection-end-line="166" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/flutter/packages/flutter/lib/src/material/scaffold.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="181">
+          <caret line="1393" column="60" selection-start-line="1393" selection-start-column="60" selection-end-line="1393" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/model/mimc_servera_ack.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="46">
+          <caret line="2" column="5" selection-start-line="2" selection-start-column="2" selection-end-line="2" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/model/mimc_chat_message.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="552">
+          <caret line="50" column="52" selection-start-line="50" selection-start-column="52" selection-end-line="50" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/flutter/bin/cache/pkg/sky_engine/lib/async/stream.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1686">
+          <caret line="82" column="15" selection-start-line="82" selection-start-column="15" selection-end-line="82" selection-end-column="15" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/flutter_mimc.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1745">
-          <caret line="179" column="58" selection-start-line="179" selection-start-column="51" selection-end-line="179" selection-end-column="58" />
+        <state relative-caret-position="180">
+          <caret line="364" selection-start-line="364" selection-end-line="364" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
-            <element signature="e#2653#2722#0" />
-            <element signature="e#2727#2732#0" />
-            <element signature="e#2895#2958#0" />
-            <element signature="e#3020#3086#0" />
-            <element signature="e#3119#3221#0" />
-            <element signature="e#3284#3350#0" />
-            <element signature="e#3414#3482#0" />
-            <element signature="e#4298#4426#0" />
-            <element signature="e#4555#4661#0" />
-            <element signature="e#4782#4860#0" />
-            <element signature="e#3686#4845#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/example/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
-          <caret line="34" column="46" selection-start-line="34" selection-start-column="46" selection-end-line="34" selection-end-column="46" />
+        <state relative-caret-position="91">
+          <caret line="52" column="10" selection-start-line="52" selection-start-column="10" selection-end-line="52" selection-end-column="10" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
-            <element signature="e#1986#2776#0" />
-            <element signature="e#3111#4118#0" />
-            <element signature="e#4698#4995#0" />
-            <element signature="e#5023#5314#0" />
-            <element signature="e#5337#5968#0" />
-            <element signature="e#6362#7267#0" />
-            <element signature="e#7290#8205#0" />
+            <element signature="e#7852#8644#0" />
+            <element signature="e#8946#9243#0" />
+            <element signature="e#9271#9562#0" />
+            <element signature="e#9584#10515#0" />
+            <element signature="e#10538#11443#0" />
+            <element signature="e#11466#12381#0" />
+            <element signature="e#12404#13308#0" />
+            <element signature="e#13331#14248#0" />
           </folding>
         </state>
       </provider>

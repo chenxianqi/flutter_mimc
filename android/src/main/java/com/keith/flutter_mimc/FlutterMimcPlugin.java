@@ -231,6 +231,7 @@ public class FlutterMimcPlugin implements MethodCallHandler{
     {
         final  ConstraintsMap params = new ConstraintsMap();
         try {
+            System.out.println("arguments=" + call.arguments);
             String groupName = call.argument("groupName");
             String users = call.argument("users");
             if (groupName == null || groupName.isEmpty() || users == null || users.isEmpty()) {
@@ -250,9 +251,13 @@ public class FlutterMimcPlugin implements MethodCallHandler{
                 public void onResponse(Call c, Response response) throws IOException {
                     if (response.isSuccessful()) {
                         JSONObject json = JSONObject.parseObject(response.body().string());
-                        JSONObject data =  json.getJSONObject("data");
-                         params.putNull("error");
-                        params.putMap("data", data);
+                        if(json.getInteger("code") == 200){
+                            params.putNull("error");
+                            params.putMap("data", json.getJSONObject("data"));
+                        }else{
+                            params.putString("error", json.getString("message"));
+                            params.putNull("data");
+                        }
                         result.success(params.toMap());
                     }
                 }
@@ -289,9 +294,13 @@ public class FlutterMimcPlugin implements MethodCallHandler{
                 public void onResponse(Call c, Response response) throws IOException {
                     if (response.isSuccessful()) {
                         JSONObject json = JSONObject.parseObject(response.body().string());
-                        JSONObject data =  json.getJSONObject("data");
-                         params.putNull("error");
-                        params.putMap("data", data);
+                        if(json.getInteger("code") == 200){
+                            params.putNull("error");
+                            params.putMap("data", json.getJSONObject("data"));
+                        }else{
+                            params.putString("error", json.getString("message"));
+                            params.putNull("data");
+                        }
                         result.success(params.toMap());
                     }
                 }}
@@ -320,9 +329,13 @@ public class FlutterMimcPlugin implements MethodCallHandler{
                 public void onResponse(Call c, Response response) throws IOException {
                     if (response.isSuccessful()) {
                         JSONObject json = JSONObject.parseObject(response.body().string());
-                        JSONArray data =  json.getJSONArray("data");
-                         params.putNull("error");
-                        params.putArray("data", data);
+                        if(json.getInteger("code") == 200){
+                            params.putNull("error");
+                            params.putArray("data", json.getJSONArray("data"));
+                        }else{
+                            params.putString("error", json.getString("message"));
+                            params.putNull("data");
+                        }
                         result.success(params.toMap());
                     }
                 }}
@@ -359,9 +372,13 @@ public class FlutterMimcPlugin implements MethodCallHandler{
                 public void onResponse(Call c, Response response) throws IOException {
                     if (response.isSuccessful()) {
                         JSONObject json = JSONObject.parseObject(response.body().string());
-                        JSONObject data =  json.getJSONObject("data");
-                         params.putNull("error");
-                        params.putMap("data", data);
+                        if(json.getInteger("code") == 200){
+                            params.putNull("error");
+                            params.putMap("data", json.getJSONObject("data"));
+                        }else{
+                            params.putString("error", json.getString("message"));
+                            params.putNull("data");
+                        }
                         result.success(params.toMap());
                     }
                 }}
@@ -396,8 +413,14 @@ public class FlutterMimcPlugin implements MethodCallHandler{
                 @Override
                 public void onResponse(Call c, Response response) throws IOException {
                     if (response.isSuccessful()) {
-                         params.putNull("error");
-                        params.putNull("data");
+                        JSONObject json = JSONObject.parseObject(response.body().string());
+                        if(json.getInteger("code") == 200){
+                            params.putNull("error");
+                            params.putNull("data");
+                        }else{
+                            params.putString("error", json.getString("message"));
+                            params.putNull("data");
+                        }
                         result.success(params.toMap());
                     }
                 }}
@@ -433,11 +456,17 @@ public class FlutterMimcPlugin implements MethodCallHandler{
                 @Override
                 public void onResponse(Call c, Response response) throws IOException {
                     if (response.isSuccessful()) {
+
                         JSONObject json = JSONObject.parseObject(response.body().string());
-                        JSONObject data =  json.getJSONObject("data");
-                         params.putNull("error");
-                        params.putMap("data", data);
+                        if(json.getInteger("code") == 200){
+                            params.putNull("error");
+                            params.putMap("data", json.getJSONObject("data"));
+                        }else{
+                            params.putString("error", json.getString("message"));
+                            params.putNull("data");
+                        }
                         result.success(params.toMap());
+
                     }
                 }}
             );
@@ -464,7 +493,6 @@ public class FlutterMimcPlugin implements MethodCallHandler{
                 result.success(params.toMap());
                 return;
             }
-            System.out.println(call.arguments);
             MimcUserManager.getInstance().updateGroup(groupId, newOwnerAccount, newGroupName, newGroupBulletin, new Callback() {
                 @Override
                 public void onFailure(Call c, IOException e) {
@@ -475,11 +503,15 @@ public class FlutterMimcPlugin implements MethodCallHandler{
                 @Override
                 public void onResponse(Call c, Response response) throws IOException {
                     if (response.isSuccessful()) {
-                        System.out.println(response.body().string());
+
                         JSONObject json = JSONObject.parseObject(response.body().string());
-                        JSONObject data =  json.getJSONObject("data");
-                        params.putNull("error");
-                        params.putMap("data", data);
+                        if(json.getInteger("code") == 200){
+                            params.putNull("error");
+                            params.putMap("data", json.getJSONObject("data"));
+                        }else{
+                            params.putString("error", json.getString("message"));
+                            params.putNull("data");
+                        }
                         result.success(params.toMap());
                     }
                 }}
@@ -490,6 +522,177 @@ public class FlutterMimcPlugin implements MethodCallHandler{
             result.success(params.toMap());
         }
 
+    }
+
+    // 群主销毁群
+    else if(call.method.equals("dismissGroup"))
+    {
+        final  ConstraintsMap params = new ConstraintsMap();
+        try {
+            String groupId = call.argument("groupId");
+            if (groupId == null || groupId.isEmpty()) {
+                params.putString("error", "groupId不能为空！");
+                params.putNull("data");
+                result.success(params.toMap());
+                return;
+            }
+            MimcUserManager.getInstance().dismissGroup(groupId, new Callback() {
+                @Override
+                public void onFailure(Call c, IOException e) {
+                    params.putString("error", e.getMessage());
+                    params.putNull("data");
+                    result.success(params.toMap());
+                }
+                @Override
+                public void onResponse(Call c, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+
+                        JSONObject json = JSONObject.parseObject(response.body().string());
+                        if(json.getInteger("code") == 200){
+                            params.putNull("error");
+                            params.putNull("data");
+                        }else{
+                            params.putString("error", json.getString("message"));
+                            params.putNull("data");
+                        }
+                        result.success(params.toMap());
+                    }
+                }}
+            );
+        }catch (Exception e){
+            params.putString("error", e.getMessage());
+            params.putNull("data");
+            result.success(params.toMap());
+        }
+
+    }
+
+    // 拉取单聊消息记录
+    else if(call.method.equals("pullP2PHistory"))
+    {
+        final  ConstraintsMap params = new ConstraintsMap();
+        try {
+            String toAccount = call.argument("toAccount");
+            String fromAccount = call.argument("fromAccount");
+            String utcFromTime = call.argument("utcFromTime");
+            String utcToTime = call.argument("utcToTime");
+            if (toAccount == null || toAccount.isEmpty() ||
+                    fromAccount == null || fromAccount.isEmpty() ||
+                    utcFromTime == null || utcFromTime.isEmpty() ||
+                    utcToTime == null || utcToTime.isEmpty()) {
+                params.putString("error", "所有参数不能为空！");
+                params.putNull("data");
+                result.success(params.toMap());
+                return;
+            }
+            MimcUserManager.getInstance().pullP2PHistory(toAccount, fromAccount, utcFromTime, utcToTime, new Callback() {
+                @Override
+                public void onFailure(Call c, IOException e) {
+                    params.putString("error", e.getMessage());
+                    params.putNull("data");
+                    result.success(params.toMap());
+                }
+                @Override
+                public void onResponse(Call c, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+
+                        JSONObject json = JSONObject.parseObject(response.body().string());
+                        if(json.getInteger("code") == 200){
+                            params.putNull("error");
+                            params.putMap("data", json.getJSONObject("data"));
+                        }else{
+                            params.putString("error", json.getString("message"));
+                            params.putNull("data");
+                        }
+                        result.success(params.toMap());
+                    }
+                }}
+            );
+        }catch (Exception e){
+            params.putString("error", e.getMessage());
+            params.putNull("data");
+            result.success(params.toMap());
+        }
+
+    }
+
+    // 拉取群聊消息记录
+    else if(call.method.equals("pullP2THistory"))
+    {
+        final  ConstraintsMap params = new ConstraintsMap();
+        try {
+            String account = call.argument("account");
+            String topicId = call.argument("topicId");
+            String utcFromTime = call.argument("utcFromTime");
+            String utcToTime = call.argument("utcToTime");
+            if (account == null || account.isEmpty() ||
+                    topicId == null || topicId.isEmpty() ||
+                    utcFromTime == null || utcFromTime.isEmpty() ||
+                    utcToTime == null || utcToTime.isEmpty()) {
+                params.putString("error", "所有参数不能为空！");
+                params.putNull("data");
+                result.success(params.toMap());
+                return;
+            }
+            MimcUserManager.getInstance().pullP2THistory(account, topicId, utcFromTime, utcToTime, new Callback() {
+                @Override
+                public void onFailure(Call c, IOException e) {
+                    params.putString("error", e.getMessage());
+                    params.putNull("data");
+                    result.success(params.toMap());
+                }
+                @Override
+                public void onResponse(Call c, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+
+                        JSONObject json = JSONObject.parseObject(response.body().string());
+                        if(json.getInteger("code") == 200){
+                            params.putNull("error");
+                            params.putMap("data", json.getJSONObject("data"));
+                        }else{
+                            params.putString("error", json.getString("message"));
+                            params.putNull("data");
+                        }
+                        result.success(params.toMap());
+                    }
+                }}
+            );
+        }catch (Exception e){
+            params.putString("error", e.getMessage());
+            params.putNull("data");
+            result.success(params.toMap());
+        }
+
+    }
+
+    // 创建无限大群
+    else if(call.method.equals("createUnlimitedGroup"))
+    {
+        String topicName = call.argument("topicName");
+        MimcUserManager.getInstance().createUnlimitedGroup(topicName, null);
+        result.success(null);
+    }
+
+    // 加入无限大群
+    else if(call.method.equals("joinUnlimitedGroup"))
+    {
+        String topicId = call.argument("topicId");
+        result.success(MimcUserManager.getInstance().joinUnlimitedGroup(Long.parseLong(topicId), null));
+    }
+
+    // 退出无限大群
+    else if(call.method.equals("quitUnlimitedGroup"))
+    {
+        String topicId = call.argument("topicId");
+        result.success(MimcUserManager.getInstance().quitUnlimitedGroup(Long.parseLong(topicId), null));
+    }
+
+    // 解散无限大群
+    else if(call.method.equals("dismissUnlimitedGroup"))
+    {
+        String topicId = call.argument("topicId");
+        MimcUserManager.getInstance().dismissUnlimitedGroup(Long.parseLong(topicId), null);
+        result.success(null);
     }
 
     // 其他
