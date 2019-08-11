@@ -10,10 +10,11 @@ export 'model/mimc_servera_ack.dart';
 
 class MIMCEvents{
   static const String onlineStatusListener = "onlineStatusListener";              // 状态变更
-  static const String onHandleSendMessageTimeout = "onHandleSendMessageTimeout";  // 发送单聊消息超时
   static const String onHandleMessage = "onHandleMessage";                        // 接收单聊
   static const String onHandleGroupMessage = "onHandleGroupMessage";              // 接收群聊
+  static const String onHandleSendMessageTimeout = "onHandleSendMessageTimeout";  // 发送单聊消息超时
   static const String onHandleSendGroupMessageTimeout = "onHandleSendGroupMessageTimeout"; // 发送群聊消息超时
+  static const String onHandleSendUnlimitedGroupMessageTimeout = "onHandleSendUnlimitedGroupMessageTimeout"; // 发送无限群聊消息超时
   static const String onHandleServerAck = "onHandleServerAck";                    // 接收服务端已收到发送消息确认
   static const String onHandleCreateUnlimitedGroup = "onHandleCreateUnlimitedGroup";  // 创建大群回调
   static const String onHandleJoinUnlimitedGroup = "onHandleJoinUnlimitedGroup";      // 加入大群回调
@@ -67,6 +68,8 @@ class FlutterMimc {
   final StreamController<MimcChatMessage> _onHandleSendMessageTimeoutStreamController = StreamController<MimcChatMessage>.broadcast();
   // 发送群聊消息超时
   final StreamController<MimcChatMessage> _onHandleSendGroupMessageTimeoutStreamController = StreamController<MimcChatMessage>.broadcast();
+  // 发送无限群聊消息超时
+  final StreamController<MimcChatMessage> _onHandleSendUnlimitedGroupMessageTimeoutStreamController = StreamController<MimcChatMessage>.broadcast();
   // 创建大群回调
   final StreamController<Map<dynamic, dynamic>> _onHandleCreateUnlimitedGroupStreamController = StreamController<Map<dynamic, dynamic>>.broadcast();
   // 加入大群回调
@@ -112,6 +115,7 @@ class FlutterMimc {
 
   // 获取token
   // @return String
+  // 请登录后获取不然返回null
   Future<String> getToken() async {
     return await _channel.invokeMethod(_ON_GET_TOKEN);
   }
@@ -360,6 +364,9 @@ class FlutterMimc {
      case MIMCEvents.onHandleSendGroupMessageTimeout:
        _onHandleSendGroupMessageTimeoutStreamController.add(MimcChatMessage.fromJson(eventValue));
        break;
+     case MIMCEvents.onHandleSendUnlimitedGroupMessageTimeout:
+       _onHandleSendUnlimitedGroupMessageTimeoutStreamController.add(MimcChatMessage.fromJson(eventValue));
+       break;
      case MIMCEvents.onHandleServerAck:
        _onHandleServerAckStreamController.add(MimcServeraAck.fromJson(eventValue as Map<dynamic, dynamic>));
        break;
@@ -408,6 +415,11 @@ class FlutterMimc {
   // 发送群聊消息超时
   Stream<MimcChatMessage> addEventListenerSendGroupMessageTimeout(){
     return _onHandleSendGroupMessageTimeoutStreamController.stream;
+  }
+
+  // 发送无限群聊消息超时
+  Stream<MimcChatMessage> addEventListenerSendUnlimitedGroupMessageTimeout(){
+    return _onHandleSendUnlimitedGroupMessageTimeoutStreamController.stream;
   }
 
   // 创建大群回调

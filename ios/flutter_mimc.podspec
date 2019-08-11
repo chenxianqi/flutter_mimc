@@ -15,6 +15,7 @@ A new flutter plugin project.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
+  s.dependency 'AFNetworking'
   s.libraries = 'c++'
   s.frameworks = 'CoreTelephony','SystemConfiguration'
   # 导入第三方资源库

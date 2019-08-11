@@ -71,6 +71,7 @@ public class MimcHandleMIMCMsgListener implements MimcUserManager.OnHandleMIMCMs
             System.out.println("eventSink  null");
             return;
         }
+        System.out.println("收到群消息" + message.toString());
         eventSinkPushMessage("onHandleGroupMessage", null, message);
     }
 
@@ -213,5 +214,10 @@ public class MimcHandleMIMCMsgListener implements MimcUserManager.OnHandleMIMCMs
         }catch (Exception e){
             System.out.println("eventSink  Error:" + e.getMessage());
         }
+    }
+
+    @Override
+    public void onHandleSendUnlimitedGroupMessageTimeout(MIMCGroupMessage groupMessage) {
+        eventSinkPushMessage("onHandleSendUnlimitedGroupMessageTimeout", null, groupMessage);
     }
 }

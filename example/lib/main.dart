@@ -15,11 +15,11 @@ class _MyAppState extends State<MyApp> {
 
   FlutterMimc flutterMimc;
   final String appAccount = "100";             // 我的账号
-  String groupID = "21371209761947648"; // 操作的普通群ID
-  String maxGroupID = "21371268016635904"; // 操作的无限通群ID
+  String groupID = "21351198708203520"; // 操作的普通群ID
+  String maxGroupID = "21360839299170304"; // 操作的无限通群ID
   bool isOnline = false;
   List<Map<String, String>> logs = [];
-  TextEditingController accountCtr = TextEditingController();
+  TextEditingController accountCtr = TextEditingController(text: '21360839299170304');
   TextEditingController contentCtr = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -121,9 +121,9 @@ class _MyAppState extends State<MyApp> {
 
   // 创建一个群
   void createGroup() async{
-    var res = await flutterMimc.createGroup("骚群1", appAccount);
-    if(res['error'] != null){
-      addLog("创建群失败:${res['error']}" );
+    var res = await flutterMimc.createGroup("ios群", appAccount);
+    if(!res['success']){
+      addLog("创建群失败:${res['message']}" );
     }else{
       groupID = res['data']['topicInfo']['topicId'];
       addLog("创建群成功：${res['data']}");
@@ -134,8 +134,8 @@ class _MyAppState extends State<MyApp> {
   // 查询群
   void queryGroupInfo() async{
     var res = await flutterMimc.queryGroupInfo(groupID);
-    if(res['error'] != null){
-      addLog("查询群失败:${res['error']}" );
+    if(!res['success']){
+      addLog("查询群失败:${res['message']}" );
     }else{
       addLog("查询群成功：${res['data']}");
     }
@@ -320,9 +320,9 @@ class _MyAppState extends State<MyApp> {
       addLog(err);
     });
 
-    // 发送单聊回调
+    // 发送消息回调
     flutterMimc.addEventListenerServerAck().listen((MimcServeraAck ack){
-      addLog("发送单聊回调==${ack.toJson()}");
+      addLog("发送消息回调==${ack.toJson()}");
     }).onError((err){
       addLog(err);
     });
@@ -330,6 +330,20 @@ class _MyAppState extends State<MyApp> {
     // 发送单聊超时
     flutterMimc.addEventListenerSendMessageTimeout().listen((MimcChatMessage resource){
       addLog("发送单聊超时==${resource.toJson()}");
+    }).onError((err){
+      addLog(err);
+    });
+
+    // 发送群聊超时
+    flutterMimc.addEventListenerSendGroupMessageTimeout().listen((MimcChatMessage resource){
+      addLog("发送群聊超时==${resource.toJson()}");
+    }).onError((err){
+      addLog(err);
+    });
+
+    // 发送无限群聊超时
+    flutterMimc.addEventListenerSendUnlimitedGroupMessageTimeout().listen((MimcChatMessage resource){
+      addLog("发送无限群聊超时==${resource.toJson()}");
     }).onError((err){
       addLog(err);
     });

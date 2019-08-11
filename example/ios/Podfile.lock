@@ -1,11 +1,31 @@
 PODS:
+  - AFNetworking (3.2.1):
+    - AFNetworking/NSURLSession (= 3.2.1)
+    - AFNetworking/Reachability (= 3.2.1)
+    - AFNetworking/Security (= 3.2.1)
+    - AFNetworking/Serialization (= 3.2.1)
+    - AFNetworking/UIKit (= 3.2.1)
+  - AFNetworking/NSURLSession (3.2.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (3.2.1)
+  - AFNetworking/Security (3.2.1)
+  - AFNetworking/Serialization (3.2.1)
+  - AFNetworking/UIKit (3.2.1):
+    - AFNetworking/NSURLSession
   - Flutter (1.0.0)
   - flutter_mimc (0.0.1):
+    - AFNetworking
     - Flutter
 
 DEPENDENCIES:
   - Flutter (from `.symlinks/flutter/ios`)
   - flutter_mimc (from `.symlinks/plugins/flutter_mimc/ios`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - AFNetworking
 
 EXTERNAL SOURCES:
   Flutter:
@@ -14,8 +34,9 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_mimc/ios"
 
 SPEC CHECKSUMS:
+  AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
   Flutter: 58dd7d1b27887414a370fcccb9e645c08ffd7a6a
-  flutter_mimc: 0adea771e4fb632cdef163d359c81fb98535f31f
+  flutter_mimc: 21461b1f1842bb47a0f4e076cdac4db0bf92aaf2
 
 PODFILE CHECKSUM: 7fb83752f59ead6285236625b82473f90b1cb932
 

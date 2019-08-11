@@ -149,7 +149,7 @@ public class MimcUserManager {
         void onHandleQuitUnlimitedGroup(long topicId, int code, String errMsg);
         void onHandleDismissUnlimitedGroup(long topicId, int code, String errMsg);
         void onHandleCreateUnlimitedGroup(long topicId,String topicName, int code, String errMsg);
-
+        void onHandleSendUnlimitedGroupMessageTimeout(MIMCGroupMessage groupMessage);
     }
 
     public static MimcUserManager getInstance() {
@@ -255,9 +255,10 @@ public class MimcUserManager {
         }
 
         @Override
-        public void handleDismissUnlimitedGroup(long topicId) {
+        public void handleDismissUnlimitedGroup(long l) {
 
         }
+
     }
 
     // 状态回调通知
@@ -347,7 +348,7 @@ public class MimcUserManager {
 
         @Override
         public void handleSendUnlimitedGroupMessageTimeout(MIMCGroupMessage mimcGroupMessage) {
-
+            onHandleMIMCMsgListener.onHandleSendUnlimitedGroupMessageTimeout(mimcGroupMessage);
         }
 
         @Override

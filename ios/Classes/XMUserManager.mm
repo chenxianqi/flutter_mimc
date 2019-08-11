@@ -1,5 +1,4 @@
 #import "XMUserManager.h"
-
 @interface XMUserManager () {
 }
 @property(nonatomic) int64_t appId;
@@ -33,7 +32,7 @@
     self.appKey = appKey;
     self.appSecret = appSecret;
     self.appAccount = appAccount;
-    self.url = @"https://mimc.chat.xiaomi.net/api/account/token";
+    self.url = @"https://mimc.chat.xiaomi.net";
 }
 
 // 发起请求获取签名认证
@@ -44,7 +43,6 @@
         NSLog(@"generateRequest, fail, parameter:url=%@, appId=%lld, appKey=%@, appKey_len=%lu, appSecret=%@, appSecret_len=%lu, appAccount=%@, appAccount_len=%lu", url, appId, appKey, (long)appKey.length, appSecret, (long)appSecret.length, appAccount, (long)appAccount.length);
         return nil;
     }
-    
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     NSMutableDictionary *dicObj = [[NSMutableDictionary alloc] init];
     [dicObj setObject:[NSNumber numberWithLongLong:appId] forKey:@"appId"];
@@ -78,10 +76,19 @@
     return [_user logout];
 }
 
-// 获取token
+// geturl
+- (NSString *)getUrl{
+    return _url;
+}
+
+// token
 - (void)parseProxyServiceToken:(void(^)(NSString *data))callback {
     NSLog(@"parseProxyServiceToken, comes");
-    NSURL *url = [NSURL URLWithString:self.url];
+    NSMutableString *httpUrl = [NSMutableString string];
+    NSString *api = @"/api/account/token";
+    [httpUrl appendString: self.url];
+    [httpUrl appendString: api];
+    NSURL *url = [NSURL URLWithString:httpUrl];
     NSMutableURLRequest *request = [self generateHttpRequest:url appId:self.appId appKey:self.appKey appSecret:self.appSecret appAccount:self.appAccount];
     void (^completionHandler)(NSData *, NSURLResponse *, NSError *) = ^(NSData *data, NSURLResponse *response, NSError *error) {
         if (data == nil || data.length == 0 || response == nil || [(NSHTTPURLResponse *)response statusCode] != 200) {

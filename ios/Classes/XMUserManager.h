@@ -9,6 +9,7 @@
 - (NSString *)getAppAccount;
 - (void)setAppAccount:(NSString *)appAccount;
 - (MCUser *)getUser;
+- (NSString *)getUrl;
 - (void)setUser:(MCUser *)user;
 - (void)parseProxyServiceToken:(void(^)(NSString *data))callback;
 @end
