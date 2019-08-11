@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_mimc/flutter_mimc.dart';
 import 'dart:convert';
 void main() => runApp(MaterialApp(
@@ -14,7 +15,8 @@ class _MyAppState extends State<MyApp> {
 
   FlutterMimc flutterMimc;
   final String appAccount = "100";             // 我的账号
-  final String groupID = "21351186997706752"; // 操作的群ID
+  String groupID = "21371209761947648"; // 操作的普通群ID
+  String maxGroupID = "21371268016635904"; // 操作的无限通群ID
   bool isOnline = false;
   List<Map<String, String>> logs = [];
   TextEditingController accountCtr = TextEditingController();
@@ -111,12 +113,19 @@ class _MyAppState extends State<MyApp> {
     addLog("获取当前账号成功：$account");
   }
 
+  // 获取当前状态
+  void getStatus() async{
+    bool isOnline =  await flutterMimc.isOnline();
+    addLog("获取当前状态：${isOnline ? '在线' :'离线'}");
+  }
+
   // 创建一个群
   void createGroup() async{
     var res = await flutterMimc.createGroup("骚群1", appAccount);
     if(res['error'] != null){
       addLog("创建群失败:${res['error']}" );
     }else{
+      groupID = res['data']['topicInfo']['topicId'];
       addLog("创建群成功：${res['data']}");
     }
 
@@ -224,26 +233,56 @@ class _MyAppState extends State<MyApp> {
 
   // 创建无限大群
   void createUnlimitedGroup() async{
-    await flutterMimc.createUnlimitedGroup("创建大群");
+    await flutterMimc.createUnlimitedGroup("创建无限大群");
     addLog("创建一个无限大群" );
   }
 
   // 加入无限大群
   void joinUnlimitedGroup() async{
-    await flutterMimc.joinUnlimitedGroup("21360419164127232");
-    addLog("加入无限大群21360419164127232" );
+    await flutterMimc.joinUnlimitedGroup(maxGroupID);
+    addLog("加入无限大群$maxGroupID" );
   }
 
   // 退出无限大群
   void quitUnlimitedGroup() async{
-    await flutterMimc.quitUnlimitedGroup("21360419164127232");
-    addLog("退出无限大群21360419164127232" );
+    await flutterMimc.quitUnlimitedGroup(maxGroupID);
+    addLog("退出无限大群$maxGroupID" );
   }
 
   // 解散无限大群
   void dismissUnlimitedGroup() async{
-    await flutterMimc.dismissUnlimitedGroup("21360412721676288");
-    addLog("解散无限大群21360412721676288" );
+    await flutterMimc.dismissUnlimitedGroup(maxGroupID);
+    addLog("解散无限大群$maxGroupID" );
+  }
+
+  // 查询无限大群成员
+  void queryUnlimitedGroupMembers() async{
+    var res = await flutterMimc.queryUnlimitedGroupMembers(maxGroupID);
+    addLog("无限大群成员: $res" );
+  }
+
+  // 查询无限大群
+  void queryUnlimitedGroups() async{
+    var res = await flutterMimc.queryUnlimitedGroups();
+    addLog("我所在的大群: $res" );
+  }
+
+  // 查询无限大群在线用户数
+  void queryUnlimitedGroupOnlineUsers() async{
+    var res =  await flutterMimc.queryUnlimitedGroupOnlineUsers(maxGroupID);
+    addLog("无限大群在线用户数：$res" );
+  }
+
+  // 查询无限大群基本信息
+  void queryUnlimitedGroupInfo() async{
+    var res =  await flutterMimc.queryUnlimitedGroupInfo(maxGroupID);
+    addLog("查询无限大群基本信息：$res" );
+  }
+
+  // 更新大群基本信息
+  void updateUnlimitedGroup() async{
+    var res =  await flutterMimc.updateUnlimitedGroup(maxGroupID, newGroupName: "新大群名称1");
+    addLog("更新大群基本信息：$res" );
   }
 
   // 监听回调消息
@@ -298,6 +337,7 @@ class _MyAppState extends State<MyApp> {
     // 创建大群回调
     flutterMimc.addEventListenerHandleCreateUnlimitedGroup().listen((Map<dynamic, dynamic> res){
       addLog("创建大群回调==${res}");
+      maxGroupID = (res['topicId'] as int).toString();
     }).onError((err){
       addLog(err);
     });
@@ -328,6 +368,24 @@ class _MyAppState extends State<MyApp> {
   }
 
 
+
+  Widget button(String title, VoidCallback onPressed){
+    return SizedBox(
+      child: GestureDetector(
+        child: Container(
+          padding: EdgeInsets.all(3.0),
+          margin: EdgeInsets.symmetric(vertical: 2.0, horizontal: 3.0),
+          decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.all(Radius.circular(3.0))
+          ),
+          child: Text(title, style: TextStyle(color: Colors.white),),
+        ),
+        onTap: onPressed
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -342,36 +400,13 @@ class _MyAppState extends State<MyApp> {
             ),
           ],
         ),
-        body: Stack(
+        body: Column(
           children: <Widget>[
-            Container(
-              width: double.infinity,
-              color: Colors.white70,
-              height: double.infinity,
-              padding: EdgeInsets.only(top: 450.0, left: 10.0, right:10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text("操作日志"),
-                  Divider(),
-                  Expanded(
-                    child: ListView.builder(
-                        itemCount: logs.length,
-                        itemBuilder: (context, index){
-                          return ListTile(title: Text(logs[index]['content']), subtitle: Text(logs[index]['date']),);
-                        }
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Container(
-              height: 450.0,
-              padding: EdgeInsets.all(5.0),
-              color: Colors.white,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.0),
               child: Column(
                 children: <Widget>[
-                  Text("当前账号：$appAccount,  当前状态：${isOnline ? '在线' : '离线'}"),
+                  Text("\r\n当前账号：$appAccount,  当前状态：${isOnline ? '在线' : '离线'}\r\n"),
                   SizedBox(
                     height: 35.0,
                     child: TextField(
@@ -397,13 +432,13 @@ class _MyAppState extends State<MyApp> {
                         onPressed:() => sendMessage(0),
                         child: Text( "发送单聊", style: TextStyle(color: Colors.white),),
                       ),
-                      VerticalDivider(width: 2.0,),
+                      VerticalDivider(width: 10.0,),
                       RaisedButton(
                         color: Colors.blue,
                         onPressed:() => sendMessage(1),
                         child: Text( "发送群聊", style: TextStyle(color: Colors.white),),
                       ),
-                      VerticalDivider(width: 2.0,),
+                      VerticalDivider(width: 10.0,),
                       RaisedButton(
                         color: Colors.blue,
                         onPressed:() => sendMessage(2),
@@ -413,117 +448,79 @@ class _MyAppState extends State<MyApp> {
                   ),
                   Row(
                     children: <Widget>[
-                      RaisedButton(
-                        color: Colors.blue,
-                        onPressed: getToken,
-                        child: Text( "获取token", style: TextStyle(color: Colors.white),),
-                      ),
-                      VerticalDivider(width: 2.0,),
-                      RaisedButton(
-                        color: Colors.blue,
-                        onPressed: getAccount,
-                        child: Text( "获取当前账号", style: TextStyle(color: Colors.white),),
-                      ),
-                      VerticalDivider(width: 2.0,),
-                      RaisedButton(
-                        color: Colors.blue,
-                        onPressed: createGroup,
-                        child: Text( "创建群", style: TextStyle(color: Colors.white),),
-                      ),
+                      button("获取token",getToken),
+                      button("获取当前账号",getAccount),
+                      button("获取账号状态",getStatus),
+                      button("拉取单聊记录",pullP2PHistory),
+                    ],
+                  ),
+                  Text('\r\n----普通群----', style: TextStyle(color: Colors.grey),),
+                  Divider(),
+                  Row(
+                    children: <Widget>[
+                      button("创建群",createGroup),
+                      button("查询群信息",queryGroupInfo),
+                      button("查询所属",queryGroupsOfAccount),
+                      button("邀请加入群",joinGroup),
                     ],
                   ),
                   Row(
                     children: <Widget>[
-                      RaisedButton(
-                        color: Colors.blue,
-                        onPressed: queryGroupInfo,
-                        child: Text( "查询群", style: TextStyle(color: Colors.white),),
-                      ),
-                      VerticalDivider(width: 2.0,),
-                      RaisedButton(
-                        color: Colors.blue,
-                        onPressed: queryGroupsOfAccount,
-                        child: Text( "查询所属", style: TextStyle(color: Colors.white),),
-                      ),
-                      VerticalDivider(width: 2.0,),
-                      RaisedButton(
-                        color: Colors.blue,
-                        onPressed: joinGroup,
-                        child: Text( "邀请加入群", style: TextStyle(color: Colors.white),),
-                      ),
+                      button("非群主退群",quitGroup),
+                      button("踢成员出群",kickGroup),
+                      button("更新群信息",updateGroup),
                     ],
                   ),
                   Row(
                     children: <Widget>[
-                      RaisedButton(
-                        color: Colors.blue,
-                        onPressed: quitGroup,
-                        child: Text( "非群主退群", style: TextStyle(color: Colors.white),),
-                      ),
-                      VerticalDivider(width: 2.0,),
-                      RaisedButton(
-                        color: Colors.blue,
-                        onPressed: kickGroup,
-                        child: Text( "踢成员出群", style: TextStyle(color: Colors.white),),
-                      ),
-                      VerticalDivider(width: 2.0,),
-                      RaisedButton(
-                        color: Colors.blue,
-                        onPressed: updateGroup,
-                        child: Text( "更新群信息", style: TextStyle(color: Colors.white),),
-                      ),
+                      button("群主删除群",dismissGroup),
+                      button("拉取群聊记录",pullP2THistory),
+                    ],
+                  ),
+                  Text('\r\n----无限大群----', style: TextStyle(color: Colors.grey),),
+                  Divider(),
+                  Row(
+                    children: <Widget>[
+                      button("创建大群",createUnlimitedGroup),
+                      button("加入大群",joinUnlimitedGroup),
+                      button("退出大群",quitUnlimitedGroup),
+                      button("解散大群",dismissUnlimitedGroup),
+                      button("大群信息",queryUnlimitedGroupInfo),
                     ],
                   ),
                   Row(
                     children: <Widget>[
-                      RaisedButton(
-                        color: Colors.blue,
-                        onPressed: dismissGroup,
-                        child: Text( "群主删除群", style: TextStyle(color: Colors.white),),
-                      ),
-                      VerticalDivider(width: 2.0,),
-                      RaisedButton(
-                        color: Colors.blue,
-                        onPressed: pullP2PHistory,
-                        child: Text( "拉取单聊记录", style: TextStyle(color: Colors.white),),
-                      ),
-                      VerticalDivider(width: 2.0,),
-                      RaisedButton(
-                        color: Colors.blue,
-                        onPressed: pullP2THistory,
-                        child: Text( "拉取群聊记录", style: TextStyle(color: Colors.white),),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      RaisedButton(
-                        color: Colors.blue,
-                        onPressed: createUnlimitedGroup,
-                        child: Text( "创建大群", style: TextStyle(color: Colors.white),),
-                      ),
-                      VerticalDivider(width: 2.0,),
-                      RaisedButton(
-                        color: Colors.blue,
-                        onPressed: joinUnlimitedGroup,
-                        child: Text( "加入大群", style: TextStyle(color: Colors.white),),
-                      ),
-                      VerticalDivider(width: 2.0,),
-                      RaisedButton(
-                        color: Colors.blue,
-                        onPressed: quitUnlimitedGroup,
-                        child: Text( "退出大群", style: TextStyle(color: Colors.white),),
-                      ),
-                      VerticalDivider(width: 2.0,),
-                      RaisedButton(
-                        color: Colors.blue,
-                        onPressed: dismissUnlimitedGroup,
-                        child: Text( "解散大群", style: TextStyle(color: Colors.white),),
-                      ),
+                      button("大群更新",updateUnlimitedGroup),
+                      button("大群成员",queryUnlimitedGroupMembers),
+                      button("在线用户数",queryUnlimitedGroupOnlineUsers),
+                      button("我所在的无限大群",queryUnlimitedGroups),
                     ],
                   ),
                   Divider()
                 ],
+              ),
+            ),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                color: Colors.white70,
+                height: 100.0,
+                padding: EdgeInsets.symmetric(horizontal:5.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text("操作日志"),
+                    Divider(),
+                    Expanded(
+                      child: ListView.builder(
+                          itemCount: logs.length,
+                          itemBuilder: (context, index){
+                            return ListTile(title: Text(logs[index]['content']), subtitle: Text(logs[index]['date']),);
+                          }
+                      ),
+                    )
+                  ],
+                ),
               ),
             )
           ],

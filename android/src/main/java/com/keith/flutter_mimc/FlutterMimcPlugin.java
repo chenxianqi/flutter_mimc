@@ -695,6 +695,217 @@ public class FlutterMimcPlugin implements MethodCallHandler{
         result.success(null);
     }
 
+    // 查询无限大群成员
+    else if(call.method.equals("queryUnlimitedGroupMembers"))
+    {
+        final  ConstraintsMap params = new ConstraintsMap();
+        try {
+            String topicId = call.argument("topicId");
+            if (topicId == null || topicId.isEmpty()) {
+                params.putString("error", "topicId参数不能为空！");
+                params.putNull("data");
+                result.success(params.toMap());
+                return;
+            }
+                MimcUserManager.getInstance().queryUnlimitedGroupMembers(Long.parseLong(topicId), new Callback() {
+                @Override
+                public void onFailure(Call c, IOException e) {
+                    params.putString("error", e.getMessage());
+                    params.putNull("data");
+                    result.success(params.toMap());
+                }
+                @Override
+                public void onResponse(Call c, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+
+                        JSONObject json = JSONObject.parseObject(response.body().string());
+                        System.out.println(json);
+                        if(json.getInteger("code") == 200){
+                            params.putNull("error");
+                            params.putMap("data", json.getJSONObject("data"));
+                        }else{
+                            params.putString("error", json.getString("message"));
+                            params.putNull("data");
+                        }
+                        result.success(params.toMap());
+                    }
+                }}
+            );
+        }catch (Exception e){
+            params.putString("error", e.getMessage());
+            params.putNull("data");
+            result.success(params.toMap());
+        }
+
+    }
+
+    // 查询无限大群所属群
+    else if(call.method.equals("queryUnlimitedGroups"))
+    {
+        final  ConstraintsMap params = new ConstraintsMap();
+        try {
+            MimcUserManager.getInstance().queryUnlimitedGroups(new Callback() {
+                @Override
+                public void onFailure(Call c, IOException e) {
+                    params.putString("error", e.getMessage());
+                    params.putNull("data");
+                    result.success(params.toMap());
+                }
+                @Override
+                public void onResponse(Call c, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+
+                        JSONObject json = JSONObject.parseObject(response.body().string());
+                        if(json.getInteger("code") == 200){
+                            params.putNull("error");
+                            params.putArray("data", json.getJSONArray("data"));
+                        }else{
+                            params.putString("error", json.getString("message"));
+                            params.putNull("data");
+                        }
+                        result.success(params.toMap());
+                    }
+                }}
+            );
+        }catch (Exception e){
+            params.putString("error", e.getMessage());
+            params.putNull("data");
+            result.success(params.toMap());
+        }
+
+    }
+
+    // 查询无限大群在线用户数
+    else if(call.method.equals("queryUnlimitedGroupOnlineUsers"))
+    {
+        final  ConstraintsMap params = new ConstraintsMap();
+        try {
+            String topicId = call.argument("topicId");
+            if (topicId == null || topicId.isEmpty()) {
+                params.putString("error", "topicId参数不能为空！");
+                params.putNull("data");
+                result.success(params.toMap());
+                return;
+            }
+            MimcUserManager.getInstance().queryUnlimitedGroupOnlineUsers(Long.parseLong(topicId), new Callback() {
+                @Override
+                public void onFailure(Call c, IOException e) {
+                    params.putString("error", e.getMessage());
+                    params.putNull("data");
+                    result.success(params.toMap());
+                }
+                @Override
+                public void onResponse(Call c, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+
+                        JSONObject json = JSONObject.parseObject(response.body().string());
+                        if(json.getInteger("code") == 200){
+                            params.putNull("error");
+                            params.putMap("data", json.getJSONObject("data"));
+                        }else{
+                            params.putString("error", json.getString("message"));
+                            params.putNull("data");
+                        }
+                        result.success(params.toMap());
+                    }
+                }}
+            );
+        }catch (Exception e){
+            params.putString("error", e.getMessage());
+            params.putNull("data");
+            result.success(params.toMap());
+        }
+
+    }
+
+    // 查询无限大群基本信息
+    else if(call.method.equals("queryUnlimitedGroupInfo"))
+    {
+        final  ConstraintsMap params = new ConstraintsMap();
+        try {
+            String topicId = call.argument("topicId");
+            if (topicId == null || topicId.isEmpty()) {
+                params.putString("error", "topicId参数不能为空！");
+                params.putNull("data");
+                result.success(params.toMap());
+                return;
+            }
+            MimcUserManager.getInstance().queryUnlimitedGroupInfo(Long.parseLong(topicId), new Callback() {
+                @Override
+                public void onFailure(Call c, IOException e) {
+                    params.putString("error", e.getMessage());
+                    params.putNull("data");
+                    result.success(params.toMap());
+                }
+                @Override
+                public void onResponse(Call c, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+
+                        JSONObject json = JSONObject.parseObject(response.body().string());
+                        if(json.getInteger("code") == 200){
+                            params.putNull("error");
+                            params.putMap("data", json.getJSONObject("data"));
+                        }else{
+                            params.putString("error", json.getString("message"));
+                            params.putNull("data");
+                        }
+                        result.success(params.toMap());
+                    }
+                }}
+            );
+        }catch (Exception e){
+            params.putString("error", e.getMessage());
+            params.putNull("data");
+            result.success(params.toMap());
+        }
+
+    }
+
+    // 更新无限大群
+    else if(call.method.equals("updateUnlimitedGroup"))
+    {
+        final  ConstraintsMap params = new ConstraintsMap();
+        try {
+            String topicId = call.argument("topicId");
+            String newGroupName = call.argument("newGroupName");
+            String newOwnerAccount = call.argument("newOwnerAccount");
+            if (topicId == null || topicId.isEmpty()) {
+                params.putString("error", "topicId参数不能为空！");
+                params.putNull("data");
+                result.success(params.toMap());
+                return;
+            }
+            MimcUserManager.getInstance().updateUnlimitedGroup(Long.parseLong(topicId), newGroupName, newOwnerAccount, new Callback() {
+                @Override
+                public void onFailure(Call c, IOException e) {
+                    params.putString("error", e.getMessage());
+                    params.putNull("data");
+                    result.success(params.toMap());
+                }
+                @Override
+                public void onResponse(Call c, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+
+                        JSONObject json = JSONObject.parseObject(response.body().string());
+                        if(json.getInteger("code") == 200){
+                            params.putNull("error");
+                            params.putMap("data", json.getJSONObject("data"));
+                        }else{
+                            params.putString("error", json.getString("message"));
+                            params.putNull("data");
+                        }
+                        result.success(params.toMap());
+                    }
+                }}
+            );
+        }catch (Exception e){
+            params.putString("error", e.getMessage());
+            params.putNull("data");
+            result.success(params.toMap());
+        }
+
+    }
+
     // 其他
     else {
       result.notImplemented();

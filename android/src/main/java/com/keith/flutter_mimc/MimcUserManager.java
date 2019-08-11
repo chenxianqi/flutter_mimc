@@ -18,7 +18,6 @@ import com.xiaomi.msg.logger.Logger;
 import com.xiaomi.msg.logger.MIMCLog;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.List;
 
 import okhttp3.Call;
@@ -693,6 +692,128 @@ public class MimcUserManager {
      */
     public void dismissUnlimitedGroup(long topicId, Object context) {
         mimcUser.dismissUnlimitedGroup(topicId, context);
+    }
+
+    /**
+     * 查询无限大群成员
+     * @param topicId 群ID
+     */
+    public void queryUnlimitedGroupMembers(long topicId, Callback responseCallback) {
+        url = domain + "/api/uctopic/userlist";
+        OkHttpClient client = new OkHttpClient();
+        final Request request = new Request
+                .Builder()
+                .url(url)
+                .addHeader("token", mimcUser.getToken())
+                .addHeader("topicId", String.valueOf(topicId))
+                .get()
+                .build();
+        try {
+            Call call = client.newCall(request);
+            call.enqueue(responseCallback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 查询无限大群所属群
+     */
+    public void queryUnlimitedGroups(Callback responseCallback) {
+        String url = domain + "/api/uctopic/topics";
+        OkHttpClient client = new OkHttpClient();
+        final Request request = new Request
+                .Builder()
+                .url(url)
+                .addHeader("token", mimcUser.getToken())
+                .get()
+                .build();
+        try {
+            Call call = client.newCall(request);
+            call.enqueue(responseCallback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 查询无限大群在线用户数
+     * @param topicId
+     */
+    public void queryUnlimitedGroupOnlineUsers(long topicId, Callback responseCallback) {
+        url = domain + "/api/uctopic/onlineinfo";
+        OkHttpClient client = new OkHttpClient();
+        final Request request = new Request
+                .Builder()
+                .url(url)
+                .addHeader("token", mimcUser.getToken())
+                .addHeader("topicId", String.valueOf(topicId))
+                .get()
+                .build();
+        try {
+            Call call = client.newCall(request);
+            call.enqueue(responseCallback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 查询无限大群基本信息
+     * @param topicId
+     */
+    public void queryUnlimitedGroupInfo(long topicId, Callback responseCallback) {
+        url = domain + "/api/uctopic/topic";
+        OkHttpClient client = new OkHttpClient();
+        final Request request = new Request
+                .Builder()
+                .url(url)
+                .addHeader("token", mimcUser.getToken())
+                .addHeader("topicId", String.valueOf(topicId))
+                .get()
+                .build();
+        try {
+            Call call = client.newCall(request);
+            call.enqueue(responseCallback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 更新大群
+     * @param topicId
+     * @param newGroupName
+     * @param newOwnerAccount
+     * 更新群，topicId必填，其他参数必填一个
+     * 必须群主才能转让群，更新群信息，转让群主需要被转让用户在群中
+     */
+    public void updateUnlimitedGroup(long topicId, String newGroupName, String newOwnerAccount, Callback responseCallback) {
+        url = domain + "/api/uctopic/update";
+        final ConstraintsMap params = new ConstraintsMap();
+        params.putLong("topicId", topicId);
+        if (!newOwnerAccount.isEmpty()) {
+            params.putString("ownerAccount", newOwnerAccount);
+        }
+        if (!newGroupName.isEmpty()) {
+            params.putString("topicName", newGroupName);
+        }
+        String json = JSON.toJSONString(params.toMap());
+        System.out.println(json);
+        MediaType JSON = MediaType.parse("application/json");
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request
+                .Builder()
+                .url(url)
+                .addHeader("token", mimcUser.getToken())
+                .post(RequestBody.create(JSON, json))
+                .build();
+        try {
+            Call call = client.newCall(request);
+            call.enqueue(responseCallback);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 

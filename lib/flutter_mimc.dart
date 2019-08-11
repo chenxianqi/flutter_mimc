@@ -49,6 +49,11 @@ class FlutterMimc {
   static const String   _ON_JOIN_UNLIMITED_GROUP    = 'joinUnlimitedGroup';     // 加入无限大群
   static const String   _ON_QUIT_UNLIMITED_GROUP    = 'quitUnlimitedGroup';     // 退出无限大群
   static const String   _ON_DISMISS_UNLIMITED_GROUP = 'dismissUnlimitedGroup';  // 解散无限大群
+  static const String   _ON_QUERY_UNLIMITED_GROUP_MEMBERS = 'queryUnlimitedGroupMembers';           // 查询无限大群成员
+  static const String   _ON_QUERY_UNLIMITED_GROUPS        = 'queryUnlimitedGroups';                 // 查询无限大群
+  static const String   _ON_QUERY_UNLIMITED_GROUP_ONLINE_USERS = 'queryUnlimitedGroupOnlineUsers';  // 查询无限大群在线用户数
+  static const String   _ON_QUERY_UNLIMITED_GROUP_INFO = 'queryUnlimitedGroupInfo';                 // 查询无限大群在线用户数
+  static const String   _ON_UPDATE_UNLIMITED_GROUP      = 'updateUnlimitedGroup';                   // 更新无限大群信息
 
   // 状态变更
   final StreamController<bool> _onlineStatusListenerStreamController = StreamController<bool>.broadcast();
@@ -281,6 +286,53 @@ class FlutterMimc {
   Future<void> dismissUnlimitedGroup(String topicId) async{
     return await _channel.invokeMethod(_ON_DISMISS_UNLIMITED_GROUP, {
       "topicId": topicId
+    });
+  }
+
+
+  //  * 查询无限大群成员
+  //  * @param topicId 群id
+  Future<Map<dynamic, dynamic>> queryUnlimitedGroupMembers(String topicId) async{
+    return await _channel.invokeMethod(_ON_QUERY_UNLIMITED_GROUP_MEMBERS, {
+      "topicId": topicId
+    });
+  }
+
+  //  * 查询无限大群
+  Future<Map<dynamic, dynamic>> queryUnlimitedGroups() async{
+    return await _channel.invokeMethod(_ON_QUERY_UNLIMITED_GROUPS);
+  }
+
+  //  * 查询无限大群在线用户数
+  //  * @param topicId 群id
+  Future<Map<dynamic, dynamic>> queryUnlimitedGroupOnlineUsers(String topicId) async{
+    return await _channel.invokeMethod(_ON_QUERY_UNLIMITED_GROUP_ONLINE_USERS, {
+      "topicId": topicId
+    });
+  }
+
+  //  * 查询无限大群基本信息
+  //  * @param topicId 群id
+  Future<Map<dynamic, dynamic>> queryUnlimitedGroupInfo(String topicId) async{
+    return await _channel.invokeMethod(_ON_QUERY_UNLIMITED_GROUP_INFO, {
+      "topicId": topicId
+    });
+  }
+
+  ///  * 更新大群
+  ///  * @param topicId
+  ///  * @param newGroupName
+  ///  * @param newOwnerAccount
+  ///  * 更新群，topicId必填，其他参数必填一个
+  ///  * 必须群主才能转让群，更新群信息，转让群主需要被转让用户在群中
+  Future<Map<dynamic, dynamic>> updateUnlimitedGroup(String topicId, {
+    String newGroupName = "",
+    String newOwnerAccount = ""
+  }) async{
+    return await _channel.invokeMethod(_ON_UPDATE_UNLIMITED_GROUP, {
+      "topicId": topicId,
+      "newGroupName": newGroupName,
+      "newOwnerAccount": newOwnerAccount,
     });
   }
 

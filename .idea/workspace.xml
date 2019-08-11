@@ -7,6 +7,7 @@
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcHandleMIMCMsgListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcHandleMIMCMsgListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcUserManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/java/com/keith/flutter_mimc/MimcUserManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/web/web_mimc_demo.html" beforeDir="false" afterPath="$PROJECT_DIR$/example/web/web_mimc_demo.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/flutter_mimc.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/flutter_mimc.dart" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -17,33 +18,26 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/flutter_mimc.dart">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/example/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="364" selection-start-line="364" selection-end-line="364" />
+            <state relative-caret-position="230">
+              <caret line="10" selection-start-line="10" selection-end-line="10" />
               <folding>
-                <element signature="e#0#20#0" expanded="true" />
+                <element signature="e#0#39#0" expanded="true" />
+                <element signature="e#10816#14503#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/example/lib/main.dart">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/flutter_mimc.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="91">
-              <caret line="52" column="10" selection-start-line="52" selection-start-column="10" selection-end-line="52" selection-end-column="10" />
+            <state relative-caret-position="-1206">
+              <caret line="327" column="32" selection-start-line="327" selection-start-column="32" selection-end-line="327" selection-end-column="32" />
               <folding>
-                <element signature="e#0#39#0" expanded="true" />
-                <element signature="e#7852#8644#0" />
-                <element signature="e#8946#9243#0" />
-                <element signature="e#9271#9562#0" />
-                <element signature="e#9584#10515#0" />
-                <element signature="e#10538#11443#0" />
-                <element signature="e#11466#12381#0" />
-                <element signature="e#12404#13308#0" />
-                <element signature="e#13331#14248#0" />
+                <element signature="e#0#20#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -67,6 +61,11 @@
       <find>&quot;21354536967340032&quot;</find>
       <find>VerticalDivider(width: 5.0,),</find>
       <find>print</find>
+      <find>21370216554954752</find>
+      <find>iosBtn</find>
+      <find>VerticalDivider(width: 2.0,)</find>
+      <find>groupMaxID</find>
+      <find>as</find>
     </findStrings>
     <replaceStrings>
       <replace>MimcChatResource</replace>
@@ -74,6 +73,8 @@
       <replace>groupID</replace>
       <replace>VerticalDivider(width: 2.0,),</replace>
       <replace>addLog</replace>
+      <replace>button</replace>
+      <replace>maxGroupID</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -101,8 +102,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="10" />
-    <option name="y" value="24" />
+    <option name="x" value="14" />
+    <option name="y" value="29" />
     <option name="width" value="1793" />
     <option name="height" value="1057" />
   </component>
@@ -202,7 +203,14 @@
       <option name="project" value="LOCAL" />
       <updated>1565273943977</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="安卓大群基本操作">
+      <created>1565455026259</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1565455026259</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TodoView">
@@ -215,8 +223,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="10" y="24" width="1793" height="1057" extended-state="0" />
-    <editor active="true" />
+    <frame x="14" y="29" width="1793" height="1057" extended-state="0" />
     <layout>
       <window_info id="Captures" order="0" weight="0.25" />
       <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.22558539" />
@@ -227,10 +234,10 @@
       <window_info id="Capture Tool" order="6" />
       <window_info id="Favorites" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Dart Analysis" order="0" weight="0.32769832" />
-      <window_info active="true" anchor="bottom" id="Run" order="1" visible="true" weight="0.743941" />
+      <window_info active="true" anchor="bottom" id="Run" order="1" visible="true" weight="0.5247629" />
       <window_info anchor="bottom" id="TODO" order="2" weight="0.32982087" />
       <window_info anchor="bottom" id="Debug" order="3" />
-      <window_info anchor="bottom" id="Terminal" order="4" weight="0.5305592" />
+      <window_info anchor="bottom" id="Terminal" order="4" weight="0.5300316" />
       <window_info anchor="bottom" id="Event Log" order="5" side_tool="true" />
       <window_info anchor="bottom" id="Flutter Performance" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="7" />
@@ -246,7 +253,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="事件监听" />
     <MESSAGE value="安卓端收发单聊消息完成" />
-    <option name="LAST_COMMIT_MESSAGE" value="安卓端收发单聊消息完成" />
+    <MESSAGE value="安卓大群基本操作" />
+    <option name="LAST_COMMIT_MESSAGE" value="安卓大群基本操作" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/test/flutter_mimc_test.dart">
@@ -282,13 +290,6 @@
     <entry file="file://$PROJECT_DIR$/mimc-webjs/demo/web_mimc_demo.html" />
     <entry file="file://$PROJECT_DIR$/example/mimc-min_1_0_2.js" />
     <entry file="file://$PROJECT_DIR$/example/web_mimc_demo.html" />
-    <entry file="file://$PROJECT_DIR$/example/web/web_mimc_demo.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/flutter/packages/flutter/lib/src/painting/strut_style.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="314">
@@ -376,28 +377,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/flutter_mimc.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="364" selection-start-line="364" selection-end-line="364" />
+        <state relative-caret-position="-1206">
+          <caret line="327" column="32" selection-start-line="327" selection-start-column="32" selection-end-line="327" selection-end-column="32" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/example/web/web_mimc_demo.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2449">
+          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/example/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="91">
-          <caret line="52" column="10" selection-start-line="52" selection-start-column="10" selection-end-line="52" selection-end-column="10" />
+        <state relative-caret-position="230">
+          <caret line="10" selection-start-line="10" selection-end-line="10" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
-            <element signature="e#7852#8644#0" />
-            <element signature="e#8946#9243#0" />
-            <element signature="e#9271#9562#0" />
-            <element signature="e#9584#10515#0" />
-            <element signature="e#10538#11443#0" />
-            <element signature="e#11466#12381#0" />
-            <element signature="e#12404#13308#0" />
-            <element signature="e#13331#14248#0" />
+            <element signature="e#10816#14503#0" />
           </folding>
         </state>
       </provider>

@@ -193,8 +193,15 @@
     function sendUCMsg() {
         var topicID = document.getElementById("ucTopicId1").value;
         var msg = document.getElementById("msgId").value;
+        var a = new Base64();
+		var message_ = a.encode(msg);
+		jsonMsg = String(JSON.stringify({
+                        version: 0, 
+						msgId: "TEXT_1234",
+						timestamp: String((new Date()).valueOf()),
+                        payload: message_}));
         var type = "txt";
-        var packetid = user.sendUnlimitedGroupMessage(topicID, msg, type);
+        var packetid = user.sendUnlimitedGroupMessage(topicID, jsonMsg, type);
     }
 
     function statusChange(bindResult, errType, errReason, errDesc) {

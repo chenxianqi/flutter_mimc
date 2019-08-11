@@ -47,6 +47,7 @@ public class MimcHandleMIMCMsgListener implements MimcUserManager.OnHandleMIMCMs
             paramsChild.putLong("timestamp", timestamp);
             paramsParent.putString("eventType", eventType);
             paramsParent.putMap("eventValue", paramsChild.toMap());
+            System.out.println("收到群消息" + paramsParent.toMap());
             FlutterMimcPlugin.eventSink.success(paramsParent.toMap());
         }catch (Exception e){
             System.out.println("eventSink  Error:" + e.getMessage());
@@ -70,7 +71,6 @@ public class MimcHandleMIMCMsgListener implements MimcUserManager.OnHandleMIMCMs
             System.out.println("eventSink  null");
             return;
         }
-        System.out.println("收到群消息" + message.toString());
         eventSinkPushMessage("onHandleGroupMessage", null, message);
     }
 
