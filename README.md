@@ -602,7 +602,7 @@ dependencies:
 ## LICENSE
 
 
-    Copyright 2018 OpenFlutter Project
+    Copyright 2019 keith
 
     Licensed to the Apache Software Foundation (ASF) under one or more contributor
     license agreements.  See the NOTICE file distributed with this work for
