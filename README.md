@@ -1,7 +1,5 @@
 ## Flutter_mimc  v 0.0.2
 
-![Image text](http://qiniu.cmp520.com/WechatIMG417.jpg)
-
 
 ## 使用需知
  使用`flutter_mimc`，建议先阅读[小米即时消息云官方文档](https://admin.mimc.chat.xiaomi.net/docs/)，
@@ -9,8 +7,8 @@
  
  
 ## 消息体注意事项
-  所有类型请保持消息体一致性
-  内置已提供MimcChatMessage模型类
+  所有消息类型请保持一致性
+  flutter_mimc已提供MimcChatMessage模型类
  ```dart
  // MimcChatMessage tojson
  var message = {
@@ -44,6 +42,9 @@ dependencies:
 ## 初始化
 使用`flutter_mimc`前，需要进行初始化操作：
  ```dart
+
+    import 'package:flutter_mimc/flutter_mimc.dart';
+
      flutterMimc = FlutterMimc.init(
       debug: true,
       appId: "xxxxxxxx",
