@@ -1,8 +1,8 @@
 name: flutter_mimc
-description: A new flutter plugin project.
+description: A new flutter IM plugin project.
 version: 0.0.1
-author:
-homepage:
+author: keith <361554012@qq.com>
+homepage: https://github.com/chenxianqi/flutter_mimc
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
