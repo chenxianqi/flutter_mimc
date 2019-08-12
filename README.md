@@ -1,4 +1,4 @@
-## Flutter_mimc  v 0.0.1
+## Flutter_mimc  v 0.0.2
 
 ![Image text](http://qiniu.cmp520.com/WechatIMG417.jpg)
 
@@ -46,9 +46,9 @@ dependencies:
  ```dart
      flutterMimc = FlutterMimc.init(
       debug: true,
-      appId: "2882303761517669588",
-      appKey: "5111766983588",
-      appSecret: "b0L3IOz/9Ob809v8H2FbVg==",
+      appId: "xxxxxxxx",
+      appKey: "xxxxxxxx",
+      appSecret: "xxxxxxxx,
       appAccount: appAccount
     );
  ```
@@ -340,9 +340,7 @@ dependencies:
     addLog("更新大群基本信息：$res" );
   }
 
-  // 监听回调消息
-  void listener(){
-
+  // =========监听回调==============
 
     // 监听登录状态
     flutterMimc.addEventListenerStatusChanged().listen((status){
@@ -434,168 +432,6 @@ dependencies:
 
 
 
-  }
-
-
-
-  Widget button(String title, VoidCallback onPressed){
-    return SizedBox(
-      child: GestureDetector(
-        child: Container(
-          padding: EdgeInsets.all(3.0),
-          margin: EdgeInsets.symmetric(vertical: 2.0, horizontal: 3.0),
-          decoration: BoxDecoration(
-            color: Colors.blue,
-            borderRadius: BorderRadius.all(Radius.circular(3.0))
-          ),
-          child: Text(title, style: TextStyle(color: Colors.white),),
-        ),
-        onTap: onPressed
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          title: const Text('FlutterMimc example app'),
-          actions: <Widget>[
-            RaisedButton(
-              color: Colors.blue,
-              onPressed: isOnline ? logout :  login,
-              child: Text( isOnline ? "退出登录" : "登录", style: TextStyle(color: Colors.white),),
-            ),
-          ],
-        ),
-        body: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.0),
-              child: Column(
-                children: <Widget>[
-                  Text("\r\n当前账号：$appAccount,  当前状态：${isOnline ? '在线' : '离线'}\r\n"),
-                  SizedBox(
-                    height: 35.0,
-                    child: TextField(
-                        controller: accountCtr,
-                        decoration: InputDecoration(
-                            hintText: "输入对方群ID、或对方账号"
-                        )
-                    ),
-                  ),
-                  SizedBox(
-                    height: 35.0,
-                    child: TextField(
-                        controller: contentCtr,
-                        decoration: InputDecoration(
-                            hintText: "输入发送的内容"
-                        )
-                    ),
-                  ),
-                  Row(
-                    children: <Widget>[
-                      RaisedButton(
-                        color: Colors.blue,
-                        onPressed:() => sendMessage(0),
-                        child: Text( "发送单聊", style: TextStyle(color: Colors.white),),
-                      ),
-                      VerticalDivider(width: 10.0,),
-                      RaisedButton(
-                        color: Colors.blue,
-                        onPressed:() => sendMessage(1),
-                        child: Text( "发送群聊", style: TextStyle(color: Colors.white),),
-                      ),
-                      VerticalDivider(width: 10.0,),
-                      RaisedButton(
-                        color: Colors.blue,
-                        onPressed:() => sendMessage(2),
-                        child: Text( "发送无限群聊", style: TextStyle(color: Colors.white),),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      button("获取token",getToken),
-                      button("获取当前账号",getAccount),
-                      button("获取账号状态",getStatus),
-                      button("拉取单聊记录",pullP2PHistory),
-                    ],
-                  ),
-                  Text('\r\n----普通群----', style: TextStyle(color: Colors.grey),),
-                  Divider(),
-                  Row(
-                    children: <Widget>[
-                      button("创建群",createGroup),
-                      button("查询群信息",queryGroupInfo),
-                      button("查询所属",queryGroupsOfAccount),
-                      button("邀请加入群",joinGroup),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      button("非群主退群",quitGroup),
-                      button("踢成员出群",kickGroup),
-                      button("更新群信息",updateGroup),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      button("群主删除群",dismissGroup),
-                      button("拉取群聊记录",pullP2THistory),
-                    ],
-                  ),
-                  Text('\r\n----无限大群----', style: TextStyle(color: Colors.grey),),
-                  Divider(),
-                  Row(
-                    children: <Widget>[
-                      button("创建大群",createUnlimitedGroup),
-                      button("加入大群",joinUnlimitedGroup),
-                      button("退出大群",quitUnlimitedGroup),
-                      button("解散大群",dismissUnlimitedGroup),
-                      button("大群信息",queryUnlimitedGroupInfo),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      button("大群更新",updateUnlimitedGroup),
-                      button("大群成员",queryUnlimitedGroupMembers),
-                      button("在线用户数",queryUnlimitedGroupOnlineUsers),
-                      button("我所在的无限大群",queryUnlimitedGroups),
-                    ],
-                  ),
-                  Divider()
-                ],
-              ),
-            ),
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                color: Colors.white70,
-                height: 100.0,
-                padding: EdgeInsets.symmetric(horizontal:5.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text("操作日志"),
-                    Divider(),
-                    Expanded(
-                      child: ListView.builder(
-                          itemCount: logs.length,
-                          itemBuilder: (context, index){
-                            return ListTile(title: Text(logs[index]['content']), subtitle: Text(logs[index]['date']),);
-                          }
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
-        )
-    );
- 
  ```
 
 

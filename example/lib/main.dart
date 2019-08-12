@@ -19,7 +19,7 @@ class _MyAppState extends State<MyApp> {
   String maxGroupID = "21360839299170304"; // 操作的无限通群ID
   bool isOnline = false;
   List<Map<String, String>> logs = [];
-  TextEditingController accountCtr = TextEditingController(text: '21351198708203520');
+  TextEditingController accountCtr = TextEditingController();
   TextEditingController contentCtr = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
