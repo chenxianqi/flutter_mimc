@@ -1,5 +1,5 @@
-## Flutter_mimc  v0.0.1
-
+## Flutter_mimc  v 0.0.1
+![Image text](http://qiniu.cmp520.com/WechatIMG417.png)
 
 ## 使用需知
  使用`flutter_mimc`，建议先阅读[小米即时消息云官方文档](https://admin.mimc.chat.xiaomi.net/docs/)，
@@ -27,11 +27,6 @@
 * 普通群聊
 * 无限大群聊
 * 实时流（暂未实现）
-
-
-## 示例
-
-[点此查看示例](./example)
 
 
 # 安装 flutter_mimc
