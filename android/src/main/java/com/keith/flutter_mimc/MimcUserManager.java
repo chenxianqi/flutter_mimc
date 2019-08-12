@@ -540,7 +540,7 @@ public class MimcUserManager {
     /**
      * 群主更新群信息
      * @param groupId 群ID
-     * @param newOwnerAccount 若为群成员则指派新的群主
+     * @param groupId 群ID
      * @param newGroupName 群名
      * @param newGroupBulletin 群公告
      */

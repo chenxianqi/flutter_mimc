@@ -21,10 +21,13 @@ AFHTTPSessionManager *httpManager;
                               binaryMessenger:[registrar messenger]];
     [mimcEvent.eventChannel setStreamHandler:mimcEvent];
     mimcUserManager = [[XMUserManager alloc] init];
+    
+    // httpManager
     httpManager = [AFHTTPSessionManager manager];
     [httpManager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [httpManager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     httpManager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", nil];
+    httpManager.requestSerializer = [AFJSONRequestSerializer serializer];
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
@@ -36,8 +39,12 @@ AFHTTPSessionManager *httpManager;
         NSString *appKey = argsMap[@"appKey"];
         NSString *appSecret = argsMap[@"appSecret"];
         NSString *appAccount = argsMap[@"appAccount"];
-        bool isDebug = argsMap[@"debug"];
-        if(isDebug == 1){[MCUser setMIMCLogSwitch:YES];};
+        BOOL isDebug = [argsMap[@"debug"] boolValue];
+        NSLog(@"call.arguments%@", call.arguments);
+        if(isDebug == YES){
+            NSLog(@"打开了log=%@", appIdStr);
+            [MCUser setMIMCLogSwitch:YES];
+        };
         int64_t appId =[appIdStr longLongValue];
         [mimcUserManager initArgs:appId appKey:appKey appSecret:appSecret appAccount:appAccount];
         result(NULL);
@@ -49,6 +56,7 @@ AFHTTPSessionManager *httpManager;
         [mimcUserManager userLogin];
         mimcUserManager.getUser.onlineStatusDelegate = self;
         mimcUserManager.getUser.handleMessageDelegate = self;
+        mimcUserManager.getUser.handleUnlimitedGroupDelegate = self;
         result(NULL);
         
     }
@@ -112,6 +120,8 @@ AFHTTPSessionManager *httpManager;
     }
     
     // 创建普通群
+    // @param groupName 群名
+    // @param users 群成员，多个成员之间用英文逗号(,)分隔
     else if ([@"createGroup" isEqualToString:call.method]) {
         NSMutableDictionary *dic = [NSMutableDictionary dictionary];
         [dic setValue:@"" forKey:@"data"];
@@ -131,7 +141,6 @@ AFHTTPSessionManager *httpManager;
         [httpUrl appendString: @"/api/topic/"];
         [httpUrl appendString:[appid stringValue]];
         NSDictionary *parameters = @{@"topicName": groupName, @"accounts": users};
-        httpManager.requestSerializer = [AFJSONRequestSerializer serializer];
         [httpManager.requestSerializer setValue:token forHTTPHeaderField:@"token"];
         [httpManager POST:httpUrl parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             int code = [[responseObject valueForKey:@"code"] intValue];
@@ -152,7 +161,8 @@ AFHTTPSessionManager *httpManager;
         }];
     }
     
-    // 查询群
+    // 查询群信息
+    // @param groupId 群ID
     else if ([@"queryGroupInfo" isEqualToString:call.method]) {
         NSMutableDictionary *dic = [NSMutableDictionary dictionary];
         [dic setValue:@"" forKey:@"data"];
@@ -172,9 +182,472 @@ AFHTTPSessionManager *httpManager;
         [httpUrl appendString:[appid stringValue]];
         [httpUrl appendString:@"/"];
         [httpUrl appendString: groupId];
-        httpManager.requestSerializer = [AFJSONRequestSerializer serializer];
         [httpManager.requestSerializer setValue:token forHTTPHeaderField:@"token"];
         [httpManager GET:httpUrl parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            int code = [[responseObject valueForKey:@"code"] intValue];
+            NSString *message = [responseObject valueForKey:@"message"];
+            NSDictionary *data = [responseObject valueForKey:@"data"];
+            if(code == 200){
+                [dic setValue:data forKey:@"data"];
+                [dic setValue:@YES forKey:@"success"];
+                result(dic);
+            }else{
+                [dic setValue:message forKey:@"message"];
+                result(dic);
+            }
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [dic setValue:error forKey:@"message"];
+            result(dic);
+        }];
+    }
+    
+    // 查询所属群信息
+    // @param groupId 群ID
+    else if ([@"queryGroupsOfAccount" isEqualToString:call.method]) {
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        [dic setValue:@"" forKey:@"data"];
+        [dic setValue:@NO forKey:@"success"];
+        [dic setValue:@"" forKey:@"message"];
+        NSNumber *appid = [NSNumber numberWithLongLong:mimcUserManager.getUser.getAppId];
+        NSString *token = [mimcUserManager.getUser getToken];
+        NSMutableString *httpUrl = [NSMutableString string];
+        [httpUrl appendString: [mimcUserManager getUrl]];
+        [httpUrl appendString: @"/api/topic/"];
+        [httpUrl appendString:[appid stringValue]];
+        [httpUrl appendString:@"/account"];
+        [httpManager.requestSerializer setValue:token forHTTPHeaderField:@"token"];
+        [httpManager GET:httpUrl parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            int code = [[responseObject valueForKey:@"code"] intValue];
+            NSString *message = [responseObject valueForKey:@"message"];
+            NSArray *data = [responseObject valueForKey:@"data"];
+            if(code == 200){
+                [dic setValue:data forKey:@"data"];
+                [dic setValue:@YES forKey:@"success"];
+                result(dic);
+            }else{
+                [dic setValue:message forKey:@"message"];
+                result(dic);
+            }
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [dic setValue:error forKey:@"message"];
+            result(dic);
+        }];
+    }
+    
+    // 邀请用户加入群
+    // @param groupId 群ID
+    // @param users 加入成员，多个成员之间用英文逗号(,)分隔
+    else if ([@"joinGroup" isEqualToString:call.method]) {
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        [dic setValue:@"" forKey:@"data"];
+        [dic setValue:@NO forKey:@"success"];
+        [dic setValue:@"" forKey:@"message"];
+        NSString *groupId = argsMap[@"groupId"];
+        NSString *users = argsMap[@"users"];
+        if([groupId isEqual: @""] || [users isEqual: @""]){
+            [dic setValue:@"groupId或users不能为空！" forKey:@"message"];
+            result(dic);
+            return;
+        }
+        NSNumber *appid = [NSNumber numberWithLongLong:mimcUserManager.getUser.getAppId];
+        NSString *token = [mimcUserManager.getUser getToken];
+        NSMutableString *httpUrl = [NSMutableString string];
+        [httpUrl appendString: [mimcUserManager getUrl]];
+        [httpUrl appendString: @"/api/topic/"];
+        [httpUrl appendString:[appid stringValue]];
+        [httpUrl appendString: @"/"];
+        [httpUrl appendString: groupId];
+        [httpUrl appendString: @"/accounts"];
+        NSDictionary *parameters = @{@"accounts": users};
+        [httpManager.requestSerializer setValue:token forHTTPHeaderField:@"token"];
+        [httpManager POST:httpUrl parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            int code = [[responseObject valueForKey:@"code"] intValue];
+            NSString *message = [responseObject valueForKey:@"message"];
+            NSDictionary *data = [responseObject valueForKey:@"data"];
+            if(code == 200){
+                [dic setValue:data forKey:@"data"];
+                [dic setValue:@YES forKey:@"success"];
+                result(dic);
+            }else{
+                [dic setValue:message forKey:@"message"];
+                result(dic);
+            }
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [dic setValue:error forKey:@"message"];
+            result(dic);
+        }];
+    }
+    
+    // 非群主成员退群
+    // @param groupId 群ID
+    else if ([@"quitGroup" isEqualToString:call.method]) {
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        [dic setValue:@"" forKey:@"data"];
+        [dic setValue:@NO forKey:@"success"];
+        [dic setValue:@"" forKey:@"message"];
+        NSString *groupId = argsMap[@"groupId"];
+        if([groupId isEqual: @""]){
+            [dic setValue:@"groupId不能为空！" forKey:@"message"];
+            result(dic);
+            return;
+        }
+        NSNumber *appid = [NSNumber numberWithLongLong:mimcUserManager.getUser.getAppId];
+        NSString *token = [mimcUserManager.getUser getToken];
+        NSMutableString *httpUrl = [NSMutableString string];
+        [httpUrl appendString: [mimcUserManager getUrl]];
+        [httpUrl appendString: @"/api/topic/"];
+        [httpUrl appendString:[appid stringValue]];
+        [httpUrl appendString: @"/"];
+        [httpUrl appendString: groupId];
+        [httpUrl appendString: @"/account"];
+        [httpManager.requestSerializer setValue:token forHTTPHeaderField:@"token"];
+        [httpManager DELETE:httpUrl parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            int code = [[responseObject valueForKey:@"code"] intValue];
+            NSString *message = [responseObject valueForKey:@"message"];
+            if(code == 200){
+                [dic setValue:@"" forKey:@"data"];
+                [dic setValue:@YES forKey:@"success"];
+                result(dic);
+            }else{
+                [dic setValue:message forKey:@"message"];
+                result(dic);
+            }
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [dic setValue:error forKey:@"message"];
+            result(dic);
+        }];
+    }
+    
+    // 群主踢成员出群
+    // @param groupId 群ID
+    // @param users 群成员，多个成员之间用英文逗号(,)分隔
+    else if ([@"kickGroup" isEqualToString:call.method]) {
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        [dic setValue:@"" forKey:@"data"];
+        [dic setValue:@NO forKey:@"success"];
+        [dic setValue:@"" forKey:@"message"];
+        NSString *groupId = argsMap[@"groupId"];
+        NSString *users = argsMap[@"users"];
+        if([groupId isEqual: @""] || [users isEqual: @""]){
+            [dic setValue:@"groupId或users不能为空！" forKey:@"message"];
+            result(dic);
+            return;
+        }
+        NSNumber *appid = [NSNumber numberWithLongLong:mimcUserManager.getUser.getAppId];
+        NSString *token = [mimcUserManager.getUser getToken];
+        NSMutableString *httpUrl = [NSMutableString string];
+        [httpUrl appendString: [mimcUserManager getUrl]];
+        [httpUrl appendString: @"/api/topic/"];
+        [httpUrl appendString:[appid stringValue]];
+        [httpUrl appendString: @"/"];
+        [httpUrl appendString: groupId];
+        [httpUrl appendString: @"/accounts?accounts="];
+        [httpUrl appendString: users];
+        [httpManager.requestSerializer setValue:token forHTTPHeaderField:@"token"];
+        [httpManager DELETE:httpUrl parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            int code = [[responseObject valueForKey:@"code"] intValue];
+            NSString *message = [responseObject valueForKey:@"message"];
+            NSDictionary *data = [responseObject valueForKey:@"data"];
+            if(code == 200){
+                [dic setValue:data forKey:@"data"];
+                [dic setValue:@YES forKey:@"success"];
+                result(dic);
+            }else{
+                [dic setValue:message forKey:@"message"];
+                result(dic);
+            }
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [dic setValue:error forKey:@"message"];
+            result(dic);
+        }];
+    }
+    
+    // 群主更新群信息
+    // @param groupId 群ID
+    // @param newOwnerAccount 若为群成员则指派新的群主
+    // @param newGroupName 群名
+    // @param newGroupBulletin 群公告
+    else if ([@"updateGroup" isEqualToString:call.method]) {
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        [dic setValue:@"" forKey:@"data"];
+        [dic setValue:@NO forKey:@"success"];
+        [dic setValue:@"" forKey:@"message"];
+        NSString *groupId = argsMap[@"groupId"];
+         NSString *newOwnerAccount = argsMap[@"newOwnerAccount"];
+         NSString *newGroupName = argsMap[@"newGroupName"];
+        NSString *newGroupBulletin = argsMap[@"newGroupBulletin"];
+        if([groupId isEqual: @""]){
+            [dic setValue:@"groupId不能为空!" forKey:@"message"];
+            result(dic);
+            return;
+        }
+        NSNumber *appid = [NSNumber numberWithLongLong:mimcUserManager.getUser.getAppId];
+        NSString *token = [mimcUserManager.getUser getToken];
+        NSMutableString *httpUrl = [NSMutableString string];
+        [httpUrl appendString: [mimcUserManager getUrl]];
+        [httpUrl appendString: @"/api/topic/"];
+        [httpUrl appendString:[appid stringValue]];
+        [httpUrl appendString: @"/"];
+        [httpUrl appendString:groupId];
+        NSDictionary *parameters = [NSMutableDictionary dictionary];
+        if(![newOwnerAccount isEqual: @""]){
+            [parameters setValue:newOwnerAccount forKey:@"ownerAccount"];
+        }
+        if(![newGroupName isEqual: @""]){
+            [parameters setValue:newGroupName forKey:@"topicName"];
+        }
+        if(![newGroupBulletin isEqual: @""]){
+            [parameters setValue:newGroupBulletin forKey:@"bulletin"];
+        }
+        [httpManager.requestSerializer setValue:token forHTTPHeaderField:@"token"];
+        [httpManager PUT:httpUrl parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            int code = [[responseObject valueForKey:@"code"] intValue];
+            NSString *message = [responseObject valueForKey:@"message"];
+            NSDictionary *data = [responseObject valueForKey:@"data"];
+            if(code == 200){
+                [dic setValue:data forKey:@"data"];
+                [dic setValue:@YES forKey:@"success"];
+                result(dic);
+            }else{
+                [dic setValue:message forKey:@"message"];
+                result(dic);
+            }
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [dic setValue:error forKey:@"message"];
+            result(dic);
+        }];
+    }
+    
+    // 群主销毁群
+    // @param groupId 群ID
+    else if ([@"dismissGroup" isEqualToString:call.method]) {
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        [dic setValue:@"" forKey:@"data"];
+        [dic setValue:@NO forKey:@"success"];
+        [dic setValue:@"" forKey:@"message"];
+        NSString *groupId = argsMap[@"groupId"];
+        if([groupId isEqual: @""]){
+            [dic setValue:@"groupId不能为空！" forKey:@"message"];
+            result(dic);
+            return;
+        }
+        NSNumber *appid = [NSNumber numberWithLongLong:mimcUserManager.getUser.getAppId];
+        NSString *token = [mimcUserManager.getUser getToken];
+        NSMutableString *httpUrl = [NSMutableString string];
+        [httpUrl appendString: [mimcUserManager getUrl]];
+        [httpUrl appendString: @"/api/topic/"];
+        [httpUrl appendString:[appid stringValue]];
+        [httpUrl appendString: @"/"];
+        [httpUrl appendString: groupId];
+        [httpManager.requestSerializer setValue:token forHTTPHeaderField:@"token"];
+        [httpManager DELETE:httpUrl parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            int code = [[responseObject valueForKey:@"code"] intValue];
+            NSString *message = [responseObject valueForKey:@"message"];
+            NSDictionary *data = [responseObject valueForKey:@"data"];
+            if(code == 200){
+                [dic setValue:data forKey:@"data"];
+                [dic setValue:@YES forKey:@"success"];
+                result(dic);
+            }else{
+                [dic setValue:message forKey:@"message"];
+                result(dic);
+            }
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [dic setValue:error forKey:@"message"];
+            result(dic);
+        }];
+    }
+    
+    // 拉取单聊消息记录
+    // @param toAccount 接收方帐号
+    // @param fromAccount 发送方帐号
+    // @param utcFromTime 开始时间
+    // @param utcToTime 结束时间
+    // 注意：utcFromTime和utcToTime的时间间隔不能超过24小时，查询状态为[utcFromTime,utcToTime)，单位毫秒，UTC时间
+    else if ([@"pullP2PHistory" isEqualToString:call.method]) {
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        [dic setValue:@"" forKey:@"data"];
+        [dic setValue:@NO forKey:@"success"];
+        [dic setValue:@"" forKey:@"message"];
+        NSString *toAccount = argsMap[@"toAccount"];
+        NSString *fromAccount = argsMap[@"fromAccount"];
+        NSString *utcFromTime = argsMap[@"utcFromTime"];
+        NSString *utcToTime = argsMap[@"utcToTime"];
+        if([toAccount isEqual: @""] || [fromAccount isEqual: @""] || [utcFromTime isEqual: @""]|| [utcToTime isEqual: @""]){
+            [dic setValue:@"所有参数不能为空!" forKey:@"message"];
+            result(dic);
+            return;
+        }
+        NSString *token = [mimcUserManager.getUser getToken];
+        NSMutableString *httpUrl = [NSMutableString string];
+        [httpUrl appendString: [mimcUserManager getUrl]];
+        [httpUrl appendString: @"/api/msg/p2p/query/"];
+        NSDictionary *parameters = @{@"toAccount": toAccount, @"fromAccount": fromAccount, @"utcFromTime": utcFromTime, @"utcToTime": utcToTime};
+        [httpManager.requestSerializer setValue:token forHTTPHeaderField:@"token"];
+        [httpManager POST:httpUrl parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            int code = [[responseObject valueForKey:@"code"] intValue];
+            NSString *message = [responseObject valueForKey:@"message"];
+            NSDictionary *data = [responseObject valueForKey:@"data"];
+            if(code == 200){
+                [dic setValue:data forKey:@"data"];
+                [dic setValue:@YES forKey:@"success"];
+                result(dic);
+            }else{
+                [dic setValue:message forKey:@"message"];
+                result(dic);
+            }
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [dic setValue:error forKey:@"message"];
+            result(dic);
+        }];
+    }
+    
+    //  拉取群聊消息记录
+    // @param account 拉取者帐号
+    // @param topicId 群ID
+    // @param utcFromTime 开始时间
+    // @param utcToTime 结束时间
+    // 注意：utcFromTime和utcToTime的时间间隔不能超过24小时，查询状态为[utcFromTime,utcToTime)，单位毫秒，UTC时间
+    else if ([@"pullP2THistory" isEqualToString:call.method]) {
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        [dic setValue:@"" forKey:@"data"];
+        [dic setValue:@NO forKey:@"success"];
+        [dic setValue:@"" forKey:@"message"];
+        NSString *account = argsMap[@"account"];
+        NSString *topicId = argsMap[@"topicId"];
+        NSString *utcFromTime = argsMap[@"utcFromTime"];
+        NSString *utcToTime = argsMap[@"utcToTime"];
+        if([account isEqual: @""] || [topicId isEqual: @""] || [utcFromTime isEqual: @""]|| [utcToTime isEqual: @""]){
+            [dic setValue:@"所有参数不能为空!" forKey:@"message"];
+            result(dic);
+            return;
+        }
+        NSString *token = [mimcUserManager.getUser getToken];
+        NSMutableString *httpUrl = [NSMutableString string];
+        [httpUrl appendString: [mimcUserManager getUrl]];
+        [httpUrl appendString: @"/api/msg/p2t/query/"];
+        NSDictionary *parameters = @{@"account": account, @"topicId": topicId, @"utcFromTime": utcFromTime, @"utcToTime": utcToTime};
+        [httpManager.requestSerializer setValue:token forHTTPHeaderField:@"token"];
+        [httpManager POST:httpUrl parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            int code = [[responseObject valueForKey:@"code"] intValue];
+            NSString *message = [responseObject valueForKey:@"message"];
+            NSDictionary *data = [responseObject valueForKey:@"data"];
+            if(code == 200){
+                [dic setValue:data forKey:@"data"];
+                [dic setValue:@YES forKey:@"success"];
+                result(dic);
+            }else{
+                [dic setValue:message forKey:@"message"];
+                result(dic);
+            }
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [dic setValue:error forKey:@"message"];
+            result(dic);
+        }];
+    }
+    
+    // 创建无限大群
+    // @param topicName 群名称
+    else if ([@"createUnlimitedGroup" isEqualToString:call.method]) {
+        NSString *topicName = argsMap[@"topicName"];
+        NSLog(@"topicName==%@", topicName);
+        [mimcUserManager.getUser createUnlimitedGroup:topicName context:self];
+        result(NULL);
+    }
+    
+    // 加入无限大群
+    // @param topicId 群ID
+    // @param context 用户自定义传入的对象，通过回调函数原样传出
+    // @return String 客户端生成的消息ID
+    else if ([@"joinUnlimitedGroup" isEqualToString:call.method]) {
+        NSString *topicId = argsMap[@"topicId"];
+        result([mimcUserManager.getUser joinUnlimitedGroup:[topicId longLongValue] context:self]);
+    }
+    
+    // 退出无限大群
+    // @param topicId 群ID
+    // @param context 用户自定义传入的对象，通过回调函数原样传出
+    // @return String 客户端生成的消息ID
+    else if ([@"quitUnlimitedGroup" isEqualToString:call.method]) {
+        NSString *topicId = argsMap[@"topicId"];
+        result([mimcUserManager.getUser quitUnlimitedGroup:[topicId longLongValue] context:self]);
+    }
+    
+    //  解散无限大群
+    // @param topicId 群ID
+    // @param context 用户自定义传入的对象，通过回调函数原样传出
+    else if ([@"dismissUnlimitedGroup" isEqualToString:call.method]) {
+        NSString *topicId = argsMap[@"topicId"];
+        [mimcUserManager.getUser dismissUnlimitedGroup:[topicId longLongValue] context:self];
+        result(NULL);
+    }
+    
+    // 查询无限大群成员
+    // @param topicId 群ID
+    else if ([@"queryUnlimitedGroupMembers" isEqualToString:call.method]) {
+        NSString *topicId = argsMap[@"topicId"];
+        [self unlimitedGroupQueryInfo:topicId url:@"/api/uctopic/userlist/" result:result];
+    }
+    
+    // 查询无限大群所属群
+    else if ([@"queryUnlimitedGroups" isEqualToString:call.method]) {
+        [self unlimitedGroupQueryInfo:@"null" url:@"/api/uctopic/topics" result:result];
+    }
+    
+    // 查询无限大群在线用户数
+    // @param topicId 群ID
+    else if ([@"queryUnlimitedGroupOnlineUsers" isEqualToString:call.method]) {
+        NSString *topicId = argsMap[@"topicId"];
+        [self unlimitedGroupQueryInfo:topicId url:@"/api/uctopic/onlineinfo" result:result];
+    }
+    
+    // 查询无限大群基本信息
+    // @param topicId 群ID
+    else if ([@"queryUnlimitedGroupInfo" isEqualToString:call.method]) {
+        NSString *topicId = argsMap[@"topicId"];
+        [self unlimitedGroupQueryInfo:topicId url:@"/api/uctopic/topic" result:result];
+    }
+    
+    // 更新大群
+    // @param topicId 群ID
+    // @param newOwnerAccount 若为群成员则指派新的群主
+    // @param newGroupName 群名
+    else if ([@"updateUnlimitedGroup" isEqualToString:call.method]) {
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        [dic setValue:@"" forKey:@"data"];
+        [dic setValue:@NO forKey:@"success"];
+        [dic setValue:@"" forKey:@"message"];
+        NSString *topicId = argsMap[@"topicId"];
+        NSString *newOwnerAccount = argsMap[@"newOwnerAccount"];
+        NSString *newGroupName = argsMap[@"newGroupName"];
+        if([topicId isEqual: @""]){
+            [dic setValue:@"topicId不能为空!" forKey:@"message"];
+            result(dic);
+            return;
+        }
+        NSString *token = [mimcUserManager.getUser getToken];
+        NSMutableString *httpUrl = [NSMutableString string];
+        [httpUrl appendString: [mimcUserManager getUrl]];
+        [httpUrl appendString: @"/api/uctopic/update"];
+        NSDictionary *parameters = [NSMutableDictionary dictionary];
+        [parameters setValue:topicId forKey:@"topicId"];
+        if(![newOwnerAccount isEqual: @""]){
+            [parameters setValue:newOwnerAccount forKey:@"ownerAccount"];
+        }
+        if(![newGroupName isEqual: @""]){
+            [parameters setValue:newGroupName forKey:@"topicName"];
+        }
+        [httpManager.requestSerializer setValue:token forHTTPHeaderField:@"token"];
+        [httpManager POST:httpUrl parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             int code = [[responseObject valueForKey:@"code"] intValue];
             NSString *message = [responseObject valueForKey:@"message"];
             NSDictionary *data = [responseObject valueForKey:@"data"];
@@ -197,6 +670,42 @@ AFHTTPSessionManager *httpManager;
     else {
         result(FlutterMethodNotImplemented);
     }
+}
+
+// 无限大群基本查询
+- (void)unlimitedGroupQueryInfo:(NSString *)topicId url:(NSString *)url result:(FlutterResult)result{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    [dic setValue:@"" forKey:@"data"];
+    [dic setValue:@NO forKey:@"success"];
+    [dic setValue:@"" forKey:@"message"];
+    if([topicId isEqual: @""]){
+        [dic setValue:@"topicId不能为空!" forKey:@"message"];
+        result(dic);
+        return;
+    }
+    NSString *token = [mimcUserManager.getUser getToken];
+    NSMutableString *httpUrl = [NSMutableString string];
+    [httpUrl appendString: [mimcUserManager getUrl]];
+    [httpUrl appendString: url];
+    [httpManager.requestSerializer setValue:token forHTTPHeaderField:@"token"];
+    [httpManager.requestSerializer setValue:topicId forHTTPHeaderField:@"topicId"];
+    [httpManager GET:httpUrl parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        int code = [[responseObject valueForKey:@"code"] intValue];
+        NSString *message = [responseObject valueForKey:@"message"];
+        NSDictionary *data = [responseObject valueForKey:@"data"];
+        if(code == 200){
+            [dic setValue:data forKey:@"data"];
+            [dic setValue:@YES forKey:@"success"];
+            result(dic);
+        }else{
+            [dic setValue:message forKey:@"message"];
+            result(dic);
+        }
+        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        [dic setValue:error forKey:@"message"];
+        result(dic);
+    }];
 }
 
 // 登录状态变更
@@ -360,6 +869,8 @@ AFHTTPSessionManager *httpManager;
     }
 }
 
+
+
 // 发送无限群消息超时
 - (void)handleSendUnlimitedGroupMessageTimeout:(MIMCGroupMessage *)groupMessage {
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
@@ -383,6 +894,7 @@ AFHTTPSessionManager *httpManager;
 
 
 - (void)handleCreateUnlimitedGroup:(int64_t)topicId topicName:(NSString *)topicName success:(Boolean)success desc:(NSString *)desc context:(id)context {
+    
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     NSNumber *tID = [NSNumber numberWithLongLong:topicId];
     NSNumber *code = [NSNumber numberWithInt:success ? 0 : -1];

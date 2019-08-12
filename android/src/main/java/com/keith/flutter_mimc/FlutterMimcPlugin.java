@@ -328,7 +328,8 @@ public class FlutterMimcPlugin implements MethodCallHandler{
             MimcUserManager.getInstance().queryGroupsOfAccount(new Callback() {
                 @Override
                 public void onFailure(Call c, IOException e) {
-                    params.putString("error", e.getMessage());
+                    params.putString("message", e.getMessage());
+                    params.putBoolean("success", false);
                     params.putNull("data");
                     result.success(params.toMap());
                 }
@@ -337,19 +338,22 @@ public class FlutterMimcPlugin implements MethodCallHandler{
                     if (response.isSuccessful()) {
                         JSONObject json = JSONObject.parseObject(response.body().string());
                         if(json.getInteger("code") == 200){
-                            params.putNull("error");
+                            params.putNull("message");
+                            params.putBoolean("success", true);
                             params.putArray("data", json.getJSONArray("data"));
                         }else{
-                            params.putString("error", json.getString("message"));
+                            params.putString("message", json.getString("message"));
                             params.putNull("data");
+                            params.putBoolean("success", false);
                         }
                         result.success(params.toMap());
                     }
                 }}
             );
         }catch (Exception e){
-            params.putString("error", e.getMessage());
+            params.putString("message", e.getMessage());
             params.putNull("data");
+            params.putBoolean("success", false);
             result.success(params.toMap());
         }
 
@@ -363,16 +367,18 @@ public class FlutterMimcPlugin implements MethodCallHandler{
             String groupId = call.argument("groupId");
             String users = call.argument("users");
             if (groupId == null || groupId.isEmpty() || users == null || users.isEmpty()) {
-                params.putString("error", "groupId或users不能为空！");
+                params.putString("message", "groupId或users不能为空！");
                 params.putNull("data");
+                params.putBoolean("success", false);
                 result.success(params.toMap());
                 return;
             }
             MimcUserManager.getInstance().joinGroup(groupId,users,new Callback() {
                 @Override
                 public void onFailure(Call c, IOException e) {
-                    params.putString("error", e.getMessage());
+                    params.putString("message", e.getMessage());
                     params.putNull("data");
+                    params.putBoolean("success", false);
                     result.success(params.toMap());
                 }
                 @Override
@@ -380,10 +386,12 @@ public class FlutterMimcPlugin implements MethodCallHandler{
                     if (response.isSuccessful()) {
                         JSONObject json = JSONObject.parseObject(response.body().string());
                         if(json.getInteger("code") == 200){
-                            params.putNull("error");
+                            params.putNull("message");
+                            params.putBoolean("success", true);
                             params.putMap("data", json.getJSONObject("data"));
                         }else{
-                            params.putString("error", json.getString("message"));
+                            params.putString("message", json.getString("message"));
+                            params.putBoolean("success", false);
                             params.putNull("data");
                         }
                         result.success(params.toMap());
@@ -391,8 +399,9 @@ public class FlutterMimcPlugin implements MethodCallHandler{
                 }}
             );
         }catch (Exception e){
-            params.putString("error", e.getMessage());
+            params.putString("message", e.getMessage());
             params.putNull("data");
+            params.putBoolean("success", false);
             result.success(params.toMap());
         }
 
@@ -405,15 +414,17 @@ public class FlutterMimcPlugin implements MethodCallHandler{
         try {
             String groupId = call.argument("groupId");
             if (groupId == null || groupId.isEmpty()) {
-                params.putString("error", "groupId不能为空！");
+                params.putString("message", "groupId不能为空！");
                 params.putNull("data");
+                params.putBoolean("success", false);
                 result.success(params.toMap());
                 return;
             }
             MimcUserManager.getInstance().quitGroup(groupId,new Callback() {
                 @Override
                 public void onFailure(Call c, IOException e) {
-                    params.putString("error", e.getMessage());
+                    params.putString("message", e.getMessage());
+                    params.putBoolean("success", false);
                     params.putNull("data");
                     result.success(params.toMap());
                 }
@@ -422,19 +433,22 @@ public class FlutterMimcPlugin implements MethodCallHandler{
                     if (response.isSuccessful()) {
                         JSONObject json = JSONObject.parseObject(response.body().string());
                         if(json.getInteger("code") == 200){
-                            params.putNull("error");
+                            params.putNull("message");
+                            params.putBoolean("success", true);
                             params.putNull("data");
                         }else{
-                            params.putString("error", json.getString("message"));
+                            params.putString("message", json.getString("message"));
                             params.putNull("data");
+                            params.putBoolean("success", false);
                         }
                         result.success(params.toMap());
                     }
                 }}
             );
         }catch (Exception e){
-            params.putString("error", e.getMessage());
+            params.putString("message", e.getMessage());
             params.putNull("data");
+            params.putBoolean("success", false);
             result.success(params.toMap());
         }
 
@@ -448,16 +462,18 @@ public class FlutterMimcPlugin implements MethodCallHandler{
             String groupId = call.argument("groupId");
             String users = call.argument("users");
             if (groupId == null || groupId.isEmpty() || users == null || users.isEmpty()) {
-                params.putString("error", "groupId或users不能为空！");
+                params.putString("message", "groupId或users不能为空！");
                 params.putNull("data");
+                params.putBoolean("success", false);
                 result.success(params.toMap());
                 return;
             }
             MimcUserManager.getInstance().kickGroup(groupId, users,new Callback() {
                 @Override
                 public void onFailure(Call c, IOException e) {
-                    params.putString("error", e.getMessage());
+                    params.putString("message", e.getMessage());
                     params.putNull("data");
+                    params.putBoolean("success", false);
                     result.success(params.toMap());
                 }
                 @Override
@@ -466,10 +482,12 @@ public class FlutterMimcPlugin implements MethodCallHandler{
 
                         JSONObject json = JSONObject.parseObject(response.body().string());
                         if(json.getInteger("code") == 200){
-                            params.putNull("error");
+                            params.putNull("message");
+                            params.putBoolean("success", true);
                             params.putMap("data", json.getJSONObject("data"));
                         }else{
-                            params.putString("error", json.getString("message"));
+                            params.putString("message", json.getString("message"));
+                            params.putBoolean("success", false);
                             params.putNull("data");
                         }
                         result.success(params.toMap());
@@ -478,8 +496,9 @@ public class FlutterMimcPlugin implements MethodCallHandler{
                 }}
             );
         }catch (Exception e){
-            params.putString("error", e.getMessage());
+            params.putString("message", e.getMessage());
             params.putNull("data");
+            params.putBoolean("success", false);
             result.success(params.toMap());
         }
 
@@ -495,16 +514,18 @@ public class FlutterMimcPlugin implements MethodCallHandler{
             String newGroupName = call.argument("newGroupName");
             String newGroupBulletin = call.argument("newGroupBulletin");
             if (groupId == null || groupId.isEmpty()) {
-                params.putString("error", "groupId不能为空！");
+                params.putString("message", "groupId不能为空！");
                 params.putNull("data");
+                params.putBoolean("success", false);
                 result.success(params.toMap());
                 return;
             }
             MimcUserManager.getInstance().updateGroup(groupId, newOwnerAccount, newGroupName, newGroupBulletin, new Callback() {
                 @Override
                 public void onFailure(Call c, IOException e) {
-                    params.putString("error", e.getMessage());
+                    params.putString("message", e.getMessage());
                     params.putNull("data");
+                    params.putBoolean("success", false);
                     result.success(params.toMap());
                 }
                 @Override
@@ -513,10 +534,12 @@ public class FlutterMimcPlugin implements MethodCallHandler{
 
                         JSONObject json = JSONObject.parseObject(response.body().string());
                         if(json.getInteger("code") == 200){
-                            params.putNull("error");
+                            params.putNull("message");
+                            params.putBoolean("success", true);
                             params.putMap("data", json.getJSONObject("data"));
                         }else{
-                            params.putString("error", json.getString("message"));
+                            params.putString("message", json.getString("message"));
+                            params.putBoolean("success", false);
                             params.putNull("data");
                         }
                         result.success(params.toMap());
@@ -524,8 +547,9 @@ public class FlutterMimcPlugin implements MethodCallHandler{
                 }}
             );
         }catch (Exception e){
-            params.putString("error", e.getMessage());
+            params.putString("message", e.getMessage());
             params.putNull("data");
+            params.putBoolean("success", false);
             result.success(params.toMap());
         }
 
@@ -538,16 +562,18 @@ public class FlutterMimcPlugin implements MethodCallHandler{
         try {
             String groupId = call.argument("groupId");
             if (groupId == null || groupId.isEmpty()) {
-                params.putString("error", "groupId不能为空！");
+                params.putString("message", "groupId不能为空！");
                 params.putNull("data");
+                params.putBoolean("success", false);
                 result.success(params.toMap());
                 return;
             }
             MimcUserManager.getInstance().dismissGroup(groupId, new Callback() {
                 @Override
                 public void onFailure(Call c, IOException e) {
-                    params.putString("error", e.getMessage());
+                    params.putString("message", e.getMessage());
                     params.putNull("data");
+                    params.putBoolean("success", false);
                     result.success(params.toMap());
                 }
                 @Override
@@ -556,19 +582,22 @@ public class FlutterMimcPlugin implements MethodCallHandler{
 
                         JSONObject json = JSONObject.parseObject(response.body().string());
                         if(json.getInteger("code") == 200){
-                            params.putNull("error");
+                            params.putNull("message");
+                            params.putBoolean("success", true);
                             params.putNull("data");
                         }else{
-                            params.putString("error", json.getString("message"));
+                            params.putString("message", json.getString("message"));
                             params.putNull("data");
+                            params.putBoolean("success", false);
                         }
                         result.success(params.toMap());
                     }
                 }}
             );
         }catch (Exception e){
-            params.putString("error", e.getMessage());
+            params.putString("message", e.getMessage());
             params.putNull("data");
+            params.putBoolean("success", false);
             result.success(params.toMap());
         }
 
@@ -587,16 +616,18 @@ public class FlutterMimcPlugin implements MethodCallHandler{
                     fromAccount == null || fromAccount.isEmpty() ||
                     utcFromTime == null || utcFromTime.isEmpty() ||
                     utcToTime == null || utcToTime.isEmpty()) {
-                params.putString("error", "所有参数不能为空！");
+                params.putString("message", "所有参数不能为空！");
                 params.putNull("data");
+                params.putBoolean("success", false);
                 result.success(params.toMap());
                 return;
             }
             MimcUserManager.getInstance().pullP2PHistory(toAccount, fromAccount, utcFromTime, utcToTime, new Callback() {
                 @Override
                 public void onFailure(Call c, IOException e) {
-                    params.putString("error", e.getMessage());
+                    params.putString("message", e.getMessage());
                     params.putNull("data");
+                    params.putBoolean("success", false);
                     result.success(params.toMap());
                 }
                 @Override
@@ -605,19 +636,22 @@ public class FlutterMimcPlugin implements MethodCallHandler{
 
                         JSONObject json = JSONObject.parseObject(response.body().string());
                         if(json.getInteger("code") == 200){
-                            params.putNull("error");
+                            params.putNull("message");
+                            params.putBoolean("success", true);
                             params.putMap("data", json.getJSONObject("data"));
                         }else{
-                            params.putString("error", json.getString("message"));
+                            params.putString("message", json.getString("message"));
                             params.putNull("data");
+                            params.putBoolean("success", false);
                         }
                         result.success(params.toMap());
                     }
                 }}
             );
         }catch (Exception e){
-            params.putString("error", e.getMessage());
+            params.putString("message", e.getMessage());
             params.putNull("data");
+            params.putBoolean("success", false);
             result.success(params.toMap());
         }
 
@@ -636,16 +670,18 @@ public class FlutterMimcPlugin implements MethodCallHandler{
                     topicId == null || topicId.isEmpty() ||
                     utcFromTime == null || utcFromTime.isEmpty() ||
                     utcToTime == null || utcToTime.isEmpty()) {
-                params.putString("error", "所有参数不能为空！");
+                params.putString("message", "所有参数不能为空！");
                 params.putNull("data");
+                params.putBoolean("success", false);
                 result.success(params.toMap());
                 return;
             }
             MimcUserManager.getInstance().pullP2THistory(account, topicId, utcFromTime, utcToTime, new Callback() {
                 @Override
                 public void onFailure(Call c, IOException e) {
-                    params.putString("error", e.getMessage());
+                    params.putString("message", e.getMessage());
                     params.putNull("data");
+                    params.putBoolean("success", false);
                     result.success(params.toMap());
                 }
                 @Override
@@ -654,19 +690,22 @@ public class FlutterMimcPlugin implements MethodCallHandler{
 
                         JSONObject json = JSONObject.parseObject(response.body().string());
                         if(json.getInteger("code") == 200){
-                            params.putNull("error");
+                            params.putNull("message");
+                            params.putBoolean("success", true);
                             params.putMap("data", json.getJSONObject("data"));
                         }else{
-                            params.putString("error", json.getString("message"));
+                            params.putString("message", json.getString("message"));
                             params.putNull("data");
+                            params.putBoolean("success", false);
                         }
                         result.success(params.toMap());
                     }
                 }}
             );
         }catch (Exception e){
-            params.putString("error", e.getMessage());
+            params.putString("message", e.getMessage());
             params.putNull("data");
+            params.putBoolean("success", false);
             result.success(params.toMap());
         }
 
@@ -709,16 +748,18 @@ public class FlutterMimcPlugin implements MethodCallHandler{
         try {
             String topicId = call.argument("topicId");
             if (topicId == null || topicId.isEmpty()) {
-                params.putString("error", "topicId参数不能为空！");
+                params.putString("message", "topicId参数不能为空！");
                 params.putNull("data");
+                params.putBoolean("success", false);
                 result.success(params.toMap());
                 return;
             }
                 MimcUserManager.getInstance().queryUnlimitedGroupMembers(Long.parseLong(topicId), new Callback() {
                 @Override
                 public void onFailure(Call c, IOException e) {
-                    params.putString("error", e.getMessage());
+                    params.putString("message", e.getMessage());
                     params.putNull("data");
+                    params.putBoolean("success", false);
                     result.success(params.toMap());
                 }
                 @Override
@@ -728,19 +769,22 @@ public class FlutterMimcPlugin implements MethodCallHandler{
                         JSONObject json = JSONObject.parseObject(response.body().string());
                         System.out.println(json);
                         if(json.getInteger("code") == 200){
-                            params.putNull("error");
+                            params.putNull("message");
+                            params.putBoolean("success", true);
                             params.putMap("data", json.getJSONObject("data"));
                         }else{
-                            params.putString("error", json.getString("message"));
+                            params.putString("message", json.getString("message"));
                             params.putNull("data");
+                            params.putBoolean("success", false);
                         }
                         result.success(params.toMap());
                     }
                 }}
             );
         }catch (Exception e){
-            params.putString("error", e.getMessage());
+            params.putString("message", e.getMessage());
             params.putNull("data");
+            params.putBoolean("success", false);
             result.success(params.toMap());
         }
 
@@ -754,8 +798,9 @@ public class FlutterMimcPlugin implements MethodCallHandler{
             MimcUserManager.getInstance().queryUnlimitedGroups(new Callback() {
                 @Override
                 public void onFailure(Call c, IOException e) {
-                    params.putString("error", e.getMessage());
+                    params.putString("message", e.getMessage());
                     params.putNull("data");
+                    params.putBoolean("success", false);
                     result.success(params.toMap());
                 }
                 @Override
@@ -764,19 +809,22 @@ public class FlutterMimcPlugin implements MethodCallHandler{
 
                         JSONObject json = JSONObject.parseObject(response.body().string());
                         if(json.getInteger("code") == 200){
-                            params.putNull("error");
+                            params.putNull("message");
+                            params.putBoolean("success", true);
                             params.putArray("data", json.getJSONArray("data"));
                         }else{
-                            params.putString("error", json.getString("message"));
+                            params.putString("message", json.getString("message"));
                             params.putNull("data");
+                            params.putBoolean("success", false);
                         }
                         result.success(params.toMap());
                     }
                 }}
             );
         }catch (Exception e){
-            params.putString("error", e.getMessage());
+            params.putString("message", e.getMessage());
             params.putNull("data");
+            params.putBoolean("success", false);
             result.success(params.toMap());
         }
 
@@ -789,16 +837,18 @@ public class FlutterMimcPlugin implements MethodCallHandler{
         try {
             String topicId = call.argument("topicId");
             if (topicId == null || topicId.isEmpty()) {
-                params.putString("error", "topicId参数不能为空！");
+                params.putString("message", "topicId参数不能为空！");
                 params.putNull("data");
+                params.putBoolean("success", false);
                 result.success(params.toMap());
                 return;
             }
             MimcUserManager.getInstance().queryUnlimitedGroupOnlineUsers(Long.parseLong(topicId), new Callback() {
                 @Override
                 public void onFailure(Call c, IOException e) {
-                    params.putString("error", e.getMessage());
+                    params.putString("message", e.getMessage());
                     params.putNull("data");
+                    params.putBoolean("success", false);
                     result.success(params.toMap());
                 }
                 @Override
@@ -807,19 +857,22 @@ public class FlutterMimcPlugin implements MethodCallHandler{
 
                         JSONObject json = JSONObject.parseObject(response.body().string());
                         if(json.getInteger("code") == 200){
-                            params.putNull("error");
+                            params.putNull("message");
+                            params.putBoolean("success", true);
                             params.putMap("data", json.getJSONObject("data"));
                         }else{
-                            params.putString("error", json.getString("message"));
+                            params.putString("message", json.getString("message"));
                             params.putNull("data");
+                            params.putBoolean("success", false);
                         }
                         result.success(params.toMap());
                     }
                 }}
             );
         }catch (Exception e){
-            params.putString("error", e.getMessage());
+            params.putString("message", e.getMessage());
             params.putNull("data");
+            params.putBoolean("success", false);
             result.success(params.toMap());
         }
 
@@ -832,16 +885,18 @@ public class FlutterMimcPlugin implements MethodCallHandler{
         try {
             String topicId = call.argument("topicId");
             if (topicId == null || topicId.isEmpty()) {
-                params.putString("error", "topicId参数不能为空！");
+                params.putString("message", "topicId参数不能为空！");
                 params.putNull("data");
+                params.putBoolean("success", false);
                 result.success(params.toMap());
                 return;
             }
             MimcUserManager.getInstance().queryUnlimitedGroupInfo(Long.parseLong(topicId), new Callback() {
                 @Override
                 public void onFailure(Call c, IOException e) {
-                    params.putString("error", e.getMessage());
+                    params.putString("message", e.getMessage());
                     params.putNull("data");
+                    params.putBoolean("success", false);
                     result.success(params.toMap());
                 }
                 @Override
@@ -850,19 +905,22 @@ public class FlutterMimcPlugin implements MethodCallHandler{
 
                         JSONObject json = JSONObject.parseObject(response.body().string());
                         if(json.getInteger("code") == 200){
-                            params.putNull("error");
+                            params.putNull("message");
+                            params.putBoolean("success", true);
                             params.putMap("data", json.getJSONObject("data"));
                         }else{
-                            params.putString("error", json.getString("message"));
+                            params.putString("message", json.getString("message"));
                             params.putNull("data");
+                            params.putBoolean("success", false);
                         }
                         result.success(params.toMap());
                     }
                 }}
             );
         }catch (Exception e){
-            params.putString("error", e.getMessage());
+            params.putString("message", e.getMessage());
             params.putNull("data");
+            params.putBoolean("success", false);
             result.success(params.toMap());
         }
 
@@ -877,16 +935,18 @@ public class FlutterMimcPlugin implements MethodCallHandler{
             String newGroupName = call.argument("newGroupName");
             String newOwnerAccount = call.argument("newOwnerAccount");
             if (topicId == null || topicId.isEmpty()) {
-                params.putString("error", "topicId参数不能为空！");
+                params.putString("message", "topicId参数不能为空！");
                 params.putNull("data");
+                params.putBoolean("success", false);
                 result.success(params.toMap());
                 return;
             }
             MimcUserManager.getInstance().updateUnlimitedGroup(Long.parseLong(topicId), newGroupName, newOwnerAccount, new Callback() {
                 @Override
                 public void onFailure(Call c, IOException e) {
-                    params.putString("error", e.getMessage());
+                    params.putString("message", e.getMessage());
                     params.putNull("data");
+                    params.putBoolean("success", false);
                     result.success(params.toMap());
                 }
                 @Override
@@ -895,19 +955,22 @@ public class FlutterMimcPlugin implements MethodCallHandler{
 
                         JSONObject json = JSONObject.parseObject(response.body().string());
                         if(json.getInteger("code") == 200){
-                            params.putNull("error");
+                            params.putNull("message");
+                            params.putBoolean("success", true);
                             params.putMap("data", json.getJSONObject("data"));
                         }else{
-                            params.putString("error", json.getString("message"));
+                            params.putString("message", json.getString("message"));
                             params.putNull("data");
+                            params.putBoolean("success", false);
                         }
                         result.success(params.toMap());
                     }
                 }}
             );
         }catch (Exception e){
-            params.putString("error", e.getMessage());
+            params.putString("message", e.getMessage());
             params.putNull("data");
+            params.putBoolean("success", false);
             result.success(params.toMap());
         }
 

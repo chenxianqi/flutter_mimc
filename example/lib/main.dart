@@ -19,7 +19,7 @@ class _MyAppState extends State<MyApp> {
   String maxGroupID = "21360839299170304"; // 操作的无限通群ID
   bool isOnline = false;
   List<Map<String, String>> logs = [];
-  TextEditingController accountCtr = TextEditingController(text: '21360839299170304');
+  TextEditingController accountCtr = TextEditingController(text: '21351198708203520');
   TextEditingController contentCtr = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -34,13 +34,13 @@ class _MyAppState extends State<MyApp> {
 
   // 初始化
   void initFlutterMimc() async{
-    flutterMimc = FlutterMimc.init({
-      "debug": false,
-      "appId": "2882303761517669588",
-      "appKey": "5111766983588",
-      "appSecret": "b0L3IOz/9Ob809v8H2FbVg==",
-      "appAccount": appAccount
-    });
+    flutterMimc = FlutterMimc.init(
+      debug: true,
+      appId: "2882303761517669588",
+      appKey: "5111766983588",
+      appSecret: "b0L3IOz/9Ob809v8H2FbVg==",
+      appAccount: appAccount
+    );
     addLog("init==实例化完成");
     listener();
   }
@@ -128,7 +128,8 @@ class _MyAppState extends State<MyApp> {
       groupID = res['data']['topicInfo']['topicId'];
       addLog("创建群成功：${res['data']}");
     }
-
+    accountCtr.text = groupID;
+    setState(() { });
   }
 
   // 查询群
@@ -144,8 +145,8 @@ class _MyAppState extends State<MyApp> {
   // 查询所属群信息
   void queryGroupsOfAccount() async{
     var res = await flutterMimc.queryGroupsOfAccount();
-    if(res['error'] != null){
-      addLog("查询所属群失败:${res['error']}" );
+    if(!res['success']){
+      addLog("查询所属群失败:${res['message']}" );
     }else{
       addLog("查询所属群成功：${res['data']}");
     }
@@ -154,8 +155,8 @@ class _MyAppState extends State<MyApp> {
   // 邀请用户加入群
   void joinGroup() async{
     var res = await flutterMimc.joinGroup(groupID, "101,102,103");
-    if(res['error'] != null){
-      addLog("邀请用户加入群执行失败:${res['error']}" );
+    if(!res['success']){
+      addLog("邀请用户加入群执行失败:${res['message']}" );
     }else{
       addLog("邀请用户加入群执行成功：${res['data']}");
     }
@@ -164,8 +165,8 @@ class _MyAppState extends State<MyApp> {
   // 非群主用户退群
   void quitGroup() async{
     var res = await flutterMimc.quitGroup(groupID);
-    if(res['error'] != null){
-      addLog("非群主用户退群执行失败:${res['error']}" );
+    if(!res['success']){
+      addLog("非群主用户退群执行失败:${res['message']}" );
     }else{
       addLog("非群主用户退群执行成功：${res['data']}");
     }
@@ -174,8 +175,8 @@ class _MyAppState extends State<MyApp> {
   // 群主踢成员出群
   void kickGroup() async{
     var res = await flutterMimc.kickGroup(groupID, "101,102,103");
-    if(res['error'] != null){
-      addLog("群主踢成员出群执行失败:${res['error']}" );
+    if(!res['success']){
+      addLog("群主踢成员出群执行失败:${res['message']}");
     }else{
       addLog("群主踢成员出群执行成功：${res['data']}");
     }
@@ -183,9 +184,9 @@ class _MyAppState extends State<MyApp> {
 
   // 群主更新群信息
   void updateGroup() async{
-    var res = await flutterMimc.updateGroup(groupID, newOwnerAccount: "", newGroupName: "新群名", newGroupBulletin: "新公告");
-    if(res['error'] != null){
-      addLog("群主更新群信息执行失败:${res['error']}" );
+    var res = await flutterMimc.updateGroup(groupID, newOwnerAccount: "", newGroupName: "新群名" + groupID, newGroupBulletin: "新公告");
+    if(!res['success']){
+      addLog("群主更新群信息执行失败:${res['message']}" );
     }else{
       addLog("群主更新群信息执行成功：${res['data']}");
     }
@@ -194,8 +195,8 @@ class _MyAppState extends State<MyApp> {
   // 群主销毁群
   void dismissGroup() async{
     var res = await flutterMimc.dismissGroup(groupID);
-    if(res['error'] != null){
-      addLog("群主销毁群执行失败:${res['error']}" );
+    if(!res['success']){
+      addLog("群主销毁群执行失败:${res['message']}" );
     }else{
       addLog("群主销毁群执行成功：${res['data']}");
     }
@@ -208,9 +209,14 @@ class _MyAppState extends State<MyApp> {
     String toAccount = "101";
     String utcFromTime = (thisTimer - 86400000).toString();
     String utcToTime = thisTimer.toString();
-    var res = await flutterMimc.pullP2PHistory(toAccount, fromAccount, utcFromTime, utcToTime);
-    if(res['error'] != null){
-      addLog("单聊消息记录执行失败:${res['error']}" );
+    var res = await flutterMimc.pullP2PHistory(
+      toAccount: toAccount,
+      fromAccount: fromAccount,
+      utcFromTime: utcFromTime,
+      utcToTime: utcToTime
+    );
+    if(!res['success']){
+      addLog("单聊消息记录执行失败:${res['message']}" );
     }else{
       addLog("单聊消息记录执行成功：${res['data']}");
     }
@@ -223,9 +229,14 @@ class _MyAppState extends State<MyApp> {
     String topicId = groupID;
     String utcFromTime = (thisTimer - 86400000).toString();
     String utcToTime = thisTimer.toString();
-    var res = await flutterMimc.pullP2THistory(account, topicId, utcFromTime, utcToTime);
-    if(res['error'] != null){
-      addLog("群聊消息记录执行失败:${res['error']}" );
+    var res = await flutterMimc.pullP2THistory(
+      account: account,
+      topicId: topicId,
+      utcFromTime: utcFromTime,
+      utcToTime: utcToTime
+    );
+    if(!res['success']){
+      addLog("群聊消息记录执行失败:${res['message']}" );
     }else{
       addLog("群聊消息记录执行成功：${res['data']}");
     }
@@ -239,13 +250,13 @@ class _MyAppState extends State<MyApp> {
 
   // 加入无限大群
   void joinUnlimitedGroup() async{
-    await flutterMimc.joinUnlimitedGroup(maxGroupID);
+    await flutterMimc.joinUnlimitedGroup("21395272047788032");
     addLog("加入无限大群$maxGroupID" );
   }
 
   // 退出无限大群
   void quitUnlimitedGroup() async{
-    await flutterMimc.quitUnlimitedGroup(maxGroupID);
+    await flutterMimc.quitUnlimitedGroup("21395272047788032");
     addLog("退出无限大群$maxGroupID" );
   }
 

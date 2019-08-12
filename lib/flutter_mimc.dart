@@ -84,8 +84,18 @@ class FlutterMimc {
   //  * String appKey       应用appKey，小米开放平台申请分配的appKey
   //  * String appSecret    应用appKey，小米开放平台申请分配的appSecret
   //  * String appAccount   会话账号（或业务平台唯一ID）
-  FlutterMimc.init(Map<String, dynamic> options){
-    _channel.invokeMethod(_ON_INIT, options);
+  FlutterMimc.init({
+    bool debug = false,
+    String appId,
+    String appKey,
+    String appSecret,
+    String appAccount
+  }){
+    assert(appId != null && appId.isNotEmpty);
+    assert(appKey != null && appKey.isNotEmpty);
+    assert(appSecret != null && appSecret.isNotEmpty);
+    assert(appAccount != null && appAccount.isNotEmpty);
+    _channel.invokeMethod(_ON_INIT, {"debug": debug, "appId": appId, "appKey":appKey,"appSecret":appSecret,"appAccount":appAccount});
     _initEvent();
   }
 
@@ -235,12 +245,17 @@ class FlutterMimc {
   //   * @param utcFromTime 开始时间
   //   * @param utcToTime   结束时间
   //   * 注意：utcFromTime和utcToTime的时间间隔不能超过24小时，查询状态为[utcFromTime,utcToTime)，单位毫秒，UTC时间
-  Future<Map<dynamic, dynamic>> pullP2PHistory(String toAccount, String fromAccount, String utcFromTime, String utcToTime) async{
+  Future<Map<dynamic, dynamic>> pullP2PHistory({
+    String toAccount = "",
+    String fromAccount = "",
+    String utcFromTime = "",
+    String utcToTime = ""
+  }) async{
     return await _channel.invokeMethod(_ON_PULL_P2P_HISTORY, {
       "toAccount": toAccount,
       "fromAccount": fromAccount,
       "utcFromTime": utcFromTime,
-      "utcToTime": utcToTime,
+      "utcToTime": utcToTime
     });
   }
 
@@ -250,7 +265,12 @@ class FlutterMimc {
   //  * @param utcFromTime 开始时间
   //  * @param utcToTime 结束时间
   //  * 注意：utcFromTime和utcToTime的时间间隔不能超过24小时，查询状态为[utcFromTime,utcToTime)，单位毫秒，UTC时间
-  Future<Map<dynamic, dynamic>> pullP2THistory(String account, String topicId, String utcFromTime, String utcToTime) async{
+  Future<Map<dynamic, dynamic>> pullP2THistory({
+    String account = "",
+    String topicId = "",
+    String utcFromTime = "",
+    String utcToTime = ""
+  }) async{
     return await _channel.invokeMethod(_ON_PULL_P2T_HISTORY, {
       "account": account,
       "topicId": topicId,
@@ -388,56 +408,78 @@ class FlutterMimc {
   }
 
   // 状态改变回调
+  void removeEventListenerStatusChanged() =>
+      _onlineStatusListenerStreamController.close();
   Stream<bool> addEventListenerStatusChanged(){
     return _onlineStatusListenerStreamController.stream;
   }
 
   // 接收单聊消息
+  void removeEventListenerHandleMessage() =>
+      _onHandleMessageStreamController.close();
   Stream<MimcChatMessage> addEventListenerHandleMessage(){
     return _onHandleMessageStreamController.stream;
   }
 
   // 接收群聊
+  void removeEventListenerHandleGroupMessage() =>
+      _onHandleGroupMessageStreamController.close();
   Stream<MimcChatMessage> addEventListenerHandleGroupMessage(){
     return _onHandleGroupMessageStreamController.stream;
   }
 
   // 接收服务端已收到发送消息确认
+  void removeEventListenerServerAck() =>
+      _onHandleServerAckStreamController.close();
   Stream<MimcServeraAck> addEventListenerServerAck(){
     return _onHandleServerAckStreamController.stream;
   }
 
   // 发送单聊消息超时
+  void removeEventListenerSendMessageTimeout() =>
+      _onHandleSendMessageTimeoutStreamController.close();
   Stream<MimcChatMessage> addEventListenerSendMessageTimeout(){
     return _onHandleSendMessageTimeoutStreamController.stream;
   }
 
   // 发送群聊消息超时
+  void removeEventListenerSendGroupMessageTimeout() =>
+      _onHandleSendGroupMessageTimeoutStreamController.close();
   Stream<MimcChatMessage> addEventListenerSendGroupMessageTimeout(){
     return _onHandleSendGroupMessageTimeoutStreamController.stream;
   }
 
   // 发送无限群聊消息超时
+  void removeEventListenerSendUnlimitedGroupMessageTimeout() =>
+      _onHandleSendUnlimitedGroupMessageTimeoutStreamController.close();
   Stream<MimcChatMessage> addEventListenerSendUnlimitedGroupMessageTimeout(){
     return _onHandleSendUnlimitedGroupMessageTimeoutStreamController.stream;
   }
 
   // 创建大群回调
+  void removeEventListenerHandleCreateUnlimitedGroup() =>
+      _onHandleCreateUnlimitedGroupStreamController.close();
   Stream<Map<dynamic, dynamic>> addEventListenerHandleCreateUnlimitedGroup(){
     return _onHandleCreateUnlimitedGroupStreamController.stream;
   }
 
   // 加入大群回调
+  void removeEventListenerHandleJoinUnlimitedGroup() =>
+      _onHandleJoinUnlimitedGroupStreamController.close();
   Stream<Map<dynamic, dynamic>> addEventListenerHandleJoinUnlimitedGroup(){
     return _onHandleJoinUnlimitedGroupStreamController.stream;
   }
 
   // 退出大群回调
+  void removeEventListenerHandleQuitUnlimitedGroup() =>
+      _onHandleQuitUnlimitedGroupStreamController.close();
   Stream<Map<dynamic, dynamic>> addEventListenerHandleQuitUnlimitedGroup(){
     return _onHandleQuitUnlimitedGroupStreamController.stream;
   }
 
   // 解散大群回调
+  void removeEventListenerHandleDismissUnlimitedGroup() =>
+      _onHandleDismissUnlimitedGroupStreamController.close();
   Stream<Map<dynamic, dynamic>> addEventListenerHandleDismissUnlimitedGroup(){
     return _onHandleDismissUnlimitedGroupStreamController.stream;
   }
