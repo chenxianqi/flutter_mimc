@@ -1,6 +1,7 @@
 ## Flutter_mimc  v 0.0.1
 
-<img align="left" src="http://qiniu.cmp520.com/WechatIMG417.png" height="300px" style="pointer-events: none;cursor: default;">
+![Image text](http://qiniu.cmp520.com/WechatIMG417.jpg)
+
 
 ## 使用需知
  使用`flutter_mimc`，建议先阅读[小米即时消息云官方文档](https://admin.mimc.chat.xiaomi.net/docs/)，
