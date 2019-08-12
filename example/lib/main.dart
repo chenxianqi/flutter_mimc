@@ -98,6 +98,7 @@ class _MyAppState extends State<MyApp> {
       addLog("发送无限群消息: $content");
       flutterMimc.sendGroupMsg(messageRes, isUnlimitedGroup: true);
     }
+    print(messageRes.toJson());
     contentCtr.clear();
   }
 

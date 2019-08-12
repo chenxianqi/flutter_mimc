@@ -138,6 +138,7 @@ class FlutterMimc {
 
   // 发送单聊消息
   Future<String> sendMessage(MimcChatMessage message) async{
+    assert(message != null);
     return await _channel.invokeMethod(_ON_SEND_MESSAGE, message.toJson());
   }
 
@@ -145,6 +146,7 @@ class FlutterMimc {
   // @ message 消息体
   // @ isUnlimitedGroup 是否是无限大群
   Future<String> sendGroupMsg(MimcChatMessage message, {bool isUnlimitedGroup = false}) async{
+    assert(message != null);
     return await _channel.invokeMethod(_ON_SEND_GROUP_MESSAGE, {
       "message": message.toJson(),
       "isUnlimitedGroup": isUnlimitedGroup
@@ -156,6 +158,7 @@ class FlutterMimc {
   //  * @param users 群成员，多个成员之间用英文逗号(,)分隔
   //  * @return  Map
   Future<Map<dynamic, dynamic>> createGroup(String groupName, String users) async{
+    assert(groupName != null && groupName.isNotEmpty);
     return await _channel.invokeMethod(_ON_CREATE_GROUP, {
       "groupName": groupName,
       "users": users
@@ -166,6 +169,7 @@ class FlutterMimc {
   //  * @param groupId 群ID
   //  * @return  Map
   Future<Map<dynamic, dynamic>> queryGroupInfo(String groupId) async{
+    assert(groupId != null && groupId.isNotEmpty);
     return await _channel.invokeMethod(_ON_QUERY_GROUP_INFO, {
       "groupId": groupId
     });
@@ -183,6 +187,7 @@ class FlutterMimc {
   //  * @param users 群成员，多个成员之间用英文逗号(,)分隔
   //  * @return  Map
   Future<Map<dynamic, dynamic>> joinGroup(String groupId, String users) async{
+    assert(groupId != null && groupId.isNotEmpty);
     return await _channel.invokeMethod(_ON_JOIN_GROUP, {
     "groupId": groupId,
     "users": users
@@ -193,6 +198,7 @@ class FlutterMimc {
   //  * @param groupId 群ID
   //  * @return Map
   Future<Map<dynamic, dynamic>> quitGroup(String groupId) async{
+    assert(groupId != null && groupId.isNotEmpty);
     return await _channel.invokeMethod(_ON_QUIT_GROUP, {
       "groupId": groupId
     });
@@ -203,6 +209,7 @@ class FlutterMimc {
   // *  @users 群成员，多个成员之间用英文逗号(,)分隔
   // * @return Map
   Future<Map<dynamic, dynamic>> kickGroup(String groupId, String users) async{
+    assert(groupId != null && groupId.isNotEmpty);
     return await _channel.invokeMethod(_ON_KICK_GROUP, {
       "groupId": groupId,
       "users": users
@@ -220,6 +227,7 @@ class FlutterMimc {
     String newGroupName = "",
     String newGroupBulletin = ""
   }) async{
+    assert(groupId != null);
     return await _channel.invokeMethod(_ON_UPDATE_GROUP, {
       "groupId": groupId,
       "newOwnerAccount": newOwnerAccount,
@@ -232,6 +240,7 @@ class FlutterMimc {
   //  * @param  groupId 群ID
   //  * @return Map
   Future<Map<dynamic, dynamic>> dismissGroup(String groupId) async{
+    assert(groupId != null && groupId.isNotEmpty);
     return await _channel.invokeMethod(_ON_DISMISS_GROUP, {
       "groupId": groupId
     });
@@ -246,11 +255,15 @@ class FlutterMimc {
   //   * @param utcToTime   结束时间
   //   * 注意：utcFromTime和utcToTime的时间间隔不能超过24小时，查询状态为[utcFromTime,utcToTime)，单位毫秒，UTC时间
   Future<Map<dynamic, dynamic>> pullP2PHistory({
-    String toAccount = "",
-    String fromAccount = "",
-    String utcFromTime = "",
-    String utcToTime = ""
+    String toAccount,
+    String fromAccount,
+    String utcFromTime,
+    String utcToTime
   }) async{
+    assert(toAccount != null && toAccount.isNotEmpty);
+    assert(fromAccount != null && fromAccount.isNotEmpty);
+    assert(utcFromTime != null && utcFromTime.isNotEmpty);
+    assert(utcToTime != null && utcToTime.isNotEmpty);
     return await _channel.invokeMethod(_ON_PULL_P2P_HISTORY, {
       "toAccount": toAccount,
       "fromAccount": fromAccount,
@@ -266,11 +279,15 @@ class FlutterMimc {
   //  * @param utcToTime 结束时间
   //  * 注意：utcFromTime和utcToTime的时间间隔不能超过24小时，查询状态为[utcFromTime,utcToTime)，单位毫秒，UTC时间
   Future<Map<dynamic, dynamic>> pullP2THistory({
-    String account = "",
-    String topicId = "",
-    String utcFromTime = "",
-    String utcToTime = ""
+    String account,
+    String topicId,
+    String utcFromTime,
+    String utcToTime
   }) async{
+    assert(account != null && account.isNotEmpty);
+    assert(topicId != null && topicId.isNotEmpty);
+    assert(utcFromTime != null && utcFromTime.isNotEmpty);
+    assert(utcToTime != null && utcToTime.isNotEmpty);
     return await _channel.invokeMethod(_ON_PULL_P2T_HISTORY, {
       "account": account,
       "topicId": topicId,
@@ -291,6 +308,7 @@ class FlutterMimc {
   //  * @param topicId 群id
   //  * @return String 客户端生成的消息ID
   Future<String> joinUnlimitedGroup(String topicId) async{
+    assert(topicId != null && topicId.isNotEmpty);
     return await _channel.invokeMethod(_ON_JOIN_UNLIMITED_GROUP, {
       "topicId": topicId
     });
@@ -300,6 +318,7 @@ class FlutterMimc {
   //  * @param topicId 群id
   //  * @return String 客户端生成的消息ID
   Future<String> quitUnlimitedGroup(String topicId) async{
+    assert(topicId != null && topicId.isNotEmpty);
     return await _channel.invokeMethod(_ON_QUIT_UNLIMITED_GROUP, {
       "topicId": topicId
     });
@@ -308,6 +327,7 @@ class FlutterMimc {
   //  * 解散无限大群
   //  * @param topicId 群id
   Future<void> dismissUnlimitedGroup(String topicId) async{
+    assert(topicId != null && topicId.isNotEmpty);
     return await _channel.invokeMethod(_ON_DISMISS_UNLIMITED_GROUP, {
       "topicId": topicId
     });
@@ -317,6 +337,7 @@ class FlutterMimc {
   //  * 查询无限大群成员
   //  * @param topicId 群id
   Future<Map<dynamic, dynamic>> queryUnlimitedGroupMembers(String topicId) async{
+    assert(topicId != null && topicId.isNotEmpty);
     return await _channel.invokeMethod(_ON_QUERY_UNLIMITED_GROUP_MEMBERS, {
       "topicId": topicId
     });
@@ -330,6 +351,7 @@ class FlutterMimc {
   //  * 查询无限大群在线用户数
   //  * @param topicId 群id
   Future<Map<dynamic, dynamic>> queryUnlimitedGroupOnlineUsers(String topicId) async{
+    assert(topicId != null && topicId.isNotEmpty);
     return await _channel.invokeMethod(_ON_QUERY_UNLIMITED_GROUP_ONLINE_USERS, {
       "topicId": topicId
     });
@@ -338,6 +360,7 @@ class FlutterMimc {
   //  * 查询无限大群基本信息
   //  * @param topicId 群id
   Future<Map<dynamic, dynamic>> queryUnlimitedGroupInfo(String topicId) async{
+    assert(topicId != null && topicId.isNotEmpty);
     return await _channel.invokeMethod(_ON_QUERY_UNLIMITED_GROUP_INFO, {
       "topicId": topicId
     });
@@ -353,6 +376,7 @@ class FlutterMimc {
     String newGroupName = "",
     String newOwnerAccount = ""
   }) async{
+    assert(topicId != null && topicId.isNotEmpty);
     return await _channel.invokeMethod(_ON_UPDATE_UNLIMITED_GROUP, {
       "topicId": topicId,
       "newGroupName": newGroupName,
@@ -365,9 +389,6 @@ class FlutterMimc {
   void _eventListener(event) {
     String eventType = event['eventType'];
     dynamic eventValue = event['eventValue'];
-    debugPrint("eventType===$eventType");
-    debugPrint("eventValue===$eventValue");
-    print(jsonEncode(eventValue));
    switch(eventType){
      case MIMCEvents.onlineStatusListener:
        _onlineStatusListenerStreamController.add(eventValue as bool);
