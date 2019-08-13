@@ -14,7 +14,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 
   FlutterMimc flutterMimc;
-  final String appAccount = "100";             // 我的账号
+  final String appAccount = "19419";             // 我的账号
   String groupID = "21351198708203520"; // 操作的普通群ID
   String maxGroupID = "21360839299170304"; // 操作的无限通群ID
   bool isOnline = false;
@@ -36,9 +36,9 @@ class _MyAppState extends State<MyApp> {
   void initFlutterMimc() async{
     flutterMimc = FlutterMimc.init(
       debug: true,
-      appId: "2882303761517669588",
-      appKey: "5111766983588",
-      appSecret: "b0L3IOz/9Ob809v8H2FbVg==",
+      appId: "2882303761517545722",
+      appKey: "5551754540722",
+      appSecret: "AW7733Rq55l7hDDPOW1oTA==",
       appAccount: appAccount
     );
     addLog("init==实例化完成");
@@ -75,30 +75,41 @@ class _MyAppState extends State<MyApp> {
       return;
     }
 
-    MimcChatMessage messageRes = MimcChatMessage();
-    MimcMessageBena messageBena = MimcMessageBena();
-    messageRes.timestamp = DateTime.now().millisecondsSinceEpoch;
-    messageRes.bizType = "bizType";
-    messageRes.fromAccount = appAccount;
-    messageBena.timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-    messageBena.payload = base64Encode(utf8.encode(content));
-    messageBena.version  = 0;
-    messageBena.msgId  = "msgId";
-    messageRes.message = messageBena;
+    // 消息
+    MIMCMessage message = MIMCMessage();
+    message.bizType = "bizType";      // 消息类型(开发者自定义)
+    // message.toAccount = id;        // 接收者账号(发送单聊留null)
+    // message.topicId                // 指定发送的群ID(发送群聊时留null)
+
+    // 自定义消息体
+    Map<String, dynamic> payloadMap = {
+      "from_account": appAccount,
+      "to_account": id,
+      "biz_type": "text",
+      "version": "0",
+      "timestamp": DateTime.now().millisecondsSinceEpoch,
+      "read": 0,
+      "transfer_account": 0,
+      "payload": content
+    };
+
+    // base64处理自定义消息
+    message.payload = base64Encode(utf8.encode(json.encode(payloadMap)));
+
     if(type == 0){
-      messageRes.toAccount = id;
+      message.toAccount = id;
       addLog("发送给$id: $content");
-      flutterMimc.sendMessage(messageRes);
+      flutterMimc.sendMessage(message);
     }else if(type == 1){
-      messageRes.topicId = int.parse(id);
+      message.topicId = int.parse(id);
       addLog("发送普通群消息: $content");
-      flutterMimc.sendGroupMsg(messageRes);
+      flutterMimc.sendGroupMsg(message);
     }else{
-      messageRes.topicId = int.parse(id);
+      message.topicId = int.parse(id);
       addLog("发送无限群消息: $content");
-      flutterMimc.sendGroupMsg(messageRes, isUnlimitedGroup: true);
+      flutterMimc.sendGroupMsg(message, isUnlimitedGroup: true);
     }
-    print(messageRes.toJson());
+    print(json.encode(message.toJson()));
     contentCtr.clear();
   }
 
@@ -315,18 +326,18 @@ class _MyAppState extends State<MyApp> {
     });
 
     // 接收单聊
-    flutterMimc.addEventListenerHandleMessage().listen((MimcChatMessage resource){
-      String content =utf8.decode(base64.decode(resource.message.payload));
-      addLog("收到${resource.fromAccount}消息: $content");
+    flutterMimc.addEventListenerHandleMessage().listen((MIMCMessage message){
+      String content =utf8.decode(base64.decode(message.payload));
+      addLog("收到${message.fromAccount}消息: $content");
       setState(() {});
     }).onError((err){
       addLog(err);
     });
 
     // 接收群聊
-    flutterMimc.addEventListenerHandleGroupMessage().listen((MimcChatMessage resource){
-      String content =utf8.decode(base64.decode(resource.message.payload));
-      addLog("收到群${resource.topicId}消息: $content");
+    flutterMimc.addEventListenerHandleGroupMessage().listen((MIMCMessage message){
+      String content =utf8.decode(base64.decode(message.payload));
+      addLog("收到群${message.topicId}消息: $content");
       setState(() {});
     }).onError((err){
       addLog(err);
@@ -340,22 +351,22 @@ class _MyAppState extends State<MyApp> {
     });
 
     // 发送单聊超时
-    flutterMimc.addEventListenerSendMessageTimeout().listen((MimcChatMessage resource){
-      addLog("发送单聊超时==${resource.toJson()}");
+    flutterMimc.addEventListenerSendMessageTimeout().listen((MIMCMessage message){
+      addLog("发送单聊超时==${message.toJson()}");
     }).onError((err){
       addLog(err);
     });
 
     // 发送群聊超时
-    flutterMimc.addEventListenerSendGroupMessageTimeout().listen((MimcChatMessage resource){
-      addLog("发送群聊超时==${resource.toJson()}");
+    flutterMimc.addEventListenerSendGroupMessageTimeout().listen((MIMCMessage message){
+      addLog("发送群聊超时==${message.toJson()}");
     }).onError((err){
       addLog(err);
     });
 
     // 发送无限群聊超时
-    flutterMimc.addEventListenerSendUnlimitedGroupMessageTimeout().listen((MimcChatMessage resource){
-      addLog("发送无限群聊超时==${resource.toJson()}");
+    flutterMimc.addEventListenerSendUnlimitedGroupMessageTimeout().listen((MIMCMessage message){
+      addLog("发送无限群聊超时==${message.toJson()}");
     }).onError((err){
       addLog(err);
     });

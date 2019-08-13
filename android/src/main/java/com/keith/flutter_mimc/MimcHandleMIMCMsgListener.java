@@ -21,34 +21,32 @@ public class MimcHandleMIMCMsgListener implements MimcUserManager.OnHandleMIMCMs
             String fromAccount;
             String toAccount = "";
             long topicId = 0;
-            ConstraintsMap paramsParent = new ConstraintsMap();
-            ConstraintsMap paramsChild = new ConstraintsMap();
+            ConstraintsMap params = new ConstraintsMap();
+            ConstraintsMap paramChild = new ConstraintsMap();
             if(msg != null){
-                MIMCMessage  message = msg;
-                timestamp = message.getTimestamp();
-                bizType = message.getBizType();
-                payload = JSONObject.parseObject(new String(message.getPayload()));
-                fromAccount = message.getFromAccount();
-                toAccount = message.getToAccount();
-                paramsChild.putString("toAccount", toAccount);
+                timestamp = msg.getTimestamp();
+                bizType = msg.getBizType();
+                payload = JSONObject.parseObject(new String(msg.getPayload()));
+                fromAccount = msg.getFromAccount();
+                toAccount = msg.getToAccount();
+                paramChild.putString("toAccount", toAccount);
             }else{
-                MIMCGroupMessage  message = gmsg;
-                timestamp = message.getTimestamp();
-                bizType = message.getBizType();
-                topicId = message.getTopicId();
-                payload = JSONObject.parseObject(new String(message.getPayload()));
-                fromAccount = message.getFromAccount();
+                timestamp = gmsg.getTimestamp();
+                bizType = gmsg.getBizType();
+                topicId = gmsg.getTopicId();
+                payload = JSONObject.parseObject(new String(gmsg.getPayload()));
+                fromAccount = gmsg.getFromAccount();
             }
-            paramsChild.putString("toAccount", toAccount);
-            paramsChild.putString("fromAccount", fromAccount);
-            paramsChild.putString("bizType", bizType);
-            paramsChild.putMap("message", payload);
-            paramsChild.putLong("topicId", topicId);
-            paramsChild.putLong("timestamp", timestamp);
-            paramsParent.putString("eventType", eventType);
-            paramsParent.putMap("eventValue", paramsChild.toMap());
-            System.out.println("收到群消息" + paramsParent.toMap());
-            FlutterMimcPlugin.eventSink.success(paramsParent.toMap());
+            paramChild.putString("toAccount", toAccount);
+            paramChild.putString("fromAccount", fromAccount);
+            paramChild.putString("bizType", bizType);
+            paramChild.putMap("payload", payload);
+            paramChild.putLong("topicId", topicId);
+            paramChild.putLong("timestamp", timestamp);
+            params.putString("eventType", eventType);
+            params.putMap("eventValue", paramChild.toMap());
+            System.out.println("消息" + paramChild.toMap());
+            FlutterMimcPlugin.eventSink.success(params.toMap());
         }catch (Exception e){
             System.out.println("eventSink  Error:" + e.getMessage());
         }
@@ -71,7 +69,6 @@ public class MimcHandleMIMCMsgListener implements MimcUserManager.OnHandleMIMCMs
             System.out.println("eventSink  null");
             return;
         }
-        System.out.println("收到群消息" + message.toString());
         eventSinkPushMessage("onHandleGroupMessage", null, message);
     }
 

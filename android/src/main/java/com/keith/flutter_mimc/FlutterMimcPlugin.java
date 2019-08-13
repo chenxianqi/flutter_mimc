@@ -9,6 +9,7 @@ import com.keith.flutter_mimc.utils.ConstraintsMap;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
@@ -164,9 +165,9 @@ public class FlutterMimcPlugin implements MethodCallHandler{
     {
         String toAccount = call.argument("toAccount");
         String bizType = call.argument("bizType");
-        Map<String, Object> message = call.argument("message");
-        byte[] payload = JSONObject.toJSONBytes(message);
-        MimcUserManager.getInstance().sendMsg(toAccount, payload, bizType);
+        String payload = call.argument("payload");
+        assert payload != null;
+        MimcUserManager.getInstance().sendMsg(toAccount, payload.getBytes(), bizType);
         result.success(null);
 
     }
@@ -176,10 +177,11 @@ public class FlutterMimcPlugin implements MethodCallHandler{
     {
         boolean isUnlimitedGroup = call.argument("isUnlimitedGroup");
         Map<String, Object> message = call.argument("message");
-        byte[] payload = JSONObject.toJSONBytes(message.get("message"));
-        long topicId = Long.parseLong(message.get("topicId").toString());
-        String bizType = message.get("bizType").toString();
-        MimcUserManager.getInstance().sendGroupMsg(topicId, payload, bizType, isUnlimitedGroup);
+        assert message != null;
+        long topicId = Long.parseLong(Objects.requireNonNull(message.get("topicId")).toString());
+        String payload = Objects.requireNonNull(message.get("payload")).toString();
+        String bizType = Objects.requireNonNull(message.get("bizType")).toString();
+        MimcUserManager.getInstance().sendGroupMsg(topicId, payload.getBytes(), bizType, isUnlimitedGroup);
         result.success(null);
 
     }
