@@ -46,7 +46,6 @@ public class MimcHandleMIMCMsgListener implements MimcUserManager.OnHandleMIMCMs
             paramChild.putLong("timestamp", timestamp);
             params.putString("eventType", eventType);
             params.putMap("eventValue", paramChild.toMap());
-            System.out.println("消息" + paramChild.toMap());
             FlutterMimcPlugin.eventSink.success(params.toMap());
         }catch (Exception e){
             System.out.println("eventSink  Error:" + e.getMessage());
