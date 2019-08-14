@@ -7,18 +7,38 @@
  
  
 ## 消息体注意事项
-  所有消息类型请保持一致性
-  flutter_mimc已提供MimcChatMessage模型类
+  消息体一致性
+  flutter_mimc提供MIMCMessage模型类
  ```dart
- // MimcChatMessage tojson
- var message = {
-   toAccount: null,
-   bizType: bizType,
-   fromAccount: 100,
-   topicId: 21351198708203520,
-   timestamp: 1565587202726,
-   message: {payload: 5L2g5aW9, msgId: msgId, timestamp: 1565587202726, version: 0}
- }
+     MIMCMessage message = MIMCMessage();
+     message.bizType = "bizType";      // 消息类型(开发者自定义)
+     message.toAccount = "";           // 接收者账号(发送单聊留null)
+     message.topicId = "";             // 指定发送的群ID(发送群聊时留null)
+     message.payload = "";             // 开发者自定义消息体
+ 
+     // 自定义消息体(官方建议的消息体，我多加了几个字段，因为我没有使用上层的任何字段)
+     Map<String, dynamic> payloadMap = {
+       "from_account": appAccount,
+       "to_account": id,
+       "biz_type": "text",
+       "version": "0",
+       "timestamp": DateTime.now().millisecondsSinceEpoch,
+       "read": 0,
+       "transfer_account": 0,
+       "payload": content
+     };
+ 
+     // base64处理自定义消息
+     message.payload = base64Encode(utf8.encode(json.encode(payloadMap)));
+     
+     // 发送单聊
+     var pid = await flutterMimc.sendMessage(message);
+     
+     // 发送普通群聊
+     var gid = await flutterMimc.sendGroupMsg(message);
+     
+     // 发送无限大群聊
+     var gid = flutterMimc.sendGroupMsg(message, isUnlimitedGroup: true);
  ```
  
 
@@ -49,7 +69,7 @@ dependencies:
       debug: true,
       appId: "xxxxxxxx",
       appKey: "xxxxxxxx",
-      appSecret: "xxxxxxxx,
+      appSecret: "xxxxxxxx",
       appAccount: appAccount
     );
  ```
@@ -63,7 +83,7 @@ dependencies:
   String maxGroupID = "21360839299170304"; // 操作的无限通群ID
   bool isOnline = false;
   List<Map<String, String>> logs = [];
-  TextEditingController accountCtr = TextEditingController(text: '21351198708203520');
+  TextEditingController accountCtr = TextEditingController();
   TextEditingController contentCtr = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -80,9 +100,9 @@ dependencies:
   void initFlutterMimc() async{
     flutterMimc = FlutterMimc.init(
       debug: true,
-      appId: "2882303761517669588",
-      appKey: "5111766983588",
-      appSecret: "b0L3IOz/9Ob809v8H2FbVg==",
+      appId: "xxxxxxxx",
+      appKey: "xxxxxxxx",
+      appSecret: "xxxxxxxx",
       appAccount: appAccount
     );
     addLog("init==实例化完成");
