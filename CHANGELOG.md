@@ -14,3 +14,6 @@
 
 ## 0.0.3+1
 * 1.修改了下README.md的版本号
+
+## 0.0.3+2
+* update api documentation
