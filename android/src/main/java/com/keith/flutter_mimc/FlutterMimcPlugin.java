@@ -167,8 +167,7 @@ public class FlutterMimcPlugin implements MethodCallHandler{
         String bizType = call.argument("bizType");
         String payload = call.argument("payload");
         assert payload != null;
-        MimcUserManager.getInstance().sendMsg(toAccount, payload.getBytes(), bizType);
-        result.success(null);
+        result.success(MimcUserManager.getInstance().sendMsg(toAccount, payload.getBytes(), bizType));
 
     }
 
@@ -181,8 +180,7 @@ public class FlutterMimcPlugin implements MethodCallHandler{
         long topicId = Long.parseLong(Objects.requireNonNull(message.get("topicId")).toString());
         String payload = Objects.requireNonNull(message.get("payload")).toString();
         String bizType = Objects.requireNonNull(message.get("bizType")).toString();
-        MimcUserManager.getInstance().sendGroupMsg(topicId, payload.getBytes(), bizType, isUnlimitedGroup);
-        result.success(null);
+        result.success(MimcUserManager.getInstance().sendGroupMsg(topicId, payload.getBytes(), bizType, isUnlimitedGroup));
 
     }
 

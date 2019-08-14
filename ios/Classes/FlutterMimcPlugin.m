@@ -97,7 +97,8 @@ AFHTTPSessionManager *httpManager;
         
         NSString *toAccount = argsMap[@"toAccount"];
         NSString *bizType = argsMap[@"bizType"];
-        NSData *payload = [NSJSONSerialization dataWithJSONObject:argsMap[@"message"] options:NSJSONWritingPrettyPrinted error:nil];
+        NSString *payloadString = argsMap[@"payload"];
+        NSData *payload = [payloadString dataUsingEncoding:NSUTF8StringEncoding];
         result([mimcUserManager.getUser sendMessage:toAccount payload: payload bizType: bizType]);
         
     }
@@ -109,7 +110,8 @@ AFHTTPSessionManager *httpManager;
         NSNumber *topicId = [message valueForKey:@"topicId"];
         NSString *bizType = [message valueForKey:@"bizType"];
         bool isUnlimitedGroup = argsMap[@"isUnlimitedGroup"];
-        NSData *payload = [NSJSONSerialization dataWithJSONObject:[message valueForKey:@"message"] options:NSJSONWritingPrettyPrinted error:nil];
+        NSString *payloadString = [message valueForKey:@"payload"];
+        NSData *payload = [payloadString dataUsingEncoding:NSUTF8StringEncoding];
         if(isUnlimitedGroup != 1){
             result([mimcUserManager.getUser sendGroupMessage:[topicId longLongValue] payload:payload bizType:bizType]);
         }else{
@@ -731,13 +733,13 @@ AFHTTPSessionManager *httpManager;
             continue;
         }
         NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-        NSDictionary * message = [NSJSONSerialization JSONObjectWithData:p.getPayload options:NSJSONReadingMutableContainers error:nil];
+        NSString *payload = [[NSString alloc] initWithData:p.getPayload encoding:NSUTF8StringEncoding];
         NSNumber *timestamp = [NSNumber numberWithLongLong:p.getTimestamp];
         [dic setObject:user.getAppAccount forKey:@"toAccount"];
         [dic setObject:@0 forKey:@"topicId"];
         [dic setObject:p.getFromAccount forKey:@"fromAccount"];
         [dic setObject:p.getBizType forKey:@"bizType"];
-        [dic setObject:message forKey:@"message"];
+        [dic setObject:payload forKey:@"payload"];
         [dic setObject:timestamp forKey:@"timestamp"];
         FlutterEventSink eventSink = mimcEvent.eventSink;
         if(eventSink){
@@ -757,14 +759,14 @@ AFHTTPSessionManager *httpManager;
             continue;
         }
         NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-        NSDictionary * message = [NSJSONSerialization JSONObjectWithData:p.getPayload options:NSJSONReadingMutableContainers error:nil];
+        NSString *payload = [[NSString alloc] initWithData:p.getPayload encoding:NSUTF8StringEncoding];
         NSNumber *timestamp = [NSNumber numberWithLongLong:p.getTimestamp];
         NSNumber *topicId = [NSNumber numberWithLongLong:p.getTopicId];
         [dic setObject:@"0" forKey:@"toAccount"];
         [dic setObject:topicId forKey:@"topicId"];
         [dic setObject:p.getFromAccount forKey:@"fromAccount"];
         [dic setObject:p.getBizType forKey:@"bizType"];
-        [dic setObject:message forKey:@"message"];
+        [dic setObject:payload forKey:@"payload"];
         [dic setObject:timestamp forKey:@"timestamp"];
         FlutterEventSink eventSink = mimcEvent.eventSink;
         if(eventSink){
@@ -804,12 +806,12 @@ AFHTTPSessionManager *httpManager;
 - (void)handleSendMessageTimeout:(MIMCMessage *)message {
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     NSNumber *timestamp = [NSNumber numberWithLongLong:message.getTimestamp];
-    NSDictionary * msg = [NSJSONSerialization JSONObjectWithData:message.getPayload options:NSJSONReadingMutableContainers error:nil];
+    NSString *payload = [[NSString alloc] initWithData:message.getPayload encoding:NSUTF8StringEncoding];
     [dic setObject:message.getToAccount forKey:@"toAccount"];
     [dic setObject:@0 forKey:@"topicId"];
     [dic setObject:message.getFromAccount forKey:@"fromAccount"];
     [dic setObject:message.getBizType forKey:@"bizType"];
-    [dic setObject:msg forKey:@"message"];
+    [dic setObject:payload forKey:@"payload"];
     [dic setObject:timestamp forKey:@"timestamp"];
     FlutterEventSink eventSink = mimcEvent.eventSink;
     if(eventSink){
@@ -824,14 +826,14 @@ AFHTTPSessionManager *httpManager;
 // 发送群聊消息超时
 - (void)handleSendGroupMessageTimeout:(MIMCGroupMessage *)groupMessage {
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    NSDictionary * message = [NSJSONSerialization JSONObjectWithData:groupMessage.getPayload options:NSJSONReadingMutableContainers error:nil];
+    NSString *payload = [[NSString alloc] initWithData:groupMessage.getPayload encoding:NSUTF8StringEncoding];
     NSNumber *timestamp = [NSNumber numberWithLongLong:groupMessage.getTimestamp];
     NSNumber *topicId = [NSNumber numberWithLongLong:groupMessage.getTopicId];
     [dic setObject:@"0" forKey:@"toAccount"];
     [dic setObject:topicId forKey:@"topicId"];
     [dic setObject:groupMessage.getFromAccount forKey:@"fromAccount"];
     [dic setObject:groupMessage.getBizType forKey:@"bizType"];
-    [dic setObject:message forKey:@"message"];
+    [dic setObject:payload forKey:@"payload"];
     [dic setObject:timestamp forKey:@"timestamp"];
     FlutterEventSink eventSink = mimcEvent.eventSink;
     if(eventSink){
@@ -850,14 +852,14 @@ AFHTTPSessionManager *httpManager;
             continue;
         }
         NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-        NSDictionary * message = [NSJSONSerialization JSONObjectWithData:p.getPayload options:NSJSONReadingMutableContainers error:nil];
+        NSString *payload = [[NSString alloc] initWithData:p.getPayload encoding:NSUTF8StringEncoding];
         NSNumber *timestamp = [NSNumber numberWithLongLong:p.getTimestamp];
         NSNumber *topicId = [NSNumber numberWithLongLong:p.getTopicId];
         [dic setObject:@"0" forKey:@"toAccount"];
         [dic setObject:topicId forKey:@"topicId"];
         [dic setObject:p.getFromAccount forKey:@"fromAccount"];
         [dic setObject:p.getBizType forKey:@"bizType"];
-        [dic setObject:message forKey:@"message"];
+        [dic setObject:payload forKey:@"payload"];
         [dic setObject:timestamp forKey:@"timestamp"];
         FlutterEventSink eventSink = mimcEvent.eventSink;
         if(eventSink){
@@ -874,14 +876,14 @@ AFHTTPSessionManager *httpManager;
 // 发送无限群消息超时
 - (void)handleSendUnlimitedGroupMessageTimeout:(MIMCGroupMessage *)groupMessage {
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    NSDictionary * message = [NSJSONSerialization JSONObjectWithData:groupMessage.getPayload options:NSJSONReadingMutableContainers error:nil];
+    NSString *payload = [[NSString alloc] initWithData:groupMessage.getPayload encoding:NSUTF8StringEncoding];
     NSNumber *timestamp = [NSNumber numberWithLongLong:groupMessage.getTimestamp];
     NSNumber *topicId = [NSNumber numberWithLongLong:groupMessage.getTopicId];
     [dic setObject:@"0" forKey:@"toAccount"];
     [dic setObject:topicId forKey:@"topicId"];
     [dic setObject:groupMessage.getFromAccount forKey:@"fromAccount"];
     [dic setObject:groupMessage.getBizType forKey:@"bizType"];
-    [dic setObject:message forKey:@"message"];
+    [dic setObject:payload forKey:@"payload"];
     [dic setObject:timestamp forKey:@"timestamp"];
     FlutterEventSink eventSink = mimcEvent.eventSink;
     if(eventSink){

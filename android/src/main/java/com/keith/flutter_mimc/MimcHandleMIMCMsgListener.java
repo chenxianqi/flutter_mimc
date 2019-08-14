@@ -14,10 +14,11 @@ public class MimcHandleMIMCMsgListener implements MimcUserManager.OnHandleMIMCMs
 
     // 消息处理
     private void eventSinkPushMessage(String eventType, MIMCMessage msg, MIMCGroupMessage gmsg){
+
         try {
             long timestamp;
             String bizType;
-            JSONObject payload;
+            String payload = "";
             String fromAccount;
             String toAccount = "";
             long topicId = 0;
@@ -26,21 +27,21 @@ public class MimcHandleMIMCMsgListener implements MimcUserManager.OnHandleMIMCMs
             if(msg != null){
                 timestamp = msg.getTimestamp();
                 bizType = msg.getBizType();
-                payload = JSONObject.parseObject(new String(msg.getPayload()));
                 fromAccount = msg.getFromAccount();
                 toAccount = msg.getToAccount();
+                payload = new String(msg.getPayload());
                 paramChild.putString("toAccount", toAccount);
             }else{
                 timestamp = gmsg.getTimestamp();
                 bizType = gmsg.getBizType();
+                payload = new String(gmsg.getPayload());
                 topicId = gmsg.getTopicId();
-                payload = JSONObject.parseObject(new String(gmsg.getPayload()));
                 fromAccount = gmsg.getFromAccount();
             }
             paramChild.putString("toAccount", toAccount);
             paramChild.putString("fromAccount", fromAccount);
             paramChild.putString("bizType", bizType);
-            paramChild.putMap("payload", payload);
+            paramChild.putString("payload", payload);
             paramChild.putLong("topicId", topicId);
             paramChild.putLong("timestamp", timestamp);
             params.putString("eventType", eventType);

@@ -14,7 +14,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 
   FlutterMimc flutterMimc;
-  final String appAccount = "19419";             // 我的账号
+  final String appAccount = "100";             // 我的账号
   String groupID = "21351198708203520"; // 操作的普通群ID
   String maxGroupID = "21360839299170304"; // 操作的无限通群ID
   bool isOnline = false;
@@ -36,9 +36,9 @@ class _MyAppState extends State<MyApp> {
   void initFlutterMimc() async{
     flutterMimc = FlutterMimc.init(
       debug: true,
-      appId: "2882303761517545722",
-      appKey: "5551754540722",
-      appSecret: "AW7733Rq55l7hDDPOW1oTA==",
+      appId: "xxxxxxxx",
+      appKey: "xxxxxxxx",
+      appSecret: "xxxxxxxx",
       appAccount: appAccount
     );
     addLog("init==实例化完成");
@@ -66,7 +66,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   // 发送消息
-  void sendMessage(int type){
+  void sendMessage(int type) async{
     String id = accountCtr.value.text;
     String content = contentCtr.value.text;
 
@@ -99,11 +99,13 @@ class _MyAppState extends State<MyApp> {
     if(type == 0){
       message.toAccount = id;
       addLog("发送给$id: $content");
-      flutterMimc.sendMessage(message);
+     var pid = await flutterMimc.sendMessage(message);
+     print("pid====$pid");
     }else if(type == 1){
       message.topicId = int.parse(id);
       addLog("发送普通群消息: $content");
-      flutterMimc.sendGroupMsg(message);
+      var gid = await flutterMimc.sendGroupMsg(message);
+      print("gid====$gid");
     }else{
       message.topicId = int.parse(id);
       addLog("发送无限群消息: $content");
