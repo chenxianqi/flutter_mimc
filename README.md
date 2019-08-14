@@ -1,9 +1,44 @@
 ## Flutter_mimc  v 0.0.2
 
+### 感谢@小米MIMC团队的贡献
+   让IM实现变得简单，喜欢本插件的客观留下您的一个小脚印（star一下）非常感谢
+
+### 目前功能
+* 单聊
+* 普通群聊
+* 无限大群聊
+* 实时流（暂未实现）
 
 ## 使用需知
  使用`flutter_mimc`，建议先阅读[小米即时消息云官方文档](https://admin.mimc.chat.xiaomi.net/docs/)，
  这有助于你使用`flutter_mimc`。
+
+
+# 安装 flutter_mimc
+## 引入
+
+在你的 `pubspec.yaml` 文件中添加如下依赖:
+
+```yaml
+dependencies:
+  flutter_mimc: ^${latestVersion}
+```
+
+
+## 初始化
+使用`flutter_mimc`前，需要进行初始化操作：
+ ```dart
+
+    import 'package:flutter_mimc/flutter_mimc.dart';
+
+     FlutterMimc flutterMimc = FlutterMimc.init(
+          debug: true,
+          appId: "xxxxxxxx",
+          appKey: "xxxxxxxx",
+          appSecret: "xxxxxxxx",
+          appAccount: appAccount
+    );
+ ```
  
  
 ## 消息体注意事项
@@ -41,40 +76,7 @@
      var gid = flutterMimc.sendGroupMsg(message, isUnlimitedGroup: true);
  ```
  
-
-### 目前功能
-* 单聊
-* 普通群聊
-* 无限大群聊
-* 实时流（暂未实现）
-
-
-# 安装 flutter_mimc
-## 引入
-
-在你的 `pubspec.yaml` 文件中添加如下依赖:
-
-```yaml
-dependencies:
-  flutter_mimc: ^${latestVersion}
-```
-
-## 初始化
-使用`flutter_mimc`前，需要进行初始化操作：
- ```dart
-
-    import 'package:flutter_mimc/flutter_mimc.dart';
-
-     flutterMimc = FlutterMimc.init(
-      debug: true,
-      appId: "xxxxxxxx",
-      appKey: "xxxxxxxx",
-      appSecret: "xxxxxxxx",
-      appAccount: appAccount
-    );
- ```
- 
- ## 接口使用
+ ## 接口使用用例
 ```dart
 
   FlutterMimc flutterMimc;
@@ -85,12 +87,11 @@ dependencies:
   List<Map<String, String>> logs = [];
   TextEditingController accountCtr = TextEditingController();
   TextEditingController contentCtr = TextEditingController();
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-
+    
     // 初始化 FlutterMimc
     initFlutterMimc();
 
