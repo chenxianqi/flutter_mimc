@@ -375,7 +375,7 @@ class _MyAppState extends State<MyApp> {
 
     // 创建大群回调
     flutterMimc.addEventListenerHandleCreateUnlimitedGroup().listen((Map<dynamic, dynamic> res){
-      addLog("创建大群回调==${res}");
+      addLog("创建大群回调==$res");
       maxGroupID = (res['topicId'] as int).toString();
     }).onError((err){
       addLog(err);
@@ -383,21 +383,21 @@ class _MyAppState extends State<MyApp> {
 
     // 加入大群回调
     flutterMimc.addEventListenerHandleJoinUnlimitedGroup().listen((Map<dynamic, dynamic> res){
-      addLog("加入大群回调==${res}");
+      addLog("加入大群回调==$res");
     }).onError((err){
       addLog(err);
     });
 
     // 退出大群回调
     flutterMimc.addEventListenerHandleQuitUnlimitedGroup().listen((Map<dynamic, dynamic> res){
-      addLog("退出大群回调==${res}");
+      addLog("退出大群回调==$res");
     }).onError((err){
       addLog(err);
     });
 
     // 解散大群回调
     flutterMimc.addEventListenerHandleDismissUnlimitedGroup().listen((Map<dynamic, dynamic> res){
-      addLog("解散大群回调==${res}");
+      addLog("解散大群回调==$res");
     }).onError((err){
       addLog(err);
     });

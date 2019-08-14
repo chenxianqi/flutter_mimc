@@ -5,7 +5,8 @@ class MimcServeraAck {
   int sequence;
   int code;
 
-  MimcServeraAck({this.packetId, this.timestamp, this.desc, this.sequence, this.code});
+  MimcServeraAck(
+      {this.packetId, this.timestamp, this.desc, this.sequence, this.code});
 
   MimcServeraAck.fromJson(Map<dynamic, dynamic> json) {
     this.packetId = json['packetId'];
@@ -24,5 +25,4 @@ class MimcServeraAck {
     data['code'] = this.code;
     return data;
   }
-
 }

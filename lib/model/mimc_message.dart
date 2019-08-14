@@ -6,7 +6,13 @@ class MIMCMessage {
   int topicId;
   String payload;
 
-  MIMCMessage({this.toAccount, this.bizType,this.timestamp, this.fromAccount, this.topicId, this.payload});
+  MIMCMessage(
+      {this.toAccount,
+      this.bizType,
+      this.timestamp,
+      this.fromAccount,
+      this.topicId,
+      this.payload});
 
   MIMCMessage.fromJson(Map<dynamic, dynamic> json) {
     this.toAccount = json['toAccount'];
@@ -27,5 +33,4 @@ class MIMCMessage {
     data['payload'] = this.payload;
     return data;
   }
-
 }
