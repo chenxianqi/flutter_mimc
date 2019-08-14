@@ -17,3 +17,6 @@
 
 ## 0.0.3+2
 * update api documentation
+
+## 0.0.3+3
+* update api documentation

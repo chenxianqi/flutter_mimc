@@ -25,7 +25,7 @@ class MIMCEvents{
 
 class FlutterMimc {
 
-  final  MethodChannel _channel = const MethodChannel('flutter_mimc');
+  final MethodChannel _channel =  MethodChannel('flutter_mimc');
   final EventChannel _eventChannel = EventChannel('flutter_mimc.event');
 
   static const String   _ON_INIT        =     'init';          /// 参数形式初始化
@@ -102,13 +102,13 @@ class FlutterMimc {
 
   /// 登录
   /// @return bool
-  Future<void> login() async {
+  Future<dynamic> login() async {
     return await _channel.invokeMethod(_ON_LOGIN);
   }
 
   /// 退出登录
   /// @return null 无返回值
-  Future<void> logout() async {
+  Future<dynamic> logout() async {
     return await _channel.invokeMethod(_ON_LOGOUT);
   }
 
@@ -298,7 +298,7 @@ class FlutterMimc {
 
   ///  * 创建无限大群
   ///  * @param topicName 群名
-  Future<void> createUnlimitedGroup(String topicName) async{
+  Future<dynamic> createUnlimitedGroup(String topicName) async{
     return await _channel.invokeMethod(_ON_CREATE_UNLIMITED_GROUP, {
       "topicName": topicName
     });
@@ -326,7 +326,7 @@ class FlutterMimc {
 
   ///  * 解散无限大群
   ///  * @param topicId 群id
-  Future<void> dismissUnlimitedGroup(String topicId) async{
+  Future<dynamic> dismissUnlimitedGroup(String topicId) async {
     assert(topicId != null && topicId.isNotEmpty);
     return await _channel.invokeMethod(_ON_DISMISS_UNLIMITED_GROUP, {
       "topicId": topicId
