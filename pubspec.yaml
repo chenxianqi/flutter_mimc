@@ -1,5 +1,5 @@
 name: flutter_mimc
-description: This is a flutter version based on Xiaomi Cloud sdk GO GO GOA
+description: This is a flutter plugin based on the millet message cloud，Make IM easy
 version: 0.0.3+3
 author: keith <361554012@qq.com>
 homepage: https://github.com/chenxianqi/flutter_mimc

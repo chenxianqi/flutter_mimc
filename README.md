@@ -1,23 +1,25 @@
 ## Flutter_mimc  v 0.0.3+3
 
-### 感谢@小米MIMC团队的贡献
-   让IM实现变得简单，喜欢本插件的客观留下您的一个小脚印（star一下）非常感谢
+[English][中文](./README_CN.md)
 
-### 目前功能
-* 单聊
-* 普通群聊
-* 无限大群聊
-* 实时流（暂未实现）
+### thank@Xiaomi MIMC team's contribution
+   Make IM easy
 
-## 使用需知
- 使用`flutter_mimc`，建议先阅读[小米即时消息云官方文档](https://admin.mimc.chat.xiaomi.net/docs/)，
- 这有助于你使用`flutter_mimc`。
+### features
+* Single chat
+* Ordinary group chat
+* Infinite group chat
+* Live stream（Not yet implemented）
+
+## Use needs
+ use`flutter_mimc`，It is recommended to read first[Xiaomi instant message cloud official document](https://admin.mimc.chat.xiaomi.net/docs/)，
+ This helps you to use `flutter_mimc`。
 
 
-# 安装 flutter_mimc
-## 引入
+# Install flutter_mimc
+## import
 
-在你的 `pubspec.yaml` 文件中添加如下依赖:
+`pubspec.yaml` Add the following dependency to the file:
 
 ```yaml
 dependencies:
@@ -25,8 +27,8 @@ dependencies:
 ```
 
 
-## 初始化
-使用`flutter_mimc`前，需要进行初始化操作：
+## initialization
+Use `flutter_mimc` Before, need to perform initialization：
  ```dart
 
     import 'package:flutter_mimc/flutter_mimc.dart';
@@ -41,17 +43,16 @@ dependencies:
  ```
  
  
-## 消息体注意事项
-  消息体一致性
-  flutter_mimc提供MIMCMessage模型类
+## Message body
+  flutter_mimc Provide MIMCMessage model class
  ```dart
      MIMCMessage message = MIMCMessage();
-     message.bizType = "bizType";      // 消息类型(开发者自定义)
-     message.toAccount = "";           // 接收者账号(发送单聊留null)
-     message.topicId = "";             // 指定发送的群ID(发送群聊时留null)
-     message.payload = "";             // 开发者自定义消息体
+     message.bizType = "bizType";      // Message type (developer custom)
+     message.toAccount = "";           // Recipient account number (send single chat leave null)
+     message.topicId = "";             // Specify the group ID to send (null when sending group chat)
+     message.payload = "";             // Developer custom message body
  
-     // 自定义消息体(官方建议的消息体，我多加了几个字段，因为我没有使用上层的任何字段)
+     // Custom message body And Base64 encoding
      Map<String, dynamic> payloadMap = {
        "from_account": appAccount,
        "to_account": id,
@@ -63,26 +64,26 @@ dependencies:
        "payload": content
      };
  
-     // base64处理自定义消息
+     // base64 Handling custom messages
      message.payload = base64Encode(utf8.encode(json.encode(payloadMap)));
      
-     // 发送单聊
+     // Send a single chat
      var pid = await flutterMimc.sendMessage(message);
      
-     // 发送普通群聊
+     // Send a normal group chat
      var gid = await flutterMimc.sendGroupMsg(message);
      
-     // 发送无限大群聊
+     // Send unlimited group chat
      var gid = flutterMimc.sendGroupMsg(message, isUnlimitedGroup: true);
  ```
  
- ## 接口使用用例
+ ## example
 ```dart
 
   FlutterMimc flutterMimc;
-  final String appAccount = "100";         // 我的账号
-  String groupID = "21351198708203520";    // 操作的普通群ID
-  String maxGroupID = "21360839299170304"; // 操作的无限通群ID
+  final String appAccount = "100";         // My IM account
+  String groupID = "21351198708203520";    // Ordinary group Account id
+  String maxGroupID = "21360839299170304"; // Unlimited group Account id
   bool isOnline = false;
   List<Map<String, String>> logs = [];
   TextEditingController accountCtr = TextEditingController();
@@ -92,12 +93,12 @@ dependencies:
   void initState() {
     super.initState();
     
-    // 初始化 FlutterMimc
+    // init FlutterMimc
     initFlutterMimc();
 
   }
 
-  // 初始化
+  // init
   void initFlutterMimc() async{
     flutterMimc = FlutterMimc.init(
       debug: true,
@@ -106,11 +107,11 @@ dependencies:
       appSecret: "xxxxxxxx",
       appAccount: appAccount
     );
-    addLog("init==实例化完成");
+    addLog("init== init success ");
     listener();
   }
 
-  // 登录
+  // login
   void login() async{
     await flutterMimc.login();
   }
@@ -125,18 +126,18 @@ dependencies:
     setState(() {});
   }
 
-  // 退出登录
+  // logout
   void logout() async{
     await flutterMimc.logout();
   }
 
-  // 发送消息
+  // send message
   void sendMessage(int type){
     String id = accountCtr.value.text;
     String content = contentCtr.value.text;
 
     if(id == null || id.isEmpty || content == null || content.isEmpty){
-      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("id 或 content参数错误"), backgroundColor: Colors.pink,));
+      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("id or content Parameter error"), backgroundColor: Colors.pink,));
       return;
     }
 
@@ -152,123 +153,123 @@ dependencies:
     messageRes.message = messageBena;
     if(type == 0){
       messageRes.toAccount = id;
-      addLog("发送给$id: $content");
+      addLog("send to$id: $content");
       flutterMimc.sendMessage(messageRes);
     }else if(type == 1){
       messageRes.topicId = int.parse(id);
-      addLog("发送普通群消息: $content");
+      addLog("Send a normal group message: $content");
       flutterMimc.sendGroupMsg(messageRes);
     }else{
       messageRes.topicId = int.parse(id);
-      addLog("发送无限群消息: $content");
+      addLog("Send unlimited group messages: $content");
       flutterMimc.sendGroupMsg(messageRes, isUnlimitedGroup: true);
     }
     print(messageRes.toJson());
     contentCtr.clear();
   }
 
-  // 获取token
+  // get token
   void getToken() async{
     String token = await flutterMimc.getToken();
-    addLog("获取token成功：$token");
+    addLog("Get token successfully：$token");
   }
 
-  // 获取当前账号
+  // Get current account
   void getAccount() async{
     String account = await flutterMimc.getAccount();
-    addLog("获取当前账号成功：$account");
+    addLog("Get current account successfully：$account");
   }
 
-  // 获取当前状态
+  // Get current status
   void getStatus() async{
     bool isOnline =  await flutterMimc.isOnline();
-    addLog("获取当前状态：${isOnline ? '在线' :'离线'}");
+    addLog("Get current status：${isOnline ? 'Online' :'Offline'}");
   }
 
-  // 创建一个群
+  // Create a group
   void createGroup() async{
-    var res = await flutterMimc.createGroup("ios群", appAccount);
+    var res = await flutterMimc.createGroup("ios_group_name", appAccount);
     if(!res['success']){
-      addLog("创建群失败:${res['message']}" );
+      addLog("Create group failed:${res['message']}" );
     }else{
       groupID = res['data']['topicInfo']['topicId'];
-      addLog("创建群成功：${res['data']}");
+      addLog("Create group success：${res['data']}");
     }
     accountCtr.text = groupID;
     setState(() { });
   }
 
-  // 查询群
+  // Query group
   void queryGroupInfo() async{
     var res = await flutterMimc.queryGroupInfo(groupID);
     if(!res['success']){
-      addLog("查询群失败:${res['message']}" );
+      addLog("Query group failed:${res['message']}" );
     }else{
-      addLog("查询群成功：${res['data']}");
+      addLog("Query group success：${res['data']}");
     }
   }
 
-  // 查询所属群信息
+  // Query group information
   void queryGroupsOfAccount() async{
     var res = await flutterMimc.queryGroupsOfAccount();
     if(!res['success']){
-      addLog("查询所属群失败:${res['message']}" );
+      addLog("Querying group info failed:${res['message']}" );
     }else{
-      addLog("查询所属群成功：${res['data']}");
+      addLog("Querying group info success：${res['data']}");
     }
   }
 
-  // 邀请用户加入群
+  // Invite users to join the group
   void joinGroup() async{
     var res = await flutterMimc.joinGroup(groupID, "101,102,103");
     if(!res['success']){
-      addLog("邀请用户加入群执行失败:${res['message']}" );
+      addLog("Invite users to join group failed:${res['message']}" );
     }else{
-      addLog("邀请用户加入群执行成功：${res['data']}");
+      addLog("Invite users to join group success：${res['data']}");
     }
   }
 
-  // 非群主用户退群
+  // Non-group master user quit group
   void quitGroup() async{
     var res = await flutterMimc.quitGroup(groupID);
     if(!res['success']){
-      addLog("非群主用户退群执行失败:${res['message']}" );
+      addLog("Non-group master user quit group failed:${res['message']}" );
     }else{
-      addLog("非群主用户退群执行成功：${res['data']}");
+      addLog("Non-group master user quit group success：${res['data']}");
     }
   }
 
-  // 群主踢成员出群
+  // Kicking members out of the group
   void kickGroup() async{
     var res = await flutterMimc.kickGroup(groupID, "101,102,103");
     if(!res['success']){
-      addLog("群主踢成员出群执行失败:${res['message']}");
+      addLog("Kicking members out of the group failed:${res['message']}");
     }else{
-      addLog("群主踢成员出群执行成功：${res['data']}");
+      addLog("Kicking members out of the group success：${res['data']}");
     }
   }
 
-  // 群主更新群信息
+  // Group owner update group information
   void updateGroup() async{
-    var res = await flutterMimc.updateGroup(groupID, newOwnerAccount: "", newGroupName: "新群名" + groupID, newGroupBulletin: "新公告");
+    var res = await flutterMimc.updateGroup(groupID, newOwnerAccount: "", newGroupName: "New group name" + groupID, newGroupBulletin: "New announcement");
     if(!res['success']){
-      addLog("群主更新群信息执行失败:${res['message']}" );
+      addLog("Group owner update group information failed:${res['message']}" );
     }else{
-      addLog("群主更新群信息执行成功：${res['data']}");
+      addLog("Group owner update group information success：${res['data']}");
     }
   }
 
-  // 群主销毁群
+  // Group destroyer
   void dismissGroup() async{
     var res = await flutterMimc.dismissGroup(groupID);
     if(!res['success']){
-      addLog("群主销毁群执行失败:${res['message']}" );
+      addLog("Group destroyer failed:${res['message']}" );
     }else{
-      addLog("群主销毁群执行成功：${res['data']}");
+      addLog("Group destroyer success：${res['data']}");
     }
   }
 
-  // 拉取单聊消息记录
+  // Pull single chat message record
   void pullP2PHistory() async{
     int thisTimer = DateTime.now().millisecondsSinceEpoch;
     String fromAccount = appAccount;
@@ -282,13 +283,13 @@ dependencies:
       utcToTime: utcToTime
     );
     if(!res['success']){
-      addLog("单聊消息记录执行失败:${res['message']}" );
+      addLog("Pull single chat message record failed:${res['message']}" );
     }else{
-      addLog("单聊消息记录执行成功：${res['data']}");
+      addLog("Pull single chat message record success：${res['data']}");
     }
   }
 
-  // 拉取群聊消息记录
+  // Pull group chat message record
   void pullP2THistory() async{
     int thisTimer = DateTime.now().millisecondsSinceEpoch;
     String account = appAccount;
@@ -302,152 +303,152 @@ dependencies:
       utcToTime: utcToTime
     );
     if(!res['success']){
-      addLog("群聊消息记录执行失败:${res['message']}" );
+      addLog("Pull group chat message record failed:${res['message']}" );
     }else{
-      addLog("群聊消息记录执行成功：${res['data']}");
+      addLog("Pull group chat message record success：${res['data']}");
     }
   }
 
-  // 创建无限大群
+  // create unlimited group
   void createUnlimitedGroup() async{
-    await flutterMimc.createUnlimitedGroup("创建无限大群");
-    addLog("创建一个无限大群" );
+    await flutterMimc.createUnlimitedGroup("unlimitedGroup");
+    addLog("create unlimited group" );
   }
 
-  // 加入无限大群
+  // join unlimited group
   void joinUnlimitedGroup() async{
     await flutterMimc.joinUnlimitedGroup("21395272047788032");
-    addLog("加入无限大群$maxGroupID" );
+    addLog("join unlimited group$maxGroupID" );
   }
 
-  // 退出无限大群
+  // quit unlimited group
   void quitUnlimitedGroup() async{
     await flutterMimc.quitUnlimitedGroup("21395272047788032");
-    addLog("退出无限大群$maxGroupID" );
+    addLog("quit unlimited group$maxGroupID" );
   }
 
-  // 解散无限大群
+  // dismiss unlimited group
   void dismissUnlimitedGroup() async{
     await flutterMimc.dismissUnlimitedGroup(maxGroupID);
-    addLog("解散无限大群$maxGroupID" );
+    addLog("dismiss unlimited group$maxGroupID" );
   }
 
-  // 查询无限大群成员
+  // Query unlimited group members
   void queryUnlimitedGroupMembers() async{
     var res = await flutterMimc.queryUnlimitedGroupMembers(maxGroupID);
-    addLog("无限大群成员: $res" );
+    addLog("Query unlimited group members: $res" );
   }
 
-  // 查询无限大群
+  // unlimited group I am in
   void queryUnlimitedGroups() async{
     var res = await flutterMimc.queryUnlimitedGroups();
-    addLog("我所在的大群: $res" );
+    addLog("unlimited group I am in: $res" );
   }
 
-  // 查询无限大群在线用户数
+  // Query the number of unlimited group of online users
   void queryUnlimitedGroupOnlineUsers() async{
     var res =  await flutterMimc.queryUnlimitedGroupOnlineUsers(maxGroupID);
-    addLog("无限大群在线用户数：$res" );
+    addLog("online count data：$res" );
   }
 
-  // 查询无限大群基本信息
+      // unlimited group Basic Information
   void queryUnlimitedGroupInfo() async{
     var res =  await flutterMimc.queryUnlimitedGroupInfo(maxGroupID);
-    addLog("查询无限大群基本信息：$res" );
+    addLog("unlimited group Basic Information：$res" );
   }
 
-  // 更新大群基本信息
+  // update unlimited group Basic Information
   void updateUnlimitedGroup() async{
-    var res =  await flutterMimc.updateUnlimitedGroup(maxGroupID, newGroupName: "新大群名称1");
-    addLog("更新大群基本信息：$res" );
+    var res =  await flutterMimc.updateUnlimitedGroup(maxGroupID, newGroupName: "newGroupName");
+    addLog("update unlimited group Basic Information：$res" );
   }
 
-  // =========监听回调==============
+  // =========add Event Listener==============
 
-    // 监听登录状态
+    // Listener login status
     flutterMimc.addEventListenerStatusChanged().listen((status){
       isOnline = status;
       if(status){
-        addLog("$appAccount====状态变更====上线");
+        addLog("$appAccount====status changed====Online");
       }else{
-        addLog("$appAccount====状态变更====下线");
+        addLog("$appAccount====status changed====Offline");
       }
       setState(() {});
     }).onError((err){
       addLog(err);
     });
 
-    // 接收单聊
+    // Receive a single chat
     flutterMimc.addEventListenerHandleMessage().listen((MimcChatMessage resource){
       String content =utf8.decode(base64.decode(resource.message.payload));
-      addLog("收到${resource.fromAccount}消息: $content");
+      addLog("get${resource.fromAccount}message: $content");
       setState(() {});
     }).onError((err){
       addLog(err);
     });
 
-    // 接收群聊
+    // Receiving group chat
     flutterMimc.addEventListenerHandleGroupMessage().listen((MimcChatMessage resource){
       String content =utf8.decode(base64.decode(resource.message.payload));
-      addLog("收到群${resource.topicId}消息: $content");
+      addLog("get group${resource.topicId}message: $content");
       setState(() {});
     }).onError((err){
       addLog(err);
     });
 
-    // 发送消息回调
+    // Send message callback
     flutterMimc.addEventListenerServerAck().listen((MimcServeraAck ack){
-      addLog("发送消息回调==${ack.toJson()}");
+      addLog("Send message callback==${ack.toJson()}");
     }).onError((err){
       addLog(err);
     });
 
-    // 发送单聊超时
+    // Send a single chat timeout
     flutterMimc.addEventListenerSendMessageTimeout().listen((MimcChatMessage resource){
-      addLog("发送单聊超时==${resource.toJson()}");
+      addLog("Send a single chat timeout==${resource.toJson()}");
     }).onError((err){
       addLog(err);
     });
 
-    // 发送群聊超时
+    // Send group chat timeout
     flutterMimc.addEventListenerSendGroupMessageTimeout().listen((MimcChatMessage resource){
-      addLog("发送群聊超时==${resource.toJson()}");
+      addLog("Send group chat timeout==${resource.toJson()}");
     }).onError((err){
       addLog(err);
     });
 
-    // 发送无限群聊超时
+    // Send unlimited group chat timeout
     flutterMimc.addEventListenerSendUnlimitedGroupMessageTimeout().listen((MimcChatMessage resource){
-      addLog("发送无限群聊超时==${resource.toJson()}");
+      addLog("Send unlimited group chat timeout==${resource.toJson()}");
     }).onError((err){
       addLog(err);
     });
 
-    // 创建大群回调
+    // Create a unlimited group callback
     flutterMimc.addEventListenerHandleCreateUnlimitedGroup().listen((Map<dynamic, dynamic> res){
-      addLog("创建大群回调==${res}");
+      addLog("Create a unlimited group callback==${res}");
       maxGroupID = (res['topicId'] as int).toString();
     }).onError((err){
       addLog(err);
     });
 
-    // 加入大群回调
+    // join unlimited group callback
     flutterMimc.addEventListenerHandleJoinUnlimitedGroup().listen((Map<dynamic, dynamic> res){
-      addLog("加入大群回调==${res}");
+      addLog("join unlimited group callback==${res}");
     }).onError((err){
       addLog(err);
     });
 
-    // 退出大群回调
+    // quit unlimited group callback
     flutterMimc.addEventListenerHandleQuitUnlimitedGroup().listen((Map<dynamic, dynamic> res){
-      addLog("退出大群回调==${res}");
+      addLog("quit unlimited group callback==${res}");
     }).onError((err){
       addLog(err);
     });
 
-    // 解散大群回调
+    // Dismiss unlimited group callback
     flutterMimc.addEventListenerHandleDismissUnlimitedGroup().listen((Map<dynamic, dynamic> res){
-      addLog("解散大群回调==${res}");
+      addLog("Dismiss unlimited group callback==${res}");
     }).onError((err){
       addLog(err);
     });
