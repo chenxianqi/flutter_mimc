@@ -76,8 +76,11 @@ dependencies:
      // 发送无限大群聊
      var gid = flutterMimc.sendGroupMsg(message, isUnlimitedGroup: true);
  ```
+ ## 已知问题
+ 1.可能会有部分http api没有实现接口,请先自己通过flutter_mim获得token去调用接口
+ 2.安全验证有待添加该功能，目前敏感信息是写死的
  
- ## 使用-用例
+ ## 使用-例子
 ```dart
 
   FlutterMimc flutterMimc;
