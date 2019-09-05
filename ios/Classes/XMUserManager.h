@@ -4,6 +4,7 @@
 @interface XMUserManager : NSObject<parseTokenDelegate>
 
 - (void)initArgs:(int64_t)appId appKey:(NSString *)appKey appSecret:(NSString *)appSecret appAccount:(NSString *)appAccount;
+- (void)initStringToken:(NSString *)stringToken;
 - (BOOL)userLogin;
 - (BOOL)userLogout;
 - (NSString *)getAppAccount;
@@ -12,4 +13,5 @@
 - (NSString *)getUrl;
 - (void)setUser:(MCUser *)user;
 - (void)parseProxyServiceToken:(void(^)(NSString *data))callback;
++(NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString;
 @end

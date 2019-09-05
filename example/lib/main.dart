@@ -34,13 +34,16 @@ class _MyAppState extends State<MyApp> {
 
   // 初始化
   void initFlutterMimc() async{
-    flutterMimc = FlutterMimc.init(
-      debug: true,
-      appId: "xxxxxxxx",
-      appKey: "xxxxxxxx",
-      appSecret: "xxxxxxxx",
-      appAccount: appAccount
-    );
+    // token String
+    String tokenString = '{"code":200,"message":"success","data":{"appId":"2882303761517669588","appPackage":"com.xiaomi.mimcdemo","appAccount":"100","miChid":9,"miUserId":"18667786322837504","miUserSecurityKey":"hXpXDszBEMwSBzKutEgnkw==","token":"bJRLeg7AgtSh0T13YjL\/IFDdK0JTjCJG4KdSfB9L7c0N56uq0EiflNyh2H5qmlOwqeOEcudSjEicejSfy+BJz2ui\/bkYYYPpT9rKkuChjVDMAXpIv1L7ItYzsCaYjygYQD\/FuVQ+0xiiFJqDudzL2vHwjH\/X7NJbH7JCqycZkfUhOW+rPNmf3OtMhhI0+qSMIFX8f4Dn9XWCelzvYtp0Hxe4DsPqI0ry3\/z9VRTTDCRIbR8SQ\/NtpLh3xRb2eDCbmFVJR7l8QGwh6kcbPAhn0gRzEZHPL+65x4TtkGNKnJPXloBkQLt6z\/AGLFf0k78rrpQgQQlFADPqH826GCvg6VVqlUiQXNkODuPSAYCuXtMgoeHTcMIUjJL2dnPvuR9uMPOttF2ILzE\/h+oXbR3MF6SSikdvxLGUJGCmFeSs7ZCJs\/sAMrYUa8IIw9+2bIU7fK6XRWr+DzxSN\/pIM8CUJw==","regionBucket":105,"feDomainName":"app.chat.xiaomi.net","relayDomainName":"relay.mimc.chat.xiaomi.net"}}';
+    flutterMimc =  FlutterMimc.stringTokenInit(tokenString);
+//    flutterMimc = FlutterMimc.init(
+//      debug: true,
+//      appId: "2882303761517669588",
+//      appKey: "5111766983588",
+//      appSecret: "b0L3IOz/9Ob809v8H2FbVg==",
+//      appAccount: appAccount
+//    );
     addLog("init==实例化完成");
     listener();
   }
@@ -52,7 +55,7 @@ class _MyAppState extends State<MyApp> {
 
   // add log
   addLog(String content){
-    print(content);
+    debugPrint(content);
     logs.insert(0,{
       "date": DateTime.now().toIso8601String(),
       "content": content
@@ -310,6 +313,48 @@ class _MyAppState extends State<MyApp> {
     addLog("更新大群基本信息：$res" );
   }
 
+  // 获取最近会话列表
+  void getContact() async{
+    var res =  await flutterMimc.getContact(isV2: true);
+    addLog("获取最近会话列表：$res" );
+  }
+
+  // 拉黑对方
+  void setBlackList() async{
+    var res =  await flutterMimc.setBlackList("200");
+    addLog("拉黑对方：$res" );
+  }
+
+  // 取消拉黑对方
+  void deleteBlackList() async{
+    var res =  await flutterMimc.deleteBlackList("200");
+    addLog("取消拉黑对方：$res" );
+  }
+
+  // 判断账号是否被拉黑
+  void hasBlackList() async{
+    var res =  await flutterMimc.hasBlackList("200");
+    addLog("判断账号是否被拉黑：$res" );
+  }
+
+  // 普通群拉黑成员
+  void setGroupBlackList() async{
+    var res =  await flutterMimc.setGroupBlackList(blackTopicId: "21351198708203520", blackAccount: "102");
+    addLog("普通群拉黑成员：$res" );
+  }
+
+  // 普通群取消拉黑成员
+  void deleteGroupBlackList() async{
+    var res =  await flutterMimc.deleteGroupBlackList(blackTopicId: "21351198708203520", blackAccount: "102");
+    addLog("普通群取消拉黑成员：$res" );
+  }
+
+  // 判断账号是否被普通群拉黑
+  void hasGroupBlackList() async{
+    var res =  await flutterMimc.hasGroupBlackList(blackTopicId: "21351198708203520", blackAccount: "102");
+    addLog("判断账号是否被普通群拉黑：$res" );
+  }
+
   // 监听回调消息
   void listener(){
 
@@ -439,131 +484,151 @@ class _MyAppState extends State<MyApp> {
             ),
           ],
         ),
-        body: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.0),
-              child: Column(
-                children: <Widget>[
-                  Text("\r\n当前账号：$appAccount,  当前状态：${isOnline ? '在线' : '离线'}\r\n"),
-                  SizedBox(
-                    height: 35.0,
-                    child: TextField(
-                        controller: accountCtr,
-                        decoration: InputDecoration(
-                            hintText: "输入对方群ID、或对方账号"
-                        )
-                    ),
+        body: ListView(children: <Widget>[
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5.0),
+            child: Column(
+              children: <Widget>[
+                Text("\r\n当前账号：$appAccount,  当前状态：${isOnline ? '在线' : '离线'}\r\n"),
+                SizedBox(
+                  height: 35.0,
+                  child: TextField(
+                      controller: accountCtr,
+                      decoration: InputDecoration(
+                          hintText: "输入对方群ID、或对方账号"
+                      )
                   ),
-                  SizedBox(
-                    height: 35.0,
-                    child: TextField(
-                        controller: contentCtr,
-                        decoration: InputDecoration(
-                            hintText: "输入发送的内容"
-                        )
-                    ),
+                ),
+                SizedBox(
+                  height: 35.0,
+                  child: TextField(
+                      controller: contentCtr,
+                      decoration: InputDecoration(
+                          hintText: "输入发送的内容"
+                      )
                   ),
-                  Row(
-                    children: <Widget>[
-                      RaisedButton(
-                        color: Colors.blue,
-                        onPressed:() => sendMessage(0),
-                        child: Text( "发送单聊", style: TextStyle(color: Colors.white),),
-                      ),
-                      VerticalDivider(width: 10.0,),
-                      RaisedButton(
-                        color: Colors.blue,
-                        onPressed:() => sendMessage(1),
-                        child: Text( "发送群聊", style: TextStyle(color: Colors.white),),
-                      ),
-                      VerticalDivider(width: 10.0,),
-                      RaisedButton(
-                        color: Colors.blue,
-                        onPressed:() => sendMessage(2),
-                        child: Text( "发送无限群聊", style: TextStyle(color: Colors.white),),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      button("获取token",getToken),
-                      button("获取当前账号",getAccount),
-                      button("获取账号状态",getStatus),
-                      button("拉取单聊记录",pullP2PHistory),
-                    ],
-                  ),
-                  Text('\r\n----普通群----', style: TextStyle(color: Colors.grey),),
-                  Divider(),
-                  Row(
-                    children: <Widget>[
-                      button("创建群",createGroup),
-                      button("查询群信息",queryGroupInfo),
-                      button("查询所属",queryGroupsOfAccount),
-                      button("邀请加入群",joinGroup),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      button("非群主退群",quitGroup),
-                      button("踢成员出群",kickGroup),
-                      button("更新群信息",updateGroup),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      button("群主删除群",dismissGroup),
-                      button("拉取群聊记录",pullP2THistory),
-                    ],
-                  ),
-                  Text('\r\n----无限大群----', style: TextStyle(color: Colors.grey),),
-                  Divider(),
-                  Row(
-                    children: <Widget>[
-                      button("创建大群",createUnlimitedGroup),
-                      button("加入大群",joinUnlimitedGroup),
-                      button("退出大群",quitUnlimitedGroup),
-                      button("解散大群",dismissUnlimitedGroup),
-                      button("大群信息",queryUnlimitedGroupInfo),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      button("大群更新",updateUnlimitedGroup),
-                      button("大群成员",queryUnlimitedGroupMembers),
-                      button("在线用户数",queryUnlimitedGroupOnlineUsers),
-                      button("我所在的无限大群",queryUnlimitedGroups),
-                    ],
-                  ),
-                  Divider()
-                ],
-              ),
-            ),
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                color: Colors.white70,
-                height: 100.0,
-                padding: EdgeInsets.symmetric(horizontal:5.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                ),
+                Row(
                   children: <Widget>[
-                    Text("操作日志"),
-                    Divider(),
-                    Expanded(
-                      child: ListView.builder(
-                          itemCount: logs.length,
-                          itemBuilder: (context, index){
-                            return ListTile(title: Text(logs[index]['content']), subtitle: Text(logs[index]['date']),);
-                          }
-                      ),
-                    )
+                    RaisedButton(
+                      color: Colors.blue,
+                      onPressed:() => sendMessage(0),
+                      child: Text( "发送单聊", style: TextStyle(color: Colors.white),),
+                    ),
+                    VerticalDivider(width: 10.0,),
+                    RaisedButton(
+                      color: Colors.blue,
+                      onPressed:() => sendMessage(1),
+                      child: Text( "发送群聊", style: TextStyle(color: Colors.white),),
+                    ),
+                    VerticalDivider(width: 10.0,),
+                    RaisedButton(
+                      color: Colors.blue,
+                      onPressed:() => sendMessage(2),
+                      child: Text( "发送无限群聊", style: TextStyle(color: Colors.white),),
+                    ),
                   ],
                 ),
-              ),
-            )
-          ],
-        )
+                Row(
+                  children: <Widget>[
+                    button("获取token",getToken),
+                    button("当前账号",getAccount),
+                    button("账号状态",getStatus),
+                    button("单聊记录",pullP2PHistory),
+                    button("会话列表",getContact),
+                  ],
+                ),
+                Text('\r\n----普通群----', style: TextStyle(color: Colors.grey),),
+                Divider(),
+                Row(
+                  children: <Widget>[
+                    button("创建群",createGroup),
+                    button("查询群信息",queryGroupInfo),
+                    button("查询所属",queryGroupsOfAccount),
+                    button("邀请加入群",joinGroup),
+                    button("群主删除群",dismissGroup),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    button("非群主退群",quitGroup),
+                    button("踢成员出群",kickGroup),
+                    button("更新群信息",updateGroup),
+                    button("拉取群聊记录",pullP2THistory),
+                  ],
+                ),
+                Text('\r\n----无限大群----', style: TextStyle(color: Colors.grey),),
+                Divider(),
+                Row(
+                  children: <Widget>[
+                    button("创建大群",createUnlimitedGroup),
+                    button("加入大群",joinUnlimitedGroup),
+                    button("退出大群",quitUnlimitedGroup),
+                    button("解散大群",dismissUnlimitedGroup),
+                    button("大群信息",queryUnlimitedGroupInfo),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    button("大群更新",updateUnlimitedGroup),
+                    button("大群成员",queryUnlimitedGroupMembers),
+                    button("在线用户数",queryUnlimitedGroupOnlineUsers),
+                    button("我所在的无限大群",queryUnlimitedGroups),
+                  ],
+                ),
+                Text('\r\n----黑名单----', style: TextStyle(color: Colors.grey),),
+                Divider(),
+                Row(
+                  children: <Widget>[
+                    button("拉黑对方",setBlackList),
+                    button("取消拉黑",deleteBlackList),
+                    button("检查是否被拉黑",hasBlackList),
+                  ],
+                ),
+                Text('\r\n----群禁言----', style: TextStyle(color: Colors.grey),),
+                Divider(),
+                Row(
+                  children: <Widget>[
+                    button("禁言群成员",setGroupBlackList),
+                    button("取消禁言群成员",deleteGroupBlackList),
+                    button("检查是否禁言",hasGroupBlackList),
+                  ],
+                ),
+                Divider(),
+              ],
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            color: Colors.white70,
+            height: 500.0,
+            padding: EdgeInsets.symmetric(horizontal:5.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment:  MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text("操作日志（部分接口需要登录后才能操作）"),
+                    button("清空日志",(){
+                      logs = [];
+                      setState(() {});
+                    }),
+                  ],
+                ),
+                Divider(),
+                Expanded(
+                  child: ListView.builder(
+                      itemCount: logs.length,
+                      itemBuilder: (context, index){
+                        return ListTile(title: Text(logs[index]['content']), subtitle: Text(logs[index]['date']),);
+                      }
+                  ),
+                )
+              ],
+            ),
+          )
+        ],)
     );
   }
 }

@@ -160,6 +160,18 @@ public class FlutterMimcPlugin implements MethodCallHandler{
 
     }
 
+    // 通过服务端的鉴权获得的String 初始化
+    else if (call.method.equals("stringTokenInit")) {
+
+          String token = call.argument("token");
+          Boolean isDebug = call.argument("debug");
+          if(isDebug){
+              MimcUserManager.getInstance().openLog();
+          }
+          MimcUserManager.getInstance().stringTokenInit(context, token);
+          result.success(null);
+
+      }
     // 发送单聊
     else if(call.method.equals("sendMessage"))
     {
@@ -974,6 +986,328 @@ public class FlutterMimcPlugin implements MethodCallHandler{
             result.success(params.toMap());
         }
 
+    }
+
+    // 获取最近会话列表
+    else if(call.method.equals("getContact"))
+    {
+        final  ConstraintsMap params = new ConstraintsMap();
+        try {
+            boolean isV2 = call.argument("isV2");
+            MimcUserManager.getInstance().contact(isV2, new Callback() {
+                @Override
+                public void onFailure(Call c, IOException e) {
+                    params.putString("message", e.getMessage());
+                    params.putNull("data");
+                    params.putBoolean("success", false);
+                    result.success(params.toMap());
+                }
+                @Override
+                public void onResponse(Call c, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        JSONObject json = JSONObject.parseObject(response.body().string());
+                        if(json.getInteger("code") == 200){
+                            params.putNull("message");
+                            params.putBoolean("success", true);
+                            params.putMap("data", json.getJSONObject("data"));
+                        }else{
+                            params.putString("message", json.getString("message"));
+                            params.putNull("data");
+                            params.putBoolean("success", false);
+                        }
+                        result.success(params.toMap());
+                    }
+                }}
+            );
+        }catch (Exception e){
+            params.putString("message", e.getMessage());
+            params.putNull("data");
+            params.putBoolean("success", false);
+            result.success(params.toMap());
+        }
+
+    }
+
+    // 将对方拉黑
+    else if(call.method.equals("setBlackList"))
+    {
+        final  ConstraintsMap params = new ConstraintsMap();
+        try {
+            String blackAccount = call.argument("blackAccount");
+            if (blackAccount == null || blackAccount.isEmpty()) {
+                params.putString("message", "blackAccount参数不能为空！");
+                params.putNull("data");
+                params.putBoolean("success", false);
+                result.success(params.toMap());
+                return;
+            }
+            MimcUserManager.getInstance().setBlackList(blackAccount, new Callback() {
+                @Override
+                public void onFailure(Call c, IOException e) {
+                    params.putString("message", e.getMessage());
+                    params.putNull("data");
+                    params.putBoolean("success", false);
+                    result.success(params.toMap());
+                }
+                @Override
+                public void onResponse(Call c, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        JSONObject json = JSONObject.parseObject(response.body().string());
+                        if(json.getInteger("code") == 200){
+                            params.putNull("message");
+                            params.putBoolean("success", true);
+                            params.putMap("data", json.getJSONObject("data"));
+                        }else{
+                            params.putString("message", json.getString("message"));
+                            params.putNull("data");
+                            params.putBoolean("success", false);
+                        }
+                        result.success(params.toMap());
+                    }
+                }}
+            );
+        }catch (Exception e){
+            params.putString("message", e.getMessage());
+            params.putNull("data");
+            params.putBoolean("success", false);
+            result.success(params.toMap());
+        }
+
+    }
+
+    // 取消对方拉黑
+    else if(call.method.equals("deleteBlackList"))
+    {
+        final  ConstraintsMap params = new ConstraintsMap();
+        try {
+            String blackAccount = call.argument("blackAccount");
+            if (blackAccount == null || blackAccount.isEmpty()) {
+                params.putString("message", "blackAccount参数不能为空！");
+                params.putNull("data");
+                params.putBoolean("success", false);
+                result.success(params.toMap());
+                return;
+            }
+            MimcUserManager.getInstance().deleteBlackList(blackAccount, new Callback() {
+                @Override
+                public void onFailure(Call c, IOException e) {
+                    params.putString("message", e.getMessage());
+                    params.putNull("data");
+                    params.putBoolean("success", false);
+                    result.success(params.toMap());
+                }
+                @Override
+                public void onResponse(Call c, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        JSONObject json = JSONObject.parseObject(response.body().string());
+                        if(json.getInteger("code") == 200){
+                            params.putNull("message");
+                            params.putBoolean("success", true);
+                            params.putMap("data", json.getJSONObject("data"));
+                        }else{
+                            params.putString("message", json.getString("message"));
+                            params.putNull("data");
+                            params.putBoolean("success", false);
+                        }
+                        result.success(params.toMap());
+                    }
+                }}
+            );
+        }catch (Exception e){
+            params.putString("message", e.getMessage());
+            params.putNull("data");
+            params.putBoolean("success", false);
+            result.success(params.toMap());
+        }
+
+    }
+
+    // 是否被拉黑
+    else if(call.method.equals("hasBlackList"))
+    {
+        final  ConstraintsMap params = new ConstraintsMap();
+        try {
+            String blackAccount = call.argument("blackAccount");
+            if (blackAccount == null || blackAccount.isEmpty()) {
+                params.putString("message", "blackAccount参数不能为空！");
+                params.putNull("data");
+                params.putBoolean("success", false);
+                result.success(params.toMap());
+                return;
+            }
+            MimcUserManager.getInstance().hasBlackList(blackAccount, new Callback() {
+                @Override
+                public void onFailure(Call c, IOException e) {
+                    params.putString("message", e.getMessage());
+                    params.putNull("data");
+                    params.putBoolean("success", false);
+                    result.success(params.toMap());
+                }
+                @Override
+                public void onResponse(Call c, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        JSONObject json = JSONObject.parseObject(response.body().string());
+                        if(json.getInteger("code") == 200){
+                            params.putNull("message");
+                            params.putBoolean("success", true);
+                            params.putMap("data", json.getJSONObject("data"));
+                        }else{
+                            params.putString("message", json.getString("message"));
+                            params.putNull("data");
+                            params.putBoolean("success", false);
+                        }
+                        result.success(params.toMap());
+                    }
+                }}
+            );
+        }catch (Exception e){
+            params.putString("message", e.getMessage());
+            params.putNull("data");
+            params.putBoolean("success", false);
+            result.success(params.toMap());
+        }
+
+    }
+
+    // 普通群拉黑成员
+    else if(call.method.equals("setGroupBlackList"))
+    {
+        final  ConstraintsMap params = new ConstraintsMap();
+        try {
+            String blackAccount = call.argument("blackAccount");
+            String blackTopicId = call.argument("blackTopicId");
+            if (blackAccount == null || blackAccount.isEmpty() || blackTopicId == null || blackTopicId.isEmpty()) {
+                params.putString("message", "blackAccount或blackTopicId参数不能为空！");
+                params.putNull("data");
+                params.putBoolean("success", false);
+                result.success(params.toMap());
+                return;
+            }
+            MimcUserManager.getInstance().setTopicblacklist(blackAccount, blackTopicId, new Callback() {
+                @Override
+                public void onFailure(Call c, IOException e) {
+                    params.putString("message", e.getMessage());
+                    params.putNull("data");
+                    params.putBoolean("success", false);
+                    result.success(params.toMap());
+                }
+                @Override
+                public void onResponse(Call c, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        JSONObject json = JSONObject.parseObject(response.body().string());
+                        if(json.getInteger("code") == 200){
+                            params.putNull("message");
+                            params.putBoolean("success", true);
+                            params.putMap("data", json.getJSONObject("data"));
+                        }else{
+                            params.putString("message", json.getString("message"));
+                            params.putNull("data");
+                            params.putBoolean("success", false);
+                        }
+                        result.success(params.toMap());
+                    }
+                }}
+            );
+        }catch (Exception e){
+            params.putString("message", e.getMessage());
+            params.putNull("data");
+            params.putBoolean("success", false);
+            result.success(params.toMap());
+        }
+    }
+
+    // 普通群取消拉黑成员
+    else if(call.method.equals("deleteGroupBlackList"))
+    {
+        final  ConstraintsMap params = new ConstraintsMap();
+        try {
+            String blackAccount = call.argument("blackAccount");
+            String blackTopicId = call.argument("blackTopicId");
+            if (blackAccount == null || blackAccount.isEmpty() || blackTopicId == null || blackTopicId.isEmpty()) {
+                params.putString("message", "blackAccount或blackTopicId参数不能为空！");
+                params.putNull("data");
+                params.putBoolean("success", false);
+                result.success(params.toMap());
+                return;
+            }
+            MimcUserManager.getInstance().deleteTopicblacklist(blackAccount, blackTopicId, new Callback() {
+                @Override
+                public void onFailure(Call c, IOException e) {
+                    params.putString("message", e.getMessage());
+                    params.putNull("data");
+                    params.putBoolean("success", false);
+                    result.success(params.toMap());
+                }
+                @Override
+                public void onResponse(Call c, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        JSONObject json = JSONObject.parseObject(response.body().string());
+                        if(json.getInteger("code") == 200){
+                            params.putNull("message");
+                            params.putBoolean("success", true);
+                            params.putMap("data", json.getJSONObject("data"));
+                        }else{
+                            params.putString("message", json.getString("message"));
+                            params.putNull("data");
+                            params.putBoolean("success", false);
+                        }
+                        result.success(params.toMap());
+                    }
+                }}
+            );
+        }catch (Exception e){
+            params.putString("message", e.getMessage());
+            params.putNull("data");
+            params.putBoolean("success", false);
+            result.success(params.toMap());
+        }
+    }
+
+    // 普通群判断是否被拉黑的成员
+    else if(call.method.equals("hasGroupBlackList"))
+    {
+        final  ConstraintsMap params = new ConstraintsMap();
+        try {
+            String blackAccount = call.argument("blackAccount");
+            String blackTopicId = call.argument("blackTopicId");
+            if (blackAccount == null || blackAccount.isEmpty() || blackTopicId == null || blackTopicId.isEmpty()) {
+                params.putString("message", "blackAccount或blackTopicId参数不能为空！");
+                params.putNull("data");
+                params.putBoolean("success", false);
+                result.success(params.toMap());
+                return;
+            }
+            MimcUserManager.getInstance().hasTopicblacklist(blackAccount, blackTopicId, new Callback() {
+                @Override
+                public void onFailure(Call c, IOException e) {
+                    params.putString("message", e.getMessage());
+                    params.putNull("data");
+                    params.putBoolean("success", false);
+                    result.success(params.toMap());
+                }
+                @Override
+                public void onResponse(Call c, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        JSONObject json = JSONObject.parseObject(response.body().string());
+                        if(json.getInteger("code") == 200){
+                            params.putNull("message");
+                            params.putBoolean("success", true);
+                            params.putMap("data", json.getJSONObject("data"));
+                        }else{
+                            params.putString("message", json.getString("message"));
+                            params.putNull("data");
+                            params.putBoolean("success", false);
+                        }
+                        result.success(params.toMap());
+                    }
+                }}
+            );
+        }catch (Exception e){
+            params.putString("message", e.getMessage());
+            params.putNull("data");
+            params.putBoolean("success", false);
+            result.success(params.toMap());
+        }
     }
 
     // 其他

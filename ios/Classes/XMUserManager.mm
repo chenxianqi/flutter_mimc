@@ -6,6 +6,7 @@
 @property(nonatomic) NSString *appSecret;
 @property(nonatomic) NSString *appAccount;
 @property(nonatomic) NSString *url;
+@property(nonatomic) BOOL isStringTokenInit;
 @property(nonatomic, strong) MCUser *user;
 
 - (NSMutableURLRequest *)generateHttpRequest:(NSURL *)url appId:(int64_t)appId
@@ -28,11 +29,22 @@
         NSLog(@"参数错误");
         return;
     }
+    self.isStringTokenInit = NO;
     self.appId = appId;
     self.appKey = appKey;
     self.appSecret = appSecret;
     self.appAccount = appAccount;
     self.url = @"https://mimc.chat.xiaomi.net";
+}
+
+// 通过服务端的鉴权获得的String 初始化
+-(void)initStringToken:(NSString *)stringToken{
+    self.isStringTokenInit = YES;
+    NSDictionary *dic = [XMUserManager dictionaryWithJsonString:stringToken];
+    self.appId = [[[dic valueForKey:@"data"] valueForKey:@"appId"] longLongValue];
+    self.appAccount = [[[dic valueForKey:@"data"] valueForKey:@"appAccount"] stringValue];
+    NSLog(@"appId==%@", self.appId);
+    NSLog(@"appAccount==%@", self.appAccount);
 }
 
 // 发起请求获取签名认证
@@ -145,5 +157,22 @@
 - (void)setUser:(MCUser *)user {
     _user = user;
 }
+
++ (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString {
+    if (jsonString == nil) {
+        return nil;
+    }
+    NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *err;
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                        options:NSJSONReadingMutableContainers
+                                                          error:&err];
+    if(err) {
+        NSLog(@"json解析失败：%@",err);
+        return nil;
+    }
+    return dic;
+}
+
 
 @end

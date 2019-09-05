@@ -42,11 +42,25 @@ AFHTTPSessionManager *httpManager;
         BOOL isDebug = [argsMap[@"debug"] boolValue];
         NSLog(@"call.arguments%@", call.arguments);
         if(isDebug == YES){
-            NSLog(@"打开了log=%@", appIdStr);
+            NSLog(@"打开log");
             [MCUser setMIMCLogSwitch:YES];
         };
         int64_t appId =[appIdStr longLongValue];
         [mimcUserManager initArgs:appId appKey:appKey appSecret:appSecret appAccount:appAccount];
+        result(NULL);
+        
+    }
+    // 通过服务端的鉴权获得的String 初始化
+    else if ([@"stringTokenInit" isEqualToString:call.method]) {
+        
+        NSString *tokenString = argsMap[@"token"];
+        BOOL isDebug = [argsMap[@"debug"] boolValue];
+        NSLog(@"call.arguments%@", call.arguments);
+        if(isDebug == YES){
+            NSLog(@"打开log");
+            [MCUser setMIMCLogSwitch:YES];
+        };
+        [mimcUserManager initStringToken:tokenString];
         result(NULL);
         
     }
@@ -557,6 +571,276 @@ AFHTTPSessionManager *httpManager;
         }];
     }
     
+    //  拉取最近会话列表
+    // @param isV2 是否是v2版本
+    else if ([@"getContact" isEqualToString:call.method]) {
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        [dic setValue:@"" forKey:@"data"];
+        [dic setValue:@NO forKey:@"success"];
+        [dic setValue:@"" forKey:@"message"];
+        BOOL isV2 = [argsMap[@"isV2"] boolValue];
+        NSString *token = [mimcUserManager.getUser getToken];
+        NSMutableString *httpUrl = [NSMutableString string];
+        [httpUrl appendString: [mimcUserManager getUrl]];
+        [httpUrl appendString: @"/api/contact/"];
+        if(isV2 == YES){
+            [httpUrl appendString: @"/v2"];
+        }
+        [httpManager.requestSerializer setValue:token forHTTPHeaderField:@"token"];
+        [httpManager GET:httpUrl parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            int code = [[responseObject valueForKey:@"code"] intValue];
+            NSString *message = [responseObject valueForKey:@"message"];
+            NSArray *data = [responseObject valueForKey:@"data"];
+            if(code == 200){
+                [dic setValue:data forKey:@"data"];
+                [dic setValue:@YES forKey:@"success"];
+                result(dic);
+            }else{
+                [dic setValue:message forKey:@"message"];
+                result(dic);
+            }
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [dic setValue:error forKey:@"message"];
+            result(dic);
+        }];
+    }
+    
+    //  拉黑对方
+    // @param blackAccount 被拉黑的账号
+    else if ([@"setBlackList" isEqualToString:call.method]) {
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        [dic setValue:@"" forKey:@"data"];
+        [dic setValue:@NO forKey:@"success"];
+        [dic setValue:@"" forKey:@"message"];
+        NSString *blackAccount = argsMap[@"blackAccount"];
+        if([blackAccount isEqual: @""]){
+            [dic setValue:@"blackAccount参数不能为空!" forKey:@"message"];
+            result(dic);
+            return;
+        }
+        NSString *token = [mimcUserManager.getUser getToken];
+        NSMutableString *httpUrl = [NSMutableString string];
+        [httpUrl appendString: [mimcUserManager getUrl]];
+        [httpUrl appendString: @"/api/blacklist/"];
+        NSDictionary *parameters = @{@"blackAccount": blackAccount};
+        [httpManager.requestSerializer setValue:token forHTTPHeaderField:@"token"];
+        [httpManager POST:httpUrl parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            int code = [[responseObject valueForKey:@"code"] intValue];
+            NSString *message = [responseObject valueForKey:@"message"];
+            NSDictionary *data = [responseObject valueForKey:@"data"];
+            if(code == 200){
+                [dic setValue:data forKey:@"data"];
+                [dic setValue:@YES forKey:@"success"];
+                result(dic);
+            }else{
+                [dic setValue:message forKey:@"message"];
+                result(dic);
+            }
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [dic setValue:error forKey:@"message"];
+            result(dic);
+        }];
+    }
+    
+    //  取消拉黑对方
+    // @param blackAccount 被拉黑的账号
+    else if ([@"deleteBlackList" isEqualToString:call.method]) {
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        [dic setValue:@"" forKey:@"data"];
+        [dic setValue:@NO forKey:@"success"];
+        [dic setValue:@"" forKey:@"message"];
+        NSString *blackAccount = argsMap[@"blackAccount"];
+        if([blackAccount isEqual: @""]){
+            [dic setValue:@"blackAccount参数不能为空!" forKey:@"message"];
+            result(dic);
+            return;
+        }
+        NSString *token = [mimcUserManager.getUser getToken];
+        NSMutableString *httpUrl = [NSMutableString string];
+        [httpUrl appendString: [mimcUserManager getUrl]];
+        [httpUrl appendString: @"/api/blacklist/?blackAccount="];
+        [httpUrl appendString: blackAccount];
+        [httpManager.requestSerializer setValue:token forHTTPHeaderField:@"token"];
+        [httpManager DELETE:httpUrl parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            int code = [[responseObject valueForKey:@"code"] intValue];
+            NSString *message = [responseObject valueForKey:@"message"];
+            NSDictionary *data = [responseObject valueForKey:@"data"];
+            if(code == 200){
+                [dic setValue:data forKey:@"data"];
+                [dic setValue:@YES forKey:@"success"];
+                result(dic);
+            }else{
+                [dic setValue:message forKey:@"message"];
+                result(dic);
+            }
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [dic setValue:error forKey:@"message"];
+            result(dic);
+        }];
+    }
+    
+    //  判断是否被拉黑
+    // @param blackAccount 被拉黑的账号
+    else if ([@"hasBlackList" isEqualToString:call.method]) {
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        [dic setValue:@"" forKey:@"data"];
+        [dic setValue:@NO forKey:@"success"];
+        [dic setValue:@"" forKey:@"message"];
+        NSString *blackAccount = argsMap[@"blackAccount"];
+        NSString *token = [mimcUserManager.getUser getToken];
+        NSMutableString *httpUrl = [NSMutableString string];
+        [httpUrl appendString: [mimcUserManager getUrl]];
+        [httpUrl appendString: @"/api/blacklist/?blackAccount="];
+        [httpUrl appendString: blackAccount];
+        [httpManager.requestSerializer setValue:token forHTTPHeaderField:@"token"];
+        [httpManager GET:httpUrl parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            int code = [[responseObject valueForKey:@"code"] intValue];
+            NSString *message = [responseObject valueForKey:@"message"];
+            NSArray *data = [responseObject valueForKey:@"data"];
+            if(code == 200){
+                [dic setValue:data forKey:@"data"];
+                [dic setValue:@YES forKey:@"success"];
+                result(dic);
+            }else{
+                [dic setValue:message forKey:@"message"];
+                result(dic);
+            }
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [dic setValue:error forKey:@"message"];
+            result(dic);
+        }];
+    }
+    
+    //  拉黑普通群成员
+    // @param blackAccount 被拉黑的账号
+    // @param blackTopicId 群id
+    else if ([@"setGroupBlackList" isEqualToString:call.method]) {
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        [dic setValue:@"" forKey:@"data"];
+        [dic setValue:@NO forKey:@"success"];
+        [dic setValue:@"" forKey:@"message"];
+        NSString *blackAccount = argsMap[@"blackAccount"];
+        NSString *blackTopicId = argsMap[@"blackTopicId"];
+        if([blackAccount isEqual: @""] || [blackTopicId isEqual: @""]){
+            [dic setValue:@"blackAccount或blackTopicId参数不能为空!" forKey:@"message"];
+            result(dic);
+            return;
+        }
+        NSString *token = [mimcUserManager.getUser getToken];
+        NSMutableString *httpUrl = [NSMutableString string];
+        [httpUrl appendString: [mimcUserManager getUrl]];
+        [httpUrl appendString: @"/api/topicblacklist/"];
+        NSDictionary *parameters = @{@"blackAccount": blackAccount, @"blackTopicId": blackTopicId};
+        [httpManager.requestSerializer setValue:token forHTTPHeaderField:@"token"];
+        [httpManager POST:httpUrl parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            int code = [[responseObject valueForKey:@"code"] intValue];
+            NSString *message = [responseObject valueForKey:@"message"];
+            NSDictionary *data = [responseObject valueForKey:@"data"];
+            if(code == 200){
+                [dic setValue:data forKey:@"data"];
+                [dic setValue:@YES forKey:@"success"];
+                result(dic);
+            }else{
+                [dic setValue:message forKey:@"message"];
+                result(dic);
+            }
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [dic setValue:error forKey:@"message"];
+            result(dic);
+        }];
+    }
+    
+    //  取消拉黑普通群成员
+    // @param blackAccount 被拉黑的账号
+    // @param blackTopicId 群id
+    else if ([@"deleteGroupBlackList" isEqualToString:call.method]) {
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        [dic setValue:@"" forKey:@"data"];
+        [dic setValue:@NO forKey:@"success"];
+        [dic setValue:@"" forKey:@"message"];
+        NSString *blackAccount = argsMap[@"blackAccount"];
+        NSString *blackTopicId = argsMap[@"blackTopicId"];
+        if([blackAccount isEqual: @""] || [blackTopicId isEqual: @""]){
+            [dic setValue:@"blackAccount或blackTopicId参数不能为空!" forKey:@"message"];
+            result(dic);
+            return;
+        }
+        NSString *token = [mimcUserManager.getUser getToken];
+        NSMutableString *httpUrl = [NSMutableString string];
+        [httpUrl appendString: [mimcUserManager getUrl]];
+        [httpUrl appendString: @"/api/topicblacklist/"];
+        [httpUrl appendString: blackTopicId];
+        [httpUrl appendString: @"/blackAccount?blackAccount="];
+        [httpUrl appendString: blackAccount];
+        [httpManager.requestSerializer setValue:token forHTTPHeaderField:@"token"];
+        [httpManager DELETE:httpUrl parameters:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            int code = [[responseObject valueForKey:@"code"] intValue];
+            NSString *message = [responseObject valueForKey:@"message"];
+            NSDictionary *data = [responseObject valueForKey:@"data"];
+            if(code == 200){
+                [dic setValue:data forKey:@"data"];
+                [dic setValue:@YES forKey:@"success"];
+                result(dic);
+            }else{
+                [dic setValue:message forKey:@"message"];
+                result(dic);
+            }
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [dic setValue:error forKey:@"message"];
+            result(dic);
+        }];
+    }
+    
+    //  通群群是否被禁言
+    // @param blackAccount 被拉黑的账号
+    // @param blackTopicId 群id
+    else if ([@"hasGroupBlackList" isEqualToString:call.method]) {
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        [dic setValue:@"" forKey:@"data"];
+        [dic setValue:@NO forKey:@"success"];
+        [dic setValue:@"" forKey:@"message"];
+        NSString *blackAccount = argsMap[@"blackAccount"];
+        NSString *blackTopicId = argsMap[@"blackTopicId"];
+        if([blackAccount isEqual: @""] || [blackTopicId isEqual: @""]){
+            [dic setValue:@"blackAccount或blackTopicId参数不能为空!" forKey:@"message"];
+            result(dic);
+            return;
+        }
+        NSString *token = [mimcUserManager.getUser getToken];
+        NSMutableString *httpUrl = [NSMutableString string];
+        [httpUrl appendString: [mimcUserManager getUrl]];
+        [httpUrl appendString: @"/api/topicblacklist/"];
+        [httpUrl appendString: blackTopicId];
+        [httpUrl appendString: @"/blackAccount?blackAccount="];
+        [httpUrl appendString: blackAccount];
+        [httpManager.requestSerializer setValue:token forHTTPHeaderField:@"token"];
+        [httpManager GET:httpUrl parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            int code = [[responseObject valueForKey:@"code"] intValue];
+            NSString *message = [responseObject valueForKey:@"message"];
+            NSArray *data = [responseObject valueForKey:@"data"];
+            if(code == 200){
+                [dic setValue:data forKey:@"data"];
+                [dic setValue:@YES forKey:@"success"];
+                result(dic);
+            }else{
+                [dic setValue:message forKey:@"message"];
+                result(dic);
+            }
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [dic setValue:error forKey:@"message"];
+            result(dic);
+        }];
+    }
+    
+    
+    
     // 创建无限大群
     // @param topicName 群名称
     else if ([@"createUnlimitedGroup" isEqualToString:call.method]) {
@@ -967,6 +1251,5 @@ AFHTTPSessionManager *httpManager;
         });
     }
 }
-
 
 @end

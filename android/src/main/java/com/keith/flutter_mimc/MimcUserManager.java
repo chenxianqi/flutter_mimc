@@ -3,7 +3,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.JSONSerializable;
 import com.keith.flutter_mimc.utils.ConstraintsMap;
 import com.xiaomi.mimc.MIMCGroupMessage;
 import com.xiaomi.mimc.MIMCMessage;
@@ -42,12 +41,11 @@ public class MimcUserManager {
 
     // 用户登录APP的帐号
     private String url;
-    private MIMCUser mimcUser;
+    private static String tokenString;
+    private  MIMCUser mimcUser;
     private MIMCConstant.OnlineStatus mStatus;
     private final static MimcUserManager instance = new MimcUserManager();
     private OnHandleMIMCMsgListener onHandleMIMCMsgListener;
-    private static final String TAG = "MimcUserManager";
-
 
     //  参数 初始化
     public void init(Context context, String appId, String appKey,String appSecret, String appAccount){
@@ -57,7 +55,21 @@ public class MimcUserManager {
             this.appSecret = appSecret;
             this.appAccount = appAccount;
             this.context = context;
-            newMIMCUser();
+            newMIMCUser(false);
+        }catch (Exception e){
+            System.err.println(e.getMessage());
+        }
+    }
+
+    //  通过服务的鉴权获得的String 初始化
+    public void stringTokenInit(Context context, String tokenString){
+        try {
+            MimcUserManager.tokenString = tokenString;
+            com.alibaba.fastjson.JSONObject tokenMap = JSON.parseObject(tokenString);
+            this.appId = Long.parseLong(tokenMap.getJSONObject("data").getString("appId"));
+            this.appAccount = tokenMap.getJSONObject("data").getString("appAccount");
+            this.context = context;
+            newMIMCUser(true);
         }catch (Exception e){
             System.err.println(e.getMessage());
         }
@@ -208,7 +220,7 @@ public class MimcUserManager {
      * 创建用户
      * @return 返回新创建的用户
      */
-    public MIMCUser newMIMCUser(){
+    public MIMCUser newMIMCUser(Boolean isTokenStringInit){
         if (appAccount == null || appAccount.isEmpty() || context == null){
             System.err.println("参数错误");
             return null;
@@ -224,7 +236,11 @@ public class MimcUserManager {
         mimcUser = MIMCUser.newInstance(appId, appAccount, context.getExternalFilesDir(null).getAbsolutePath());
 
         // 注册相关监听，必须
-        mimcUser.registerTokenFetcher(new TokenFetcher());
+        if(isTokenStringInit){
+            mimcUser.registerTokenFetcher(new TokenFetcherString());
+        }else{
+            mimcUser.registerTokenFetcher(new TokenFetcher());
+        }
         mimcUser.registerMessageHandler(new MessageHandler());
         mimcUser.registerOnlineStatusListener(new OnlineStatusListener());
         mimcUser.registerUnlimitedGroupHandler(new UnlimitedGroupHandler());
@@ -364,6 +380,14 @@ public class MimcUserManager {
         }
     }
 
+    // TokenFetcherString
+    class TokenFetcherString implements MIMCTokenFetcher {
+        @Override
+        public String fetchToken() {
+            return MimcUserManager.tokenString;
+        }
+    }
+
     // TokenFetcher
     class TokenFetcher implements MIMCTokenFetcher {
         @Override
@@ -396,6 +420,7 @@ public class MimcUserManager {
             } catch (Exception e) {
                 System.err.println("Get token exception: " + e);
             }
+            // System.out.println(data.toString());
             return data != null ? data.toString() : null;
         }
     }
@@ -800,7 +825,6 @@ public class MimcUserManager {
             params.putString("topicName", newGroupName);
         }
         String json = JSON.toJSONString(params.toMap());
-        System.out.println(json);
         MediaType JSON = MediaType.parse("application/json");
         OkHttpClient client = new OkHttpClient();
         Request request = new Request
@@ -816,6 +840,171 @@ public class MimcUserManager {
             System.out.println(e.getMessage());
         }
     }
+
+    /**
+     * 获取最近会话列表
+     * @param isV2 是否是v2版本
+     */
+    public void contact(boolean isV2, Callback responseCallback) {
+        url = domain + "/api/contact/";
+        if(isV2){
+            url = url + "/v2";
+        }
+        OkHttpClient client = new OkHttpClient();
+        final Request request = new Request
+            .Builder()
+            .url(url)
+            .addHeader("token", mimcUser.getToken())
+            .get()
+            .build();
+        try {
+            Call call = client.newCall(request);
+            call.enqueue(responseCallback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 拉黑对方
+     * @param blackAccount 被拉黑的账号
+     */
+    public void setBlackList(String blackAccount, Callback responseCallback) {
+        url = domain + "/api/blacklist/";
+        final ConstraintsMap params = new ConstraintsMap();
+        params.putString("blackAccount", blackAccount);
+        String json = JSON.toJSONString(params.toMap());
+        MediaType JSON = MediaType.parse("application/json");
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request
+                .Builder()
+                .url(url)
+                .addHeader("token", mimcUser.getToken())
+                .post(RequestBody.create(JSON, json))
+                .build();
+        try {
+            Call call = client.newCall(request);
+            call.enqueue(responseCallback);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * 取消拉黑对方
+     * @param blackAccount 被拉黑的账号
+     */
+    public void deleteBlackList(String blackAccount, Callback responseCallback) {
+        url = domain + "/api/blacklist/?blackAccount=" + blackAccount;
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request
+                .Builder()
+                .url(url)
+                .addHeader("token", mimcUser.getToken())
+                .delete()
+                .build();
+        try {
+            Call call = client.newCall(request);
+            call.enqueue(responseCallback);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * 是否拉黑
+     * @param blackAccount 被拉黑的账号
+     */
+    public void hasBlackList(String blackAccount, Callback responseCallback) {
+        url = domain + "/api/blacklist/?blackAccount=" + blackAccount;
+        OkHttpClient client = new OkHttpClient();
+        final Request request = new Request
+                .Builder()
+                .url(url)
+                .addHeader("token", mimcUser.getToken())
+                .get()
+                .build();
+        try {
+            Call call = client.newCall(request);
+            call.enqueue(responseCallback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 普通群群禁言
+     * @param blackAccount 成员账号
+     * @param blackTopicId 群id
+     */
+    public void setTopicblacklist(String blackAccount, String blackTopicId, Callback responseCallback) {
+        url = domain + "/api/topicblacklist/";
+        final ConstraintsMap params = new ConstraintsMap();
+        params.putString("blackAccount", blackAccount);
+        params.putString("blackTopicId", blackTopicId);
+        String json = JSON.toJSONString(params.toMap());
+        MediaType JSON = MediaType.parse("application/json");
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request
+                .Builder()
+                .url(url)
+                .addHeader("token", mimcUser.getToken())
+                .post(RequestBody.create(JSON, json))
+                .build();
+        try {
+            Call call = client.newCall(request);
+            call.enqueue(responseCallback);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * 取消普通群群禁言
+     * @param blackAccount 成员账号
+     * @param blackTopicId 群id
+     */
+    public void deleteTopicblacklist(String blackAccount, String blackTopicId,  Callback responseCallback) {
+        url = domain + "/api/topicblacklist/" + blackTopicId + "/blackAccount?blackAccount=" + blackAccount;
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request
+                .Builder()
+                .url(url)
+                .addHeader("token", mimcUser.getToken())
+                .delete()
+                .build();
+        try {
+            Call call = client.newCall(request);
+            call.enqueue(responseCallback);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * 通群群是否被禁言
+     * @param blackAccount 成员账号
+     * @param blackTopicId 群id
+     */
+    public void hasTopicblacklist(String blackAccount, String blackTopicId,  Callback responseCallback) {
+        url = domain + "/api/topicblacklist/" + blackTopicId + "/blackAccount?blackAccount=" + blackAccount;
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request
+                .Builder()
+                .url(url)
+                .addHeader("token", mimcUser.getToken())
+                .get()
+                .build();
+        try {
+            Call call = client.newCall(request);
+            call.enqueue(responseCallback);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
 
 
 }

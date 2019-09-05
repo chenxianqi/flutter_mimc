@@ -28,15 +28,23 @@ class FlutterMimc {
   final MethodChannel _channel =  MethodChannel('flutter_mimc');
   final EventChannel _eventChannel = EventChannel('flutter_mimc.event');
 
-  static const String   _ON_INIT        =     'init';          /// initialization
+  static const String   _ON_INIT        =       'init';             /// initialization
+  static const String   _ON_STRING_TOKEN_INIT = 'stringTokenInit';  /// initialization
   static const String   _ON_LOGIN       =     'login';         /// login
   static const String   _ON_LOGOUT      =     'logout';        /// logout
   static const String   _ON_GET_ACCOUNT =     'getAccount';    /// get account
   static const String   _ON_GET_TOKEN   =     'getToken';      /// get token
   static const String   _ON_IS_ONLINE   =     'isOnline';      /// get status
   static const String   _ON_CREATE_GROUP   =  'createGroup';   /// create group
-  static const String   _ON_QUERY_GROUP_INFO    =  'queryGroupInfo';              // Query specified group information
-  static const String   _ON_QUERY_GROUP_OF_ACCOUNT    =  'queryGroupsOfAccount';  // Query group information
+  static const String   _ON_GET_CONTACT   =   'getContact';    /// get contact
+  static const String   _ON_SET_BLACKLIST =   'setBlackList';  /// set blacklist
+  static const String   _ON_DELETE_BLACKLIST = 'deleteBlackList';  /// delete blacklist
+  static const String   _ON_HAS_BLACKLIST   =  'hasBlackList';     /// has blacklist
+  static const String   _ON_SET_GROUP_BLACKLIST   =  'setGroupBlackList';         /// set group blacklist
+  static const String   _ON_DELETE_GROUP_BLACKLIST=  'deleteGroupBlackList';      /// delete group blacklist
+  static const String   _ON_HAS_GROUP_BLACKLIST   =  'hasGroupBlackList';         /// has group blacklist
+  static const String   _ON_QUERY_GROUP_INFO    =  'queryGroupInfo';              /// Query specified group information
+  static const String   _ON_QUERY_GROUP_OF_ACCOUNT    =  'queryGroupsOfAccount';  /// Query group information
   static const String   _ON_JOIN_GROUP     =  'joinGroup';      /// Invite users to join the group
   static const String   _ON_QUIT_GROUP     =  'quitGroup';      /// Non-group master user quit group
   static const String   _ON_KICK_GROUP     =  'kickGroup';      /// Kicking members out of the group
@@ -96,6 +104,17 @@ class FlutterMimc {
     assert(appSecret != null && appSecret.isNotEmpty);
     assert(appAccount != null && appAccount.isNotEmpty);
     _channel.invokeMethod(_ON_INIT, {"debug": debug, "appId": appId, "appKey":appKey,"appSecret":appSecret,"appAccount":appAccount});
+    _initEvent();
+  }
+
+  ///  * init
+  ///  * String tokenString  Obtained by server signature
+  FlutterMimc.stringTokenInit(String tokenString, {bool debug = false}){
+    assert(tokenString != null && tokenString.isNotEmpty);
+    _channel.invokeMethod(_ON_STRING_TOKEN_INIT, {
+      "token": tokenString,
+      "debug": debug
+    });
     _initEvent();
   }
 
@@ -380,6 +399,77 @@ class FlutterMimc {
       "topicId": topicId,
       "newGroupName": newGroupName,
       "newOwnerAccount": newOwnerAccount,
+    });
+  }
+
+  ///  * get contact
+  ///  * @param [isV2] api is v2 version
+  Future<Map<dynamic, dynamic>> getContact({bool isV2 = true}) async{
+    return await _channel.invokeMethod(_ON_GET_CONTACT, {
+      "isV2": isV2
+    });
+  }
+
+  ///  * set BlackList
+  ///  * @param [blackAccount]
+  Future<Map<dynamic, dynamic>> setBlackList(String blackAccount) async{
+    assert(blackAccount != null && blackAccount.isNotEmpty);
+    return await _channel.invokeMethod(_ON_SET_BLACKLIST, {
+      "blackAccount": blackAccount
+    });
+  }
+
+  ///  * delete BlackList
+  ///  * @param [blackAccount]
+  Future<Map<dynamic, dynamic>> deleteBlackList(String blackAccount) async{
+    assert(blackAccount != null && blackAccount.isNotEmpty);
+    return await _channel.invokeMethod(_ON_DELETE_BLACKLIST, {
+      "blackAccount": blackAccount
+    });
+  }
+
+  ///  * has BlackList
+  ///  * @param [blackAccount]
+  Future<Map<dynamic, dynamic>> hasBlackList(String blackAccount) async{
+    assert(blackAccount != null && blackAccount.isNotEmpty);
+    return await _channel.invokeMethod(_ON_HAS_BLACKLIST, {
+      "blackAccount": blackAccount
+    });
+  }
+
+  ///  * set group BlackList
+  ///  * @param [blackAccount]
+  ///  * @param [blackTopicId]
+  Future<Map<dynamic, dynamic>> setGroupBlackList({String blackAccount, String blackTopicId}) async{
+    assert(blackAccount != null && blackAccount.isNotEmpty);
+    assert(blackTopicId != null && blackTopicId.isNotEmpty);
+    return await _channel.invokeMethod(_ON_SET_GROUP_BLACKLIST, {
+      "blackAccount": blackAccount,
+      "blackTopicId": blackTopicId,
+    });
+  }
+
+  ///  * delete group BlackList
+  ///  * @param [blackAccount]
+  ///  * @param [blackTopicId]
+  Future<Map<dynamic, dynamic>> deleteGroupBlackList({String blackAccount, String blackTopicId}) async{
+    assert(blackAccount != null && blackAccount.isNotEmpty);
+    assert(blackTopicId != null && blackTopicId.isNotEmpty);
+    return await _channel.invokeMethod(_ON_DELETE_GROUP_BLACKLIST, {
+      "blackAccount": blackAccount,
+      "blackTopicId": blackTopicId,
+    });
+  }
+
+  ///  * has group BlackList
+  ///  * @param [blackAccount]
+  ///  * @param [blackTopicId]
+  Future<Map<dynamic, dynamic>> hasGroupBlackList({String blackAccount, String blackTopicId}) async{
+    assert(blackAccount != null && blackAccount.isNotEmpty);
+    assert(blackTopicId != null && blackTopicId.isNotEmpty);
+    return await _channel.invokeMethod(_ON_HAS_GROUP_BLACKLIST, {
+      "blackAccount": blackAccount,
+      "blackTopicId": blackTopicId,
     });
   }
 
