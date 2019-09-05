@@ -34,16 +34,18 @@ class _MyAppState extends State<MyApp> {
 
   // 初始化
   void initFlutterMimc() async{
-    // token String
-    String tokenString = '{"code":200,"message":"success","data":{"appId":"2882303761517669588","appPackage":"com.xiaomi.mimcdemo","appAccount":"100","miChid":9,"miUserId":"18667786322837504","miUserSecurityKey":"hXpXDszBEMwSBzKutEgnkw==","token":"bJRLeg7AgtSh0T13YjL\/IFDdK0JTjCJG4KdSfB9L7c0N56uq0EiflNyh2H5qmlOwqeOEcudSjEicejSfy+BJz2ui\/bkYYYPpT9rKkuChjVDMAXpIv1L7ItYzsCaYjygYQD\/FuVQ+0xiiFJqDudzL2vHwjH\/X7NJbH7JCqycZkfUhOW+rPNmf3OtMhhI0+qSMIFX8f4Dn9XWCelzvYtp0Hxe4DsPqI0ry3\/z9VRTTDCRIbR8SQ\/NtpLh3xRb2eDCbmFVJR7l8QGwh6kcbPAhn0gRzEZHPL+65x4TtkGNKnJPXloBkQLt6z\/AGLFf0k78rrpQgQQlFADPqH826GCvg6VVqlUiQXNkODuPSAYCuXtMgoeHTcMIUjJL2dnPvuR9uMPOttF2ILzE\/h+oXbR3MF6SSikdvxLGUJGCmFeSs7ZCJs\/sAMrYUa8IIw9+2bIU7fK6XRWr+DzxSN\/pIM8CUJw==","regionBucket":105,"feDomainName":"app.chat.xiaomi.net","relayDomainName":"relay.mimc.chat.xiaomi.net"}}';
+    // token String init
+    String tokenString = '{"code":200,"message":"success","data":{}}';
     flutterMimc =  FlutterMimc.stringTokenInit(tokenString);
-//    flutterMimc = FlutterMimc.init(
-//      debug: true,
-//      appId: "2882303761517669588",
-//      appKey: "5111766983588",
-//      appSecret: "b0L3IOz/9Ob809v8H2FbVg==",
-//      appAccount: appAccount
-//    );
+
+    // const data init
+    flutterMimc = FlutterMimc.init(
+      debug: true,
+      appId: "2882303761517669588",
+      appKey: "5111766983588",
+      appSecret: "b0L3IOz/9Ob809v8H2FbVg==",
+      appAccount: appAccount
+    );
     addLog("init==实例化完成");
     listener();
   }

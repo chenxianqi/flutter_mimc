@@ -1,6 +1,6 @@
-## Flutter_mimc  v 0.0.3+3
+## Flutter_mimc  v 0.1.0
 
-[English](./README.md)[中文]
+[English](./README.md) - [中文]
 
 ### 感谢@小米MIMC团队的贡献
    让IM实现变得简单
@@ -26,13 +26,21 @@ dependencies:
 ```
 
 
-## 初始化
+## 初始化（有两种方式可以初始化）
 使用`flutter_mimc`前，需要进行初始化操作：
  ```dart
 
     import 'package:flutter_mimc/flutter_mimc.dart';
 
-     FlutterMimc flutterMimc = FlutterMimc.init(
+    // 第一种（服务端鉴权生成的字符串）推荐
+    String tokenString = '{"code":200,"message":"success","data":{}}';
+    FlutterMimc flutterMimc1 =  FlutterMimc.stringTokenInit(
+      tokenString,
+      debug: true,
+    );
+
+    // 第二种（将敏感数据写在客户端）
+     FlutterMimc flutterMimc2 = FlutterMimc.init(
           debug: true,
           appId: "xxxxxxxx",
           appKey: "xxxxxxxx",
@@ -42,8 +50,7 @@ dependencies:
  ```
  
  
-## 消息体注意事项
-  消息体一致性
+## 消息体
   flutter_mimc提供MIMCMessage模型类
  ```dart
      MIMCMessage message = MIMCMessage();
@@ -365,6 +372,48 @@ dependencies:
     var res =  await flutterMimc.updateUnlimitedGroup(maxGroupID, newGroupName: "新大群名称1");
     addLog("更新大群基本信息：$res" );
   }
+  
+  // 获取最近会话列表
+    void getContact() async{
+      var res =  await flutterMimc.getContact(isV2: true);
+      addLog("获取最近会话列表：$res" );
+    }
+  
+    // 拉黑对方
+    void setBlackList() async{
+      var res =  await flutterMimc.setBlackList("200");
+      addLog("拉黑对方：$res" );
+    }
+  
+    // 取消拉黑对方
+    void deleteBlackList() async{
+      var res =  await flutterMimc.deleteBlackList("200");
+      addLog("取消拉黑对方：$res" );
+    }
+  
+    // 判断账号是否被拉黑
+    void hasBlackList() async{
+      var res =  await flutterMimc.hasBlackList("200");
+      addLog("判断账号是否被拉黑：$res" );
+    }
+  
+    // 普通群拉黑成员
+    void setGroupBlackList() async{
+      var res =  await flutterMimc.setGroupBlackList(blackTopicId: "21351198708203520", blackAccount: "102");
+      addLog("普通群拉黑成员：$res" );
+    }
+  
+    // 普通群取消拉黑成员
+    void deleteGroupBlackList() async{
+      var res =  await flutterMimc.deleteGroupBlackList(blackTopicId: "21351198708203520", blackAccount: "102");
+      addLog("普通群取消拉黑成员：$res" );
+    }
+  
+    // 判断账号是否被普通群拉黑
+    void hasGroupBlackList() async{
+      var res =  await flutterMimc.hasGroupBlackList(blackTopicId: "21351198708203520", blackAccount: "102");
+      addLog("判断账号是否被普通群拉黑：$res" );
+    }
 
   // =========监听回调==============
 

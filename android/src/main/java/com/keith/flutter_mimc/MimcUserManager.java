@@ -848,7 +848,7 @@ public class MimcUserManager {
     public void contact(boolean isV2, Callback responseCallback) {
         url = domain + "/api/contact/";
         if(isV2){
-            url = url + "/v2";
+            url = url + "v2";
         }
         OkHttpClient client = new OkHttpClient();
         final Request request = new Request

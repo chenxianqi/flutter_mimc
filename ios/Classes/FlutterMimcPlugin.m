@@ -55,7 +55,6 @@ AFHTTPSessionManager *httpManager;
         
         NSString *tokenString = argsMap[@"token"];
         BOOL isDebug = [argsMap[@"debug"] boolValue];
-        NSLog(@"call.arguments%@", call.arguments);
         if(isDebug == YES){
             NSLog(@"打开log");
             [MCUser setMIMCLogSwitch:YES];
@@ -579,12 +578,13 @@ AFHTTPSessionManager *httpManager;
         [dic setValue:@NO forKey:@"success"];
         [dic setValue:@"" forKey:@"message"];
         BOOL isV2 = [argsMap[@"isV2"] boolValue];
+        NSLog(@"getToken%@", [mimcUserManager.getUser getToken]);
         NSString *token = [mimcUserManager.getUser getToken];
         NSMutableString *httpUrl = [NSMutableString string];
         [httpUrl appendString: [mimcUserManager getUrl]];
         [httpUrl appendString: @"/api/contact/"];
         if(isV2 == YES){
-            [httpUrl appendString: @"/v2"];
+            [httpUrl appendString: @"v2"];
         }
         [httpManager.requestSerializer setValue:token forHTTPHeaderField:@"token"];
         [httpManager GET:httpUrl parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {

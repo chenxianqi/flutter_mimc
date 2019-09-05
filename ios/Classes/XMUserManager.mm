@@ -6,6 +6,7 @@
 @property(nonatomic) NSString *appSecret;
 @property(nonatomic) NSString *appAccount;
 @property(nonatomic) NSString *url;
+@property(nonatomic) NSString *stringToken;
 @property(nonatomic) BOOL isStringTokenInit;
 @property(nonatomic, strong) MCUser *user;
 
@@ -23,6 +24,16 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+
+
+// 构造函数
+-(id)init{
+    if (self = [super init]) {
+         self.url = @"https://mimc.chat.xiaomi.net";
+    }
+    return self;
+}
+
 // 参数设置
 - (void)initArgs:(int64_t)appId appKey:(NSString *)appKey appSecret:(NSString *)appSecret  appAccount:(NSString *)appAccount{
     if(appId == 0 || appKey == nil || appSecret == nil || appAccount == nil){
@@ -34,17 +45,15 @@
     self.appKey = appKey;
     self.appSecret = appSecret;
     self.appAccount = appAccount;
-    self.url = @"https://mimc.chat.xiaomi.net";
 }
 
 // 通过服务端的鉴权获得的String 初始化
 -(void)initStringToken:(NSString *)stringToken{
+    self.stringToken = stringToken;
     self.isStringTokenInit = YES;
     NSDictionary *dic = [XMUserManager dictionaryWithJsonString:stringToken];
     self.appId = [[[dic valueForKey:@"data"] valueForKey:@"appId"] longLongValue];
-    self.appAccount = [[[dic valueForKey:@"data"] valueForKey:@"appAccount"] stringValue];
-    NSLog(@"appId==%@", self.appId);
-    NSLog(@"appAccount==%@", self.appAccount);
+    self.appAccount = [[dic valueForKey:@"data"] valueForKey:@"appAccount"];
 }
 
 // 发起请求获取签名认证
@@ -95,6 +104,12 @@
 
 // token
 - (void)parseProxyServiceToken:(void(^)(NSString *data))callback {
+    if(self.isStringTokenInit == YES){
+        if (callback) {
+            callback(self.stringToken);
+        }
+        return;
+    }
     NSLog(@"parseProxyServiceToken, comes");
     NSMutableString *httpUrl = [NSMutableString string];
     NSString *api = @"/api/account/token";
