@@ -1,22 +1,36 @@
-## 0.0.1
 
-* TODO: Describe initial release.
+## 0.1.0
+* Add blacklist api
+* Add get contact list API
+* Add string token init func
+* Fix IOS import AFNetworking error
 
-## 0.0.2
+## 0.0.3+3
+* update api documentation
 
-* 1. 删除安卓本地JSON静态库，以免冲突导致编译不过
-
-## 0.0.3
-
-* 1. 对消息体还原，不做限制，之前有对这个误解，已修复
-* 2. 修复安卓发送消息返回的服务ID为null
-* 3. 修改README.md
-
-## 0.0.3+1
-* 1.修改了下README.md的版本号
 
 ## 0.0.3+2
 * update api documentation
 
-## 0.0.3+3
-* update api documentation
+
+## 0.0.3+1
+* 1.Update README.md
+* 2.Fix BUG
+
+
+## 0.0.3
+
+* Restore the message body, no restrictions, there is a misunderstanding before this has been fixed
+* Fix service ID returned by Android sending message is null
+* Update README.md
+
+
+## 0.0.2
+
+* Delete the Android local JSON static library to avoid conflicts and compile
+
+
+
+## 0.0.1
+
+* TODO: Describe initial release.
