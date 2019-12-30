@@ -88,8 +88,7 @@ Use `flutter_mimc` Before, need to perform initialization：
  ```
  
   ## FQA
-  1.There may be some http api that does not implement the interface. Please first obtain the token through flutter_mim to call the interface.
-  2.Security verification is about to add this feature, the current sensitive information is fixed
+
  
  ## example
 ```dart
