@@ -1,0 +1,6 @@
+module flutter_mimc {
+  umbrella header "flutter_mimc-umbrella.h"
+
+  export *
+  module * { export * }
+}
