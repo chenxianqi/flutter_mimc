@@ -387,7 +387,11 @@ class _MyAppState extends State<MyApp> {
   // 获取最近会话列表
   void getContact() async {
     var res = await flutterMimc.getContact(isV2: true);
-    addLog("获取最近会话列表：${res.toJson()}");
+    if (res.code == 200) {
+      addLog("获取最近会话列表成功：${res.toJson()}");
+    } else {
+      addLog("获取最近会话列表失败:${res.message}");
+    }
   }
 
   // 拉黑对方

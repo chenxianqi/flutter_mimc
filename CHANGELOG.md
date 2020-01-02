@@ -1,3 +1,12 @@
+## 1.0.0
+* This version tries a major update. The SDK update of Xiaomi Messaging Cloud and the addition of corresponding new features require flutter SDK 1.12.13.
+* Update MIMC SDK to the latest version
+* Add online message interface
+* Remove the underlying http library and encapsulate the http interface in the upper and upper layers
+* Add push message library
+* Add and delete infinite group interface
+* Purify sdk reduce volume
+
 
 ## 0.1.0
 * Add blacklist api
