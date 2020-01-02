@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_mimc/model/mimc_response.dart';
-import '../services/enums.dart';
 
 /// MIMCPush
 class MIMCPush {

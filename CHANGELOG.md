@@ -1,3 +1,8 @@
+## 1.0.1
+* format file
+* update version code
+* remove  Unused import: '../services/enums.dart'.
+
 ## 1.0.0
 * This version tries a major update. The SDK update of Xiaomi Messaging Cloud and the addition of corresponding new features require flutter SDK 1.12.13.
 * Update MIMC SDK to the latest version

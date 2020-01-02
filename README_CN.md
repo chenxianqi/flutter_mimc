@@ -1,6 +1,6 @@
 客服系统开发者QQ交流群： 623661658
 
-## Flutter_mimc  v 1.0.0
+## Flutter_mimc  v 1.0.1
 
 [English](./README.md) - [中文]
 
