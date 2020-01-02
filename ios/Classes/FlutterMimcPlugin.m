@@ -50,6 +50,17 @@ XMUserManager *mimcUserManager;
         
     }
     
+    // 登录
+    else if ([@"login" isEqualToString:call.method]) {
+        
+        [mimcUserManager userLogin];
+        mimcUserManager.getUser.onlineStatusDelegate = self;
+        mimcUserManager.getUser.handleMessageDelegate = self;
+        mimcUserManager.getUser.handleUnlimitedGroupDelegate = self;
+        result(NULL);
+        
+    }
+    
     // 退出登录
     else if ([@"logout" isEqualToString:call.method]) {
         
@@ -81,6 +92,13 @@ XMUserManager *mimcUserManager;
         
     }
     
+    // 获取getAppId
+   else if ([@"getAppID" isEqualToString:call.method]) {
+       
+       result([mimcUserManager getAppId]);
+       
+   }
+    
     // 发送单聊
     else if ([@"sendMessage" isEqualToString:call.method]) {
         
@@ -89,6 +107,17 @@ XMUserManager *mimcUserManager;
         NSString *payloadString = argsMap[@"payload"];
         NSData *payload = [payloadString dataUsingEncoding:NSUTF8StringEncoding];
         result([mimcUserManager.getUser sendMessage:toAccount payload: payload bizType: bizType]);
+        
+    }
+    
+    // 发送在线消息
+    else if ([@"sendOnLineMessage" isEqualToString:call.method]) {
+        
+        NSString *toAccount = argsMap[@"toAccount"];
+        NSString *bizType = argsMap[@"bizType"];
+        NSString *payloadString = argsMap[@"payload"];
+        NSData *payload = [payloadString dataUsingEncoding:NSUTF8StringEncoding];
+        result([mimcUserManager.getUser sendOnlineMessage:toAccount payload: payload bizType: bizType]);
         
     }
     
@@ -148,33 +177,6 @@ XMUserManager *mimcUserManager;
         [mimcUserManager.getUser dismissUnlimitedGroup:[topicId longLongValue] context:self];
         result(NULL);
     }
-    
-    // 查询无限大群成员
-    // @param topicId 群ID
-    else if ([@"queryUnlimitedGroupMembers" isEqualToString:call.method]) {
-        NSString *topicId = argsMap[@"topicId"];
-        [self unlimitedGroupQueryInfo:topicId url:@"/api/uctopic/userlist/" result:result];
-    }
-    
-    // 查询无限大群所属群
-    else if ([@"queryUnlimitedGroups" isEqualToString:call.method]) {
-        [self unlimitedGroupQueryInfo:@"null" url:@"/api/uctopic/topics" result:result];
-    }
-    
-    // 查询无限大群在线用户数
-    // @param topicId 群ID
-    else if ([@"queryUnlimitedGroupOnlineUsers" isEqualToString:call.method]) {
-        NSString *topicId = argsMap[@"topicId"];
-        [self unlimitedGroupQueryInfo:topicId url:@"/api/uctopic/onlineinfo" result:result];
-    }
-    
-    // 查询无限大群基本信息
-    // @param topicId 群ID
-    else if ([@"queryUnlimitedGroupInfo" isEqualToString:call.method]) {
-        NSString *topicId = argsMap[@"topicId"];
-        [self unlimitedGroupQueryInfo:topicId url:@"/api/uctopic/topic" result:result];
-    }
-    
     
     // 无匹配
     else {
@@ -253,7 +255,6 @@ XMUserManager *mimcUserManager;
 
 // 发送消息服务器回调确认
 - (void)handleServerAck:(MIMCServerAck *)serverAck {
-    NSLog(@"handleServerAck, ReceiveMessageAck, ackPacketId=%@, sequence=%lld, timestamp=%lld, code=%d, desc=%@", serverAck.getPacketId, serverAck.getSequence, serverAck.getTimestamp, serverAck.getCode, serverAck.getDesc);
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     NSNumber *timestamp = [NSNumber numberWithLongLong:serverAck.getTimestamp];
     NSNumber *sequence = [NSNumber numberWithLongLong:serverAck.getSequence];
@@ -366,25 +367,52 @@ XMUserManager *mimcUserManager;
     }
 }
 
+// 接收在线消息
 - (void)handleOnlineMessage:(MIMCMessage *)onlineMessage {
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    NSString *payload = [[NSString alloc] initWithData:onlineMessage.getPayload encoding:NSUTF8StringEncoding];
+    NSNumber *timestamp = [NSNumber numberWithLongLong:onlineMessage.getTimestamp];
+    [dic setObject:onlineMessage.getToAccount forKey:@"toAccount"];
+    [dic setObject:@0 forKey:@"topicId"];
+    [dic setObject:onlineMessage.getFromAccount forKey:@"fromAccount"];
+    [dic setObject:onlineMessage.getBizType forKey:@"bizType"];
+    [dic setObject:payload forKey:@"payload"];
+    [dic setObject:timestamp forKey:@"timestamp"];
+    FlutterEventSink eventSink = mimcEvent.eventSink;
+    if(eventSink){
+        eventSink(@{
+            @"eventType" : @"onHandleOnlineMessage",
+            @"eventValue": dic,
+        });
+    }
     
 }
 
-
+// 发送在线消息回调Ack
 - (void)handleOnlineMessageAck:(MCOnlineMessageAck *)onlineMessageAck {
-    
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    NSNumber *code = [NSNumber numberWithLongLong:onlineMessageAck.getCode];
+    [dic setObject:onlineMessageAck.getPacketId forKey:@"packetId"];
+    [dic setObject:@"" forKey:@"sequence"];
+    [dic setObject:onlineMessageAck.getDesc forKey:@"timestamp"];
+    [dic setObject:code forKey:@"code"];
+    [dic setObject:onlineMessageAck.getDesc forKey:@"desc"];
+    FlutterEventSink eventSink = mimcEvent.eventSink;
+    if(eventSink){
+        eventSink(@{
+            @"eventType" : @"onHandleOnlineMessageAck",
+            @"eventValue": dic,
+        });
+    }
 }
 
-
-
-- (void)handleCreateUnlimitedGroup:(int64_t)topicId topicName:(NSString *)topicName success:(Boolean)success desc:(NSString *)desc context:(id)context {
-    
+- (void)handleCreateUnlimitedGroup:(int64_t)topicId topicName:(NSString *)topicName code:(int)code desc:(NSString *)desc context:(id)context {
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     NSNumber *tID = [NSNumber numberWithLongLong:topicId];
-    NSNumber *code = [NSNumber numberWithInt:success ? 0 : -1];
+    NSNumber *_code = [NSNumber numberWithInt:code];
     [dic setObject:tID forKey:@"topicId"];
     [dic setObject:topicName forKey:@"topicName"];
-    [dic setObject:code forKey:@"code"];
+    [dic setObject:_code forKey:@"code"];
     [dic setObject:desc forKey:@"errMsg"];
     FlutterEventSink eventSink = mimcEvent.eventSink;
     if(eventSink){
@@ -393,39 +421,18 @@ XMUserManager *mimcUserManager;
             @"eventValue": dic,
         });
     }
-    
 }
 
 - (void)handleDismissUnlimitedGroup:(int64_t)topicId {
     
 }
 
-- (void)handleCreateUnlimitedGroup:(int64_t)topicId topicName:(NSString *)topicName code:(int)code desc:(NSString *)desc context:(id)context {
-    <#code#>
-}
-
-
 - (void)handleDismissUnlimitedGroup:(int64_t)topicId code:(int)code desc:(NSString *)desc context:(id)context {
-    <#code#>
-}
-
-
-- (void)handleJoinUnlimitedGroup:(int64_t)topicId code:(int)code desc:(NSString *)desc context:(id)context {
-    <#code#>
-}
-
-
-- (void)handleQuitUnlimitedGroup:(int64_t)topicId code:(int)code desc:(NSString *)desc context:(id)context {
-    <#code#>
-}
-
-
-- (void)handleDismissUnlimitedGroup:(Boolean)success desc:(NSString *)desc context:(id)context {
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    NSNumber *code = [NSNumber numberWithInt:success ? 0 : -1];
+    NSNumber *_code = [NSNumber numberWithInt:code];
     [dic setObject:@0 forKey:@"topicId"];
     [dic setObject:@"" forKey:@"topicName"];
-    [dic setObject:code forKey:@"code"];
+    [dic setObject:_code forKey:@"code"];
     [dic setObject:desc forKey:@"errMsg"];
     FlutterEventSink eventSink = mimcEvent.eventSink;
     if(eventSink){
@@ -436,14 +443,14 @@ XMUserManager *mimcUserManager;
     }
 }
 
-- (void)handleJoinUnlimitedGroup:(int64_t)topicId code:(int)code message:(NSString *)message context:(id)context {
+- (void)handleJoinUnlimitedGroup:(int64_t)topicId code:(int)code desc:(NSString *)desc context:(id)context {
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     NSNumber *tID = [NSNumber numberWithLongLong:topicId];
     NSNumber *cd = [NSNumber numberWithInt:code];
     [dic setObject:tID forKey:@"topicId"];
     [dic setObject:@"" forKey:@"topicName"];
     [dic setObject:cd forKey:@"code"];
-    [dic setObject:message forKey:@"errMsg"];
+    [dic setObject:desc forKey:@"errMsg"];
     FlutterEventSink eventSink = mimcEvent.eventSink;
     if(eventSink){
         eventSink(@{
@@ -453,21 +460,21 @@ XMUserManager *mimcUserManager;
     }
 }
 
-- (void)handleQuitUnlimitedGroup:(int64_t)topicId code:(int)code message:(NSString *)message context:(id)context {
+- (void)handleQuitUnlimitedGroup:(int64_t)topicId code:(int)code desc:(NSString *)desc context:(id)context {
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    NSNumber *tID = [NSNumber numberWithLongLong:topicId];
-    NSNumber *cd = [NSNumber numberWithInt:code];
-    [dic setObject:tID forKey:@"topicId"];
-    [dic setObject:@"" forKey:@"topicName"];
-    [dic setObject:cd forKey:@"code"];
-    [dic setObject:message forKey:@"errMsg"];
-    FlutterEventSink eventSink = mimcEvent.eventSink;
-    if(eventSink){
-        eventSink(@{
-            @"eventType" : @"onHandleQuitUnlimitedGroup",
-            @"eventValue": dic,
-        });
-    }
+   NSNumber *tID = [NSNumber numberWithLongLong:topicId];
+   NSNumber *cd = [NSNumber numberWithInt:code];
+   [dic setObject:tID forKey:@"topicId"];
+   [dic setObject:@"" forKey:@"topicName"];
+   [dic setObject:cd forKey:@"code"];
+   [dic setObject:desc forKey:@"errMsg"];
+   FlutterEventSink eventSink = mimcEvent.eventSink;
+   if(eventSink){
+       eventSink(@{
+           @"eventType" : @"onHandleQuitUnlimitedGroup",
+           @"eventValue": dic,
+       });
+   }
 }
 
 @end

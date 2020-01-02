@@ -1,6 +1,0 @@
-framework module MMCSDK {
-  umbrella header "MMCSDK.h"
-
-  export *
-  module * { export * }
-}

@@ -246,16 +246,6 @@ class MIMCHandleMIMCMsgListener implements MIMCUserManager.OnHandleMIMCMsgListen
 
     @Override
     public void onPullNotification() {
-        if(FlutterMimcPlugin.eventSink == null)
-        {
-            System.out.println("eventSink  null");
-            return;
-        }
-        ConstraintsMap params = new ConstraintsMap();
-        ConstraintsMap paramsChild = new ConstraintsMap();
-        paramsChild.putBoolean("success", true);
-        params.putString("eventType", "onPullNotification");
-        params.putMap("eventValue", paramsChild.toMap());
-        FlutterMimcPlugin.eventSink.success(params.toMap());
+
     }
 }

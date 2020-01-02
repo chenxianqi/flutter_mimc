@@ -9,6 +9,9 @@
 - (void)handleSendGroupMessageTimeout:(MIMCGroupMessage *)groupMessage;
 - (void)handleUnlimitedGroupMessage:(NSArray<MIMCGroupMessage*> *)packets;
 - (void)handleSendUnlimitedGroupMessageTimeout:(MIMCGroupMessage *)groupMessage;
-- (void)handleCreateUnlimitedGroup:(int64_t)topicId topicName:(NSString *)topicName success:(Boolean)success desc:(NSString *)desc context:(id)context;
--(void)unlimitedGroupQueryInfo:(NSString *)topicId url:(NSString *)url result:(FlutterResult)result;
+- (void)handleCreateUnlimitedGroup:(int64_t)topicId topicName:(NSString *)topicName code:(int)code desc:(NSString *)desc context:(id)context;
+- (void)handleJoinUnlimitedGroup:(int64_t)topicId code:(int)code desc:(NSString *)desc context:(id)context;
+- (void)handleQuitUnlimitedGroup:(int64_t)topicId code:(int)code desc:(NSString *)desc context:(id)context;
+- (void)handleDismissUnlimitedGroup:(int64_t)topicId code:(int)code desc:(NSString *)desc context:(id)context;
+- (void)handleDismissUnlimitedGroup:(int64_t)topicId;
 @end

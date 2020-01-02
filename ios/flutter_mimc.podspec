@@ -9,13 +9,14 @@ Pod::Spec.new do |s|
   s.description      = <<-DESC
 A new Flutter plugin.
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'http://kf.aissz.com:666/example/'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.author           = { 'kieth' => '361554012@qq.com' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
+  s.libraries = 'c++'
   s.platform = :ios, '8.0'
   s.frameworks = 'CoreTelephony','SystemConfiguration'
   # 导入第三方资源库
@@ -23,4 +24,5 @@ A new Flutter plugin.
 
   # Flutter.framework does not contain a i386 slice. Only x86_64 simulators are supported.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'VALID_ARCHS[sdk=iphonesimulator*]' => 'x86_64' }
+  s.ios.deployment_target = '8.0'
 end

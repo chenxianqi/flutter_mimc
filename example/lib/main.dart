@@ -446,7 +446,11 @@ class _MyAppState extends State<MyApp> {
   void hasGroupBlackList() async {
     var res = await flutterMimc.hasGroupBlackList(
         blackTopicId: "21351198708203520", blackAccount: "102");
-    addLog("判断账号是否被普通群拉黑：$res");
+    if (res.code == 200) {
+      addLog("判断账号是否被普通群拉黑成功：${res.toJson()}");
+    } else {
+      addLog("判断账号是否被普通群拉黑失败:${res.message}");
+    }
   }
 
   // 推送单聊信息
@@ -595,6 +599,13 @@ class _MyAppState extends State<MyApp> {
       addLog(err);
     });
 
+    // 发送在线消息回调
+    flutterMimc.addEventListenerOnlineMessageAck().listen((MimcServeraAck ack) {
+      addLog("发送在线消息回调==${ack.toJson()}");
+    }).onError((err) {
+      addLog(err);
+    });
+
     // 发送单聊超时
     flutterMimc
         .addEventListenerSendMessageTimeout()
@@ -673,12 +684,6 @@ class _MyAppState extends State<MyApp> {
       addLog(err);
     });
 
-    // 通知主动拉取消息
-    flutterMimc.addEventListenerHandlePullNotification().listen((isBool) {
-      addLog("通知主动拉取消息==$isBool");
-    }).onError((err) {
-      addLog(err);
-    });
   }
 
   Widget button(String title, VoidCallback onPressed) {

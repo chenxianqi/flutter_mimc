@@ -1,6 +1,0 @@
-framework module MIMCProtoBuffer {
-  umbrella header "MIMCProtoBuffer.h"
-
-  export *
-  module * { export * }
-}

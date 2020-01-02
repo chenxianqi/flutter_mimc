@@ -40,8 +40,6 @@ class MIMCEvents {
       "onHandleQuitUnlimitedGroup"; // quit unlimited group callback
   static const String onHandleDismissUnlimitedGroup =
       "onHandleDismissUnlimitedGroup"; // dismiss unlimited group callback
-  static const String onPullNotification =
-      "onPullNotification"; // onPullNotification
   static const String onHandleOnlineMessageAck =
       "onHandleOnlineMessageAck"; // send Feedback callback for online messages
   static const String onHandleOnlineMessage =
@@ -145,10 +143,6 @@ class FlutterMIMC {
       _onHandleDismissUnlimitedGroupStreamController =
       StreamController<Map<dynamic, dynamic>>.broadcast();
 
-  /// onPullNotification callbacks
-  final StreamController<bool> _onPullNotificationStreamController =
-      StreamController<bool>.broadcast();
-
   // send Feedback callback for online messages callbacks
   final StreamController<MimcServeraAck>
       _onHandleOnlineMessageAckStreamController =
@@ -163,9 +157,11 @@ class FlutterMIMC {
     _channel.invokeMethod(
         _ON_INIT, {"token": tokenString, "debug": debug}).then((_) async {
       _initEvent();
+      var mImcUserMap = jsonDecode(tokenString);
       String _token = await getToken();
       String _appId = await getAppId();
-      services = MIMCServices(_token, _appId);
+      services = MIMCServices(mImcUserMap['data']["token"] ?? _token,
+          mImcUserMap['data']["appId"] ?? _appId);
     });
   }
 
@@ -812,9 +808,6 @@ class FlutterMIMC {
         _onHandleDismissUnlimitedGroupStreamController
             .add(eventValue as Map<dynamic, dynamic>);
         break;
-      case MIMCEvents.onPullNotification:
-        _onPullNotificationStreamController.add(true);
-        break;
       case MIMCEvents.onHandleOnlineMessage:
         _onHandleOnlineMessageStreamController
             .add(MIMCMessage.fromJson(eventValue));
@@ -930,14 +923,6 @@ class FlutterMIMC {
 
   Stream<Map<dynamic, dynamic>> addEventListenerHandleDismissUnlimitedGroup() {
     return _onHandleDismissUnlimitedGroupStreamController.stream;
-  }
-
-  /// onPullNotification
-  void removeEventListenerHandlePullNotification() =>
-      _onPullNotificationStreamController.close();
-
-  Stream<bool> addEventListenerHandlePullNotification() {
-    return _onPullNotificationStreamController.stream;
   }
 
   /// event error

@@ -2,13 +2,10 @@
 @interface XMUserManager () {
 }
 @property(nonatomic) int64_t appId;
-@property(nonatomic) NSString *appKey;
-@property(nonatomic) NSString *appSecret;
 @property(nonatomic) NSString *appAccount;
-@property(nonatomic) NSString *url;
 @property(nonatomic) NSString *stringToken;
-@property(nonatomic) BOOL isStringTokenInit;
 @property(nonatomic, strong) MCUser *user;
+
 
 @end
 
@@ -26,32 +23,18 @@
 // 构造函数
 -(id)init{
     if (self = [super init]) {
-         self.url = @"https://mimc.chat.xiaomi.net";
     }
     return self;
 }
 
-// 参数设置
-- (void)initArgs:(int64_t)appId appKey:(NSString *)appKey appSecret:(NSString *)appSecret  appAccount:(NSString *)appAccount{
-    if(appId == 0 || appKey == nil || appSecret == nil || appAccount == nil){
-        NSLog(@"参数错误");
-        return;
-    }
-    self.isStringTokenInit = NO;
-    self.appId = appId;
-    self.appKey = appKey;
-    self.appSecret = appSecret;
-    self.appAccount = appAccount;
-}
-
 // 通过服务端的鉴权获得的String 初始化
 -(void)initStringToken:(NSString *)stringToken{
-    self.stringToken = stringToken;
-    self.isStringTokenInit = YES;
+    _stringToken = stringToken;
     NSDictionary *dic = [XMUserManager dictionaryWithJsonString:stringToken];
-    self.appId = [[[dic valueForKey:@"data"] valueForKey:@"appId"] longLongValue];
-    self.appAccount = [[dic valueForKey:@"data"] valueForKey:@"appAccount"];
+    _appId = [[[dic valueForKey:@"data"] valueForKey:@"appId"] longLongValue];
+    _appAccount = [[dic valueForKey:@"data"] valueForKey:@"appAccount"];
 }
+
 
 
 // 用户登录
@@ -66,19 +49,16 @@
     return [_user logout];
 }
 
-// geturl
-- (NSString *)getUrl{
-    return _url;
-}
-
 // token
 - (void)parseProxyServiceToken:(void(^)(NSString *data))callback {
-    if(self.isStringTokenInit == YES){
-        if (callback) {
-            callback(self.stringToken);
-        }
-        return;
+    NSDictionary *dic = [XMUserManager dictionaryWithJsonString:_stringToken];
+    NSMutableDictionary *tokenDic = [dic objectForKey:@"data"];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:tokenDic options:0 error:0];
+    NSString *jsonTokenString = [[NSString alloc] initWithData: jsonData encoding:NSUTF8StringEncoding];
+    if (callback) {
+        callback(jsonTokenString);
     }
+    return;
 }
 
 
@@ -95,6 +75,11 @@
     return self.appAccount;
 }
 
+// 获取appid
+- (NSString *) getAppId{
+    return [[NSNumber numberWithLongLong:self.appId] stringValue];
+}
+
 // 设置当前账号
 - (void)setAppAccount:(NSString *)appAccount {
     _appAccount = appAccount;
@@ -102,7 +87,7 @@
 
 // 获取当前登录用户实例
 - (MCUser *)getUser {
-    return self.user;
+    return _user;
 }
 // 设置当前用户
 - (void)setUser:(MCUser *)user {
