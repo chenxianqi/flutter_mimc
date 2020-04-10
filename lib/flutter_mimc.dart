@@ -47,6 +47,13 @@ class MIMCEvents {
 }
 
 class FlutterMIMC {
+  static FlutterMIMC _instance;
+  static FlutterMIMC get _getInstance {
+    if (_instance != null) return _instance;
+    _instance = FlutterMIMC();
+    return _instance;
+  }
+
   MIMCServices services;
 
   final MethodChannel _channel = MethodChannel('flutter_mimc');
@@ -153,48 +160,54 @@ class FlutterMIMC {
       StreamController<MIMCMessage>.broadcast();
 
   /// initMImcInvokeMethod
-  void _initMImcInvokeMethod(String tokenString, {bool debug = false}) {
-    _channel.invokeMethod(
-        _ON_INIT, {"token": tokenString, "debug": debug}).then((_) async {
-      _initEvent();
-      var mImcUserMap = jsonDecode(tokenString);
-      String _token = await getToken();
-      String _appId = await getAppId();
-      services = MIMCServices(mImcUserMap['data']["token"] ?? _token,
-          mImcUserMap['data']["appId"] ?? _appId);
-    });
+  Future<dynamic> _initMImcInvokeMethod(String tokenString,
+      {bool debug = false}) async {
+    await _channel
+        .invokeMethod(_ON_INIT, {"token": tokenString, "debug": debug});
+    _initEvent();
+    var mImcUserMap = jsonDecode(tokenString);
+    String _token = await getToken();
+    String _appId = await getAppId();
+    services = MIMCServices(mImcUserMap['data']["token"] ?? _token,
+        mImcUserMap['data']["appId"] ?? _appId);
+    print("services====$services");
   }
 
-  ///  init
+  /// FlutterMIMC constrct
+  FlutterMIMC();
+
+  ///  instance
   ///  [appId]   String        application ID，Xiaomi open platform application for distribution    appId
   ///  [appKey]  String appKey       application appKey，Xiaomi open platform application for distribution appKey
   ///  [appSecret] String appSecret    application appKey，Xiaomi open platform application for distribution appSecret
   ///  [appAccount] String appAccount   Session account（business platform unique ID）
-  FlutterMIMC.init(
+  static Future<FlutterMIMC> init(
       {bool debug = false,
       String appId,
       String appKey,
       String appSecret,
-      String appAccount}) {
+      String appAccount}) async {
     assert(appId != null && appId.isNotEmpty);
     assert(appKey != null && appKey.isNotEmpty);
     assert(appSecret != null && appSecret.isNotEmpty);
     assert(appAccount != null && appAccount.isNotEmpty);
-    MIMCServices.registerToken(
-            appId: appId,
-            appKey: appKey,
-            appAccount: appAccount,
-            appSecret: appSecret)
-        .then((res) {
-      _initMImcInvokeMethod(jsonEncode(res), debug: debug);
-    });
+    MIMCResponse res = await MIMCServices.registerToken(
+        appId: appId,
+        appKey: appKey,
+        appAccount: appAccount,
+        appSecret: appSecret);
+    print(res.data);
+    await _getInstance._initMImcInvokeMethod(jsonEncode(res), debug: debug);
+    return _instance;
   }
 
   ///  * init
   ///  * String tokenString  Obtained by server signature
-  FlutterMIMC.stringTokenInit(String tokenString, {bool debug = false}) {
+  static Future<FlutterMIMC> stringTokenInit(String tokenString,
+      {bool debug = false}) async {
     assert(tokenString != null && tokenString.isNotEmpty);
-    _initMImcInvokeMethod(tokenString, debug: debug);
+    await _getInstance._initMImcInvokeMethod(tokenString, debug: debug);
+    return _instance;
   }
 
   /// login

@@ -1,3 +1,7 @@
+## 1.0.2
+* change instance to static function AND Singleton
+* fix api param
+
 ## 1.0.1
 * format file
 * update version code

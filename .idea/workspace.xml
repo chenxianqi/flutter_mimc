@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7e06dfe4-4392-4629-bb11-f046efcdedd6" name="Default Changelist" comment="" />
+    <list default="true" id="7e06dfe4-4392-4629-bb11-f046efcdedd6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/flutter_mimc/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/flutter_mimc/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -9,11 +12,20 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="DefaultGradleProjectSettings">
-    <option name="testRunner" value="GRADLE" />
-    <option name="delegatedBuild" value="true" />
+    <option name="isMigrated" value="true" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/android/gradle/wrapper/gradle-wrapper.properties">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="105">
+              <caret line="5" selection-start-line="5" selection-end-line="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -66,9 +78,10 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="new_version" />
       </map>
     </option>
+    <option name="RECENT_COMMON_BRANCH" value="master" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -100,8 +113,8 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="415" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="586" />
     <option name="y" value="23" />
     <option name="width" value="1276" />
     <option name="height" value="1057" />
@@ -125,8 +138,8 @@
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -247,10 +260,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="415" y="23" width="1276" height="1057" extended-state="0" />
+    <frame x="0" y="23" width="1920" height="1057" extended-state="6" />
     <layout>
       <window_info id="Captures" order="0" weight="0.25" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.22204214" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.09850905" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Designer" order="4" />
@@ -258,12 +271,12 @@
       <window_info id="Capture Tool" order="6" />
       <window_info id="Favorites" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Dart Analysis" order="0" weight="0.32769832" />
-      <window_info anchor="bottom" id="Run" order="1" sideWeight="0.49893504" weight="0.42571127" />
+      <window_info anchor="bottom" id="Run" order="1" sideWeight="0.49733758" weight="0.42571127" />
       <window_info anchor="bottom" id="TODO" order="2" weight="0.32982087" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.43835616" />
       <window_info anchor="bottom" id="Event Log" order="4" sideWeight="0.50106496" side_tool="true" weight="0.44889358" />
-      <window_info anchor="bottom" id="Flutter Performance" order="5" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="6" weight="0.31928346" />
+      <window_info anchor="bottom" id="Flutter Performance" order="5" sideWeight="0.5026624" side_tool="true" visible="true" weight="0.31928346" />
+      <window_info anchor="bottom" id="Terminal" order="6" sideWeight="0.49946752" weight="0.31928346" />
       <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.49893504" weight="0.32982087" />
       <window_info anchor="bottom" id="Find" order="8" weight="0.32899868" />
       <window_info anchor="bottom" id="Messages" order="9" weight="0.46944082" />
@@ -360,9 +373,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/android/local.properties" />
-    <entry file="file://$PROJECT_DIR$/android/gradle.properties">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/android/flutter_mimc_android.iml" />
     <entry file="file://$PROJECT_DIR$/android/flutter_mimc.iml" />
     <entry file="file://$PROJECT_DIR$/LICENSE">
@@ -486,6 +496,49 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="71">
           <caret line="514" column="85" lean-forward="true" selection-start-line="514" selection-start-column="85" selection-end-line="514" selection-end-column="85" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-375" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/gradle.properties">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/settings.gradle">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/example/android/app/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-784" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/example/android/gradle/wrapper/gradle-wrapper.properties">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/example/android/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-86" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/example/android/gradle.properties">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/example/android/gradlew">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/example/android/local.properties">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/example/android/settings.gradle">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/gradle/wrapper/gradle-wrapper.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
         </state>
       </provider>
     </entry>

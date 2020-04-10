@@ -1,6 +1,6 @@
 name: flutter_mimc
 description: This is a flutter plugin based on the millet message cloud，Make IM easy
-version: 1.0.1
+version: 1.0.2
 homepage: https://github.com/chenxianqi/flutter_mimc
 
 environment:

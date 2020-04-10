@@ -13,7 +13,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   FlutterMIMC flutterMimc;
   MIMCPush mImcPush;
-  final String appAccount = "100"; // 我的账号
+  final String appAccount = "100165"; // 我的账号
   String groupID = "21351198708203520"; // 操作的普通群ID
   String maxGroupID = "21360844399443968"; // 操作的无限通群ID
   bool isOnline = false;
@@ -33,22 +33,22 @@ class _MyAppState extends State<MyApp> {
   // 初始化
   void initFlutterMIMC() async {
     // token String init
-//    String tokenString = '{"code":200,"message":"success","data":{}}';
-//    flutterMimc =  FlutterMIMC.stringTokenInit(tokenString, debug: true);
+    // String tokenString = '{"code":200,"message":"success","data":{}}';
+    // flutterMimc = await FlutterMIMC.stringTokenInit(tokenString, debug: true);
 
     // const data init
-    flutterMimc = FlutterMIMC.init(
-        debug: true,
-        appId: "2882303761517669588",
-        appKey: "5111766983588",
-        appSecret: "b0L3IOz/9Ob809v8H2FbVg==",
+    flutterMimc = await FlutterMIMC.init(
+        debug: false,
+        appId: "xxxxxx",
+        appKey: "xxxxxx",
+        appSecret: "xxxxxx",
         appAccount: appAccount);
     addLog("init==实例化完成");
     listener();
 
-    /// 实例化推送消息接口
-    mImcPush = MIMCPush(mImcAppId: "2882303761517669588", mImcAppKey: "5111766983588", mImcAppSecret: "b0L3IOz/9Ob809v8H2FbVg==");
-
+    /// (需要推送消息的)实例化推送消息接口
+    mImcPush = MIMCPush(
+        mImcAppId: "xxxxxx", mImcAppKey: "xxxxxx", mImcAppSecret: "xxxxxx");
   }
 
   // 登录
@@ -458,12 +458,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   // 推送单聊信息
-  void pushP2PMessage() async{
+  void pushP2PMessage() async {
     var res = await mImcPush.pushP2PMessage(
-      fromAccount: "100",
-      toAccount: "101",
-      msg: "data",
-      fromResource: "keith");
+        fromAccount: "100",
+        toAccount: "101",
+        msg: "data",
+        fromResource: "keith");
     if (res.code == 200) {
       addLog("推送单聊信息成功：${res.toJson()}");
     } else {
@@ -472,13 +472,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   // 批量推送单聊信息
-  void pushP2PMoreMessage() async{
+  void pushP2PMoreMessage() async {
     var res = await mImcPush.pushP2PMoreMessage(
-      fromAccount: "100",
-      toAccounts: ["101","102"],
-      msg: "data",
-      fromResource: "keith"
-    );
+        fromAccount: "100",
+        toAccounts: ["101", "102"],
+        msg: "data",
+        fromResource: "keith");
     if (res.code == 200) {
       addLog("批量推送单聊信息成功：${res.toJson()}");
     } else {
@@ -487,13 +486,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   // 推送群聊信息
-  void pushP2TMessage() async{
+  void pushP2TMessage() async {
     var res = await mImcPush.pushP2TMessage(
         fromAccount: "100",
         topicId: "21351235479666688",
         msg: "data",
-        fromResource: "keith"
-    );
+        fromResource: "keith");
     if (res.code == 200) {
       addLog("推送群聊信息成功：${res.toJson()}");
     } else {
@@ -502,13 +500,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   // 批量推送群聊信息
-  void pushP2TMoreMessage() async{
+  void pushP2TMoreMessage() async {
     var res = await mImcPush.pushP2TMoreMessage(
         fromAccount: "100",
         topicIds: ["21351235479666688", "21351318392668160"],
         msg: "data",
-        fromResource: "keith"
-    );
+        fromResource: "keith");
     if (res.code == 200) {
       addLog("批量推送群聊信息成功：${res.toJson()}");
     } else {
@@ -517,13 +514,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   // 单条推送无限群聊消息
-  void pushP2UMessage() async{
+  void pushP2UMessage() async {
     var res = await mImcPush.pushP2UMessage(
         fromAccount: "100",
         topicId: "21361055926583296",
         message: "data",
-        fromResource: "keith"
-    );
+        fromResource: "keith");
     if (res.code == 200) {
       addLog("单条推送无限群聊消息成功：${res.toJson()}");
     } else {
@@ -532,13 +528,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   // 单条推送无限群聊消息
-  void pushP2UMoreMessage() async{
+  void pushP2UMoreMessage() async {
     var res = await mImcPush.pushP2UMoreMessage(
         fromAccount: "100",
         topicId: "21361055926583296",
-        messages: ["data","data1"],
-        fromResource: "keith"
-    );
+        messages: ["data", "data1"],
+        fromResource: "keith");
     if (res.code == 200) {
       addLog("批量推送无限群聊消息成功：${res.toJson()}");
     } else {
@@ -547,13 +542,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   // 多群推送单条消息
-  void pushMultiTopicMessage() async{
+  void pushMultiTopicMessage() async {
     var res = await mImcPush.pushMultiTopicMessage(
         fromAccount: "100",
         topicIds: ["21361055926583296"],
         message: "data",
-        fromResource: "keith"
-    );
+        fromResource: "keith");
     if (res.code == 200) {
       addLog("多群推送单条消息成功：${res.toJson()}");
     } else {
@@ -562,7 +556,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   // 监听回调消息
-  void listener() {
+  void listener() async {
+    print(await flutterMimc.isOnline());
     // 监听登录状态
     flutterMimc.addEventListenerStatusChanged().listen((status) {
       isOnline = status;
@@ -687,7 +682,6 @@ class _MyAppState extends State<MyApp> {
     }).onError((err) {
       addLog(err);
     });
-
   }
 
   Widget button(String title, VoidCallback onPressed) {

@@ -314,8 +314,7 @@ class MIMCServices {
   }) async {
     String api = _domain + "/api/contact/p2p/extra/update/";
     Response response = await _http.post(api,
-        data:
-            removeMapNullValueKey({"account": account, "extraKeyMap": extra}));
+        data: removeMapNullValueKey({"account": account, "extra": extra}));
     return MIMCResponse.fromJson(response.data);
   }
 
@@ -326,8 +325,7 @@ class MIMCServices {
   }) async {
     String api = _domain + "/api/contact/p2t/extra/update/";
     Response response = await _http.post(api,
-        data:
-            removeMapNullValueKey({"topicId": topicId, "extraKeyMap": extra}));
+        data: removeMapNullValueKey({"topicId": topicId, "extra": extra}));
     return MIMCResponse.fromJson(response.data);
   }
 

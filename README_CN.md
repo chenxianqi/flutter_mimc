@@ -35,13 +35,13 @@ dependencies:
 
     // 第一种（服务端鉴权生成的字符串）推荐
     String tokenString = '{"code":200,"message":"success","data":{}}';
-    FlutterMimc flutterMimc =  FlutterMimc.stringTokenInit(
+    FlutterMimc flutterMimc = await  FlutterMimc.stringTokenInit(
       tokenString,
       debug: true,
     );
 
     // 第二种（将敏感数据写在客户端）
-     FlutterMimc flutterMimc = FlutterMimc.init(
+     FlutterMimc flutterMimc = await FlutterMimc.init(
           debug: true,
           appId: "xxxxxxxx",
           appKey: "xxxxxxxx",
