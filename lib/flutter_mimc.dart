@@ -162,15 +162,18 @@ class FlutterMIMC {
   /// initMImcInvokeMethod
   Future<dynamic> _initMImcInvokeMethod(String tokenString,
       {bool debug = false}) async {
-    await _channel
-        .invokeMethod(_ON_INIT, {"token": tokenString, "debug": debug});
-    _initEvent();
-    var mImcUserMap = jsonDecode(tokenString);
-    String _token = await getToken();
-    String _appId = await getAppId();
-    services = MIMCServices(mImcUserMap['data']["token"] ?? _token,
-        mImcUserMap['data']["appId"] ?? _appId);
-    print("services====$services");
+        try{
+          await _channel
+              .invokeMethod(_ON_INIT, {"token": tokenString, "debug": debug});
+          _initEvent();
+          var mImcUserMap = jsonDecode(tokenString);
+          String _token = await getToken();
+          String _appId = await getAppId();
+          services = MIMCServices(mImcUserMap['data']["token"] ?? _token,
+              mImcUserMap['data']["appId"] ?? _appId);
+        }catch(e){
+          debugPrint(e.toString());
+        }
   }
 
   /// FlutterMIMC constrct
