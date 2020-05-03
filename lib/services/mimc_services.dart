@@ -300,10 +300,10 @@ class MIMCServices {
 
   /// getContact
   Future<MIMCResponse> getContact({
-    bool isV2,
+    bool isV2,bool msgExtraFlag
   }) async {
     String api = _domain + (isV2 ? "/api/contact/v2/" : "/api/contact/");
-    Response response = await _http.get(api);
+    Response response = await _http.get(api,queryParameters:{"msgExtraFlag":msgExtraFlag});
     return MIMCResponse.fromJson(response.data);
   }
 
