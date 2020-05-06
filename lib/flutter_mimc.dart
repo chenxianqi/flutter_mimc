@@ -688,8 +688,8 @@ class FlutterMIMC {
 
   ///  get contact
   ///  [isV2] api is v2 version
-  Future<MIMCResponse> getContact({bool isV2 = true}) async {
-    return await services.getContact(isV2: isV2);
+  Future<MIMCResponse> getContact({bool isV2 = true,bool msgExtraFlag = true}) async {
+    return await services.getContact(isV2: isV2,msgExtraFlag: msgExtraFlag);
   }
 
   ///  updateContactP2PExtra
