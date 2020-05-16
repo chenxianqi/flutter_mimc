@@ -207,7 +207,6 @@ class MIMCServices {
           "extraKey": extraKey,
           "extraValue": extraValue
         }));
-    print('response.data:${response.data}');
     return MIMCResponse.fromJson(response.data);
   }
 
