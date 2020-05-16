@@ -168,8 +168,8 @@ class MIMCUserManager {
     }
 
     // 发送单聊
-    String sendMsg(String toAppAccount, byte[] payload, String bizType) {
-        return mimcUser.sendMessage(toAppAccount, payload, bizType);
+    String sendMsg(String toAppAccount, byte[] payload, String bizType,boolean isStore) {
+        return mimcUser.sendMessage(toAppAccount, payload, bizType,isStore);
     }
 
     // 发送在线消息
