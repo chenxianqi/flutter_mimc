@@ -15,6 +15,7 @@ class MIMCHandleMIMCMsgListener implements MIMCUserManager.OnHandleMIMCMsgListen
     private void eventSinkPushMessage(String eventType, MIMCMessage mimcMessage, MIMCGroupMessage mimcGroupMessage){
 
         try {
+            long sequence;
             long timestamp;
             String bizType;
             String payload;
@@ -24,6 +25,7 @@ class MIMCHandleMIMCMsgListener implements MIMCUserManager.OnHandleMIMCMsgListen
             ConstraintsMap params = new ConstraintsMap();
             ConstraintsMap paramChild = new ConstraintsMap();
             if(mimcMessage != null){
+                sequence = mimcMessage.getSequence();
                 timestamp = mimcMessage.getTimestamp();
                 bizType = mimcMessage.getBizType();
                 fromAccount = mimcMessage.getFromAccount();
@@ -31,12 +33,14 @@ class MIMCHandleMIMCMsgListener implements MIMCUserManager.OnHandleMIMCMsgListen
                 payload = new String(mimcMessage.getPayload());
                 paramChild.putString("toAccount", toAccount);
             }else{
+                sequence = mimcGroupMessage.getSequence();
                 timestamp = mimcGroupMessage.getTimestamp();
                 bizType = mimcGroupMessage.getBizType();
                 payload = new String(mimcGroupMessage.getPayload());
                 topicId = mimcGroupMessage.getTopicId();
                 fromAccount = mimcGroupMessage.getFromAccount();
             }
+            paramChild.putLong("sequence",sequence);
             paramChild.putString("toAccount", toAccount);
             paramChild.putString("fromAccount", fromAccount);
             paramChild.putString("bizType", bizType);

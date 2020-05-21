@@ -105,9 +105,11 @@ XMUserManager *mimcUserManager;
         NSString *toAccount = argsMap[@"toAccount"];
         NSString *bizType = argsMap[@"bizType"];
         NSString *payloadString = argsMap[@"payload"];
+        BOOL isStore = argsMap[@"isStore"];
         NSData *payload = [payloadString dataUsingEncoding:NSUTF8StringEncoding];
-        result([mimcUserManager.getUser sendMessage:toAccount payload: payload bizType: bizType]);
         
+        result([mimcUserManager.getUser sendMessage:toAccount payload: payload bizType: bizType isStore:isStore]);
+
     }
     
     // 发送在线消息
@@ -209,6 +211,9 @@ XMUserManager *mimcUserManager;
         NSMutableDictionary *dic = [NSMutableDictionary dictionary];
         NSString *payload = [[NSString alloc] initWithData:p.getPayload encoding:NSUTF8StringEncoding];
         NSNumber *timestamp = [NSNumber numberWithLongLong:p.getTimestamp];
+        NSNumber *sequence = [NSNumber numberWithLongLong:p.getSequence];
+        
+        [dic setObject:sequence forKey:@"sequence"];
         [dic setObject:user.getAppAccount forKey:@"toAccount"];
         [dic setObject:@0 forKey:@"topicId"];
         [dic setObject:p.getFromAccount forKey:@"fromAccount"];
@@ -372,6 +377,9 @@ XMUserManager *mimcUserManager;
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     NSString *payload = [[NSString alloc] initWithData:onlineMessage.getPayload encoding:NSUTF8StringEncoding];
     NSNumber *timestamp = [NSNumber numberWithLongLong:onlineMessage.getTimestamp];
+    NSNumber *sequence = [NSNumber numberWithLongLong:onlineMessage.getSequence];
+
+    [dic setObject:sequence forKey:@"sequence"];
     [dic setObject:onlineMessage.getToAccount forKey:@"toAccount"];
     [dic setObject:@0 forKey:@"topicId"];
     [dic setObject:onlineMessage.getFromAccount forKey:@"fromAccount"];

@@ -158,8 +158,10 @@ public class FlutterMimcPlugin implements FlutterPlugin, MethodCallHandler {
         String toAccount = call.argument("toAccount");
         String bizType = call.argument("bizType");
         String payload = call.argument("payload");
+        boolean isStore = call.argument("isStore");
+
         assert payload != null;
-        result.success(mimcUserManager.sendMsg(toAccount, payload.getBytes(), bizType));
+        result.success(mimcUserManager.sendMsg(toAccount, payload.getBytes(), bizType,isStore));
         break;
       }
 
