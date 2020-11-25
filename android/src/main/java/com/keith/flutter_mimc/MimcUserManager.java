@@ -1,5 +1,4 @@
 package com.keith.flutter_mimc;
-import android.util.Log;
 import com.alibaba.fastjson.JSON;
 import com.xiaomi.mimc.MIMCGroupMessage;
 import com.xiaomi.mimc.MIMCMessage;
@@ -11,8 +10,7 @@ import com.xiaomi.mimc.MIMCTokenFetcher;
 import com.xiaomi.mimc.MIMCUnlimitedGroupHandler;
 import com.xiaomi.mimc.MIMCUser;
 import com.xiaomi.mimc.common.MIMCConstant;
-import com.xiaomi.msg.logger.Logger;
-import com.xiaomi.msg.logger.MIMCLog;
+
 
 import java.util.List;
 
@@ -40,53 +38,6 @@ class MIMCUserManager {
         }catch (Exception e){
             System.err.println(e.getMessage());
         }
-    }
-
-    // 打开日志
-    void openLog(){
-        MIMCLog.setLogger(new Logger() {
-            @Override
-            public void d(String tag, String msg) {
-                Log.d(tag, msg);
-            }
-
-            @Override
-            public void d(String tag, String msg, Throwable th) {
-                Log.d(tag, msg, th);
-            }
-
-            @Override
-            public void i(String tag, String msg) {
-                Log.i(tag, msg);
-            }
-
-            @Override
-            public void i(String tag, String msg, Throwable th) {
-                Log.i(tag, msg, th);
-            }
-
-            @Override
-            public void w(String tag, String msg) {
-                Log.w(tag, msg);
-            }
-
-            @Override
-            public void w(String tag, String msg, Throwable th) {
-                Log.w(tag, msg, th);
-            }
-
-            @Override
-            public void e(String tag, String msg) {
-                Log.e(tag, msg);
-            }
-
-            @Override
-            public void e(String tag, String msg, Throwable th) {
-                Log.e(tag, msg, th);
-            }
-        });
-        MIMCLog.setLogPrintLevel(MIMCLog.DEBUG);
-        MIMCLog.setLogSaveLevel(MIMCLog.DEBUG);
     }
 
     // 登录
@@ -374,7 +325,7 @@ class MIMCUserManager {
     }
 
     // TokenFetcherString
-    class TokenFetcherString implements MIMCTokenFetcher {
+    static class TokenFetcherString implements MIMCTokenFetcher {
         @Override
         public String fetchToken() {
             return MIMCUserManager.tokenString;

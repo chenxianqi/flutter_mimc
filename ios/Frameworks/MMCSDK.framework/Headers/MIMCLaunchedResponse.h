@@ -10,7 +10,7 @@
 
 @interface MIMCLaunchedResponse : NSObject
 
-- (id)initWithAccepted:(Boolean)accepted desc:(NSString *)desc;
-- (Boolean)isAccepted;
+- (id)initWithAccepted:(BOOL)accepted desc:(NSString *)desc;
+- (BOOL)isAccepted;
 - (NSString *)getDesc;
 @end

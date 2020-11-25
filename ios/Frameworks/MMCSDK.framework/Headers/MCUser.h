@@ -5,6 +5,7 @@
 //  Created by zhangdan on 2017/11/22.
 //  Copyright © 2017年 zhangdan. All rights reserved.
 //
+#define mStringIsEmpty(str) ([str isKindOfClass:[NSNull class]] || str == nil || [str length] < 1 ? YES : NO )
 
 #import <Foundation/Foundation.h>
 #import "objc/runtime.h"
@@ -29,7 +30,7 @@
 @class BindRelayResponse;
 
 @protocol parseTokenDelegate <NSObject>
-- (void)parseProxyServiceToken:(void(^)(NSString *data))callback;
+- (void)parseProxyServiceToken:(void(^)(NSData *data))callback;
 @end
 
 @protocol onlineStatusDelegate <NSObject>
@@ -37,12 +38,13 @@
 @end
 
 @protocol handleMessageDelegate <NSObject>
-- (void)handleMessage:(NSArray<MIMCMessage*> *)packets user:(MCUser *)user;
-- (void)handleGroupMessage:(NSArray<MIMCGroupMessage*> *)packets;
+- (BOOL)handleMessage:(NSArray<MIMCMessage*> *)packets user:(MCUser *)user;
+- (BOOL)handleGroupMessage:(NSArray<MIMCGroupMessage*> *)packets;
 - (void)handleServerAck:(MIMCServerAck *)serverAck;
-- (void)handleUnlimitedGroupMessage:(NSArray<MIMCGroupMessage*> *)packets;
+- (BOOL)handleUnlimitedGroupMessage:(NSArray<MIMCGroupMessage*> *)packets;
 - (void)handleOnlineMessage:(MIMCMessage *)onlineMessage;
 - (void)handleOnlineMessageAck:(MCOnlineMessageAck *)onlineMessageAck;
+- (BOOL)onPullNotification;
 
 - (void)handleSendMessageTimeout:(MIMCMessage *)message;
 - (void)handleSendGroupMessageTimeout:(MIMCGroupMessage *)groupMessage;
@@ -59,7 +61,7 @@
 
 @protocol handleRtsCallDelegate <NSObject>
 - (MIMCLaunchedResponse *)onLaunched:(NSString *)fromAccount fromResource:(NSString *)fromResource callId:(int64_t)callId appContent:(NSData *)appContent;
-- (void)onAnswered:(int64_t)callId accepted:(Boolean)accepted desc:(NSString *)desc; // 会话接通之后的回调
+- (void)onAnswered:(int64_t)callId accepted:(BOOL)accepted desc:(NSString *)desc; // 会话接通之后的回调
 - (void)onClosed:(int64_t)callId desc:(NSString *)desc; // 会话被关闭的回调
 - (void)onData:(int64_t)callId fromAccount:(NSString *)fromAccount resource:(NSString *)resource data:(NSData *)data dataType:(RtsDataType)dataType channelType:(RtsChannelType)channelType; // 接收到数据的回调
 - (void)onSendDataSuccess:(int64_t)callId dataId:(int)dataId context:(id)context; //发送数据成功的回调
@@ -67,9 +69,9 @@
 @end
 
 @protocol handleRtsChannelDelegate <NSObject>
-- (void)onCreateChannel:(int64_t)identity callId:(int64_t)callId callKey:(NSString *)callKey success:(Boolean)success desc:(NSString *)desc extra:(NSData *)extra; // 创建频道回调
-- (void)onJoinChannel:(int64_t)callId appAccount:(NSString *)appAccount resource:(NSString *)resource success:(Boolean)success desc:(NSString *)desc extra:(NSData *)extra members:(NSArray<MIMCChannelUser*> *)members; // 加入频道回调
-- (void)onLeaveChannel:(int64_t)callId appAccount:(NSString *)appAccount resource:(NSString *)resource success:(Boolean)success desc:(NSString *)desc; // 离开频道回调
+- (void)onCreateChannel:(int64_t)identity callId:(int64_t)callId callKey:(NSString *)callKey success:(BOOL)success desc:(NSString *)desc extra:(NSData *)extra; // 创建频道回调
+- (void)onJoinChannel:(int64_t)callId appAccount:(NSString *)appAccount resource:(NSString *)resource success:(BOOL)success desc:(NSString *)desc extra:(NSData *)extra members:(NSArray<MIMCChannelUser*> *)members; // 加入频道回调
+- (void)onLeaveChannel:(int64_t)callId appAccount:(NSString *)appAccount resource:(NSString *)resource success:(BOOL)success desc:(NSString *)desc; // 离开频道回调
 - (void)onUserJoined:(int64_t)callId appAccount:(NSString *)appAccount resource:(NSString *)resource; // 新加入用户回调
 - (void)onUserLeft:(int64_t)callId appAccount:(NSString *)appAccount resource:(NSString *)resource; // 用户离开回调
 - (void)onData:(int64_t)callId fromAccount:(NSString *)fromAccount resource:(NSString *)resource data:(NSData *)data dataType:(RtsDataType)dataType; // 接收流数据
@@ -126,7 +128,7 @@ static NSString *join(NSMutableDictionary *kvs) {
 @property(nonatomic, weak) id<handleRtsChannelDelegate> handleRtsChannelDelegate;
 
 - (BOOL)logout;
-//- (NSString *)pull;
+- (void)pull;
 - (BOOL)login;
 - (BOOL)login:(BOOL)useCache DEPRECATED_ATTRIBUTE;
 - (void)setOnlineStatus:(OnlineStatus)status;
@@ -134,20 +136,20 @@ static NSString *join(NSMutableDictionary *kvs) {
 - (void)addClientAttr:(NSString *)key value:(NSString *)value;
 - (NSString *)createPacketId;
 - (NSString *)sendMessage:(NSString *)toAppAccount payload:(NSData *)payload;
-- (NSString *)sendMessage:(NSString *)toAppAccount payload:(NSData *)payload isStore:(Boolean)isStore;
-- (NSString *)sendMessage:(NSString *)toAppAccount payload:(NSData *)payload isStore:(Boolean)isStore isConversation:(Boolean)isConversation;
+- (NSString *)sendMessage:(NSString *)toAppAccount payload:(NSData *)payload isStore:(BOOL)isStore;
+- (NSString *)sendMessage:(NSString *)toAppAccount payload:(NSData *)payload isStore:(BOOL)isStore isConversation:(BOOL)isConversation;
 - (NSString *)sendMessage:(NSString *)toAppAccount payload:(NSData *)payload bizType:(NSString *)bizType;
-- (NSString *)sendMessage:(NSString *)toAppAccount payload:(NSData *)payload bizType:(NSString *)bizType isStore:(Boolean)isStore;
-- (NSString *)sendMessage:(NSString *)toAppAccount payload:(NSData *)payload bizType:(NSString *)bizType isStore:(Boolean)isStore isConversation:(Boolean)isConversation;
+- (NSString *)sendMessage:(NSString *)toAppAccount payload:(NSData *)payload bizType:(NSString *)bizType isStore:(BOOL)isStore;
+- (NSString *)sendMessage:(NSString *)toAppAccount payload:(NSData *)payload bizType:(NSString *)bizType isStore:(BOOL)isStore isConversation:(BOOL)isConversation;
 - (NSString *)sendOnlineMessage:(NSString *)toAppAccount payload:(NSData *)payload;
 - (NSString *)sendOnlineMessage:(NSString *)toAppAccount payload:(NSData *)payload bizType:(NSString *)bizType;
 - (NSString *)sendGroupMessage:(int64_t)topicId payload:(NSData *)payload;
-- (NSString *)sendGroupMessage:(int64_t)topicId payload:(NSData *)payload isStore:(Boolean)isStore;
-- (NSString *)sendGroupMessage:(int64_t)topicId payload:(NSData *)payload isStore:(Boolean)isStore isConversation:(Boolean)isConversation;
+- (NSString *)sendGroupMessage:(int64_t)topicId payload:(NSData *)payload isStore:(BOOL)isStore;
+- (NSString *)sendGroupMessage:(int64_t)topicId payload:(NSData *)payload isStore:(BOOL)isStore isConversation:(BOOL)isConversation;
 - (NSString *)sendGroupMessage:(int64_t)topicId payload:(NSData *)payload bizType:(NSString *)bizType;
-- (NSString *)sendGroupMessage:(int64_t)topicId payload:(NSData *)payload bizType:(NSString *)bizType isStore:(Boolean)isStore;
-- (NSString *)sendGroupMessage:(int64_t)topicId payload:(NSData *)payload bizType:(NSString *)bizType isStore:(Boolean)isStore isConversation:(Boolean)isConversation;
-- (Boolean)sendPacket:(NSString *)msgId payload:(NSData *)payload msgType:(NSString *)msgType;
+- (NSString *)sendGroupMessage:(int64_t)topicId payload:(NSData *)payload bizType:(NSString *)bizType isStore:(BOOL)isStore;
+- (NSString *)sendGroupMessage:(int64_t)topicId payload:(NSData *)payload bizType:(NSString *)bizType isStore:(BOOL)isStore isConversation:(BOOL)isConversation;
+- (BOOL)sendPacket:(NSString *)msgId payload:(NSData *)payload msgType:(NSString *)msgType;
 - (id)initWithAppId:(int64_t)appId andAppAccount:(NSString *)appAccount;
 - (id)initWithAppId:(int64_t)appId andAppAccount:(NSString *)appAccount andResource:(NSString *)resource;
 - (id)initWithAppId:(int64_t)appId andAppAccount:(NSString *)appAccount andUseCache:(BOOL)useCache;
@@ -160,9 +162,9 @@ static NSString *join(NSMutableDictionary *kvs) {
 - (int64_t)dialCall:(NSString *)toAppAccount toResource:(NSString *)toResource;
 - (int64_t)dialCall:(NSString *)toAppAccount appContent:(NSData *)appContent;
 - (int64_t)dialCall:(NSString *)toAppAccount toResource:(NSString *)toResource appContent:(NSData *)appContent;
-- (int)sendRtsData:(int64_t)callId data:(NSData *)data dataType:(RtsDataType)dataType dataPriority:(MIMCDataPriority)dataPriority canBeDropped:(Boolean)canBeDropped context:(id)context;
-- (int)sendRtsData:(int64_t)callId data:(NSData *)data dataType:(RtsDataType)dataType dataPriority:(MIMCDataPriority)dataPriority canBeDropped:(Boolean)canBeDropped resendCount:(int)resendCount context:(id)context;
-- (int)sendRtsData:(int64_t)callId data:(NSData *)data dataType:(RtsDataType)dataType dataPriority:(MIMCDataPriority)dataPriority canBeDropped:(Boolean)canBeDropped resendCount:(int)resendCount channelType:(RtsChannelType)channelType context:(id)context;
+- (int)sendRtsData:(int64_t)callId data:(NSData *)data dataType:(RtsDataType)dataType dataPriority:(MIMCDataPriority)dataPriority canBeDropped:(BOOL)canBeDropped context:(id)context;
+- (int)sendRtsData:(int64_t)callId data:(NSData *)data dataType:(RtsDataType)dataType dataPriority:(MIMCDataPriority)dataPriority canBeDropped:(BOOL)canBeDropped resendCount:(int)resendCount context:(id)context;
+- (int)sendRtsData:(int64_t)callId data:(NSData *)data dataType:(RtsDataType)dataType dataPriority:(MIMCDataPriority)dataPriority canBeDropped:(BOOL)canBeDropped resendCount:(int)resendCount channelType:(RtsChannelType)channelType context:(id)context;
 
 - (void)closeCall:(int64_t)callId;
 - (void)closeCall:(int64_t)callId byeReason:(NSString *)byeReason;
@@ -177,9 +179,9 @@ static NSString *join(NSMutableDictionary *kvs) {
 - (NSString *)joinUnlimitedGroup:(int64_t)topicId context:(id)context;
 - (NSString *)quitUnlimitedGroup:(int64_t)topicId context:(id)context;
 - (NSString *)sendUnlimitedGroupMessage:(int64_t)topicId payload:(NSData *)payload;
-- (NSString *)sendUnlimitedGroupMessage:(int64_t)topicId payload:(NSData *)payload isStore:(Boolean)isStore;
+- (NSString *)sendUnlimitedGroupMessage:(int64_t)topicId payload:(NSData *)payload isStore:(BOOL)isStore;
 - (NSString *)sendUnlimitedGroupMessage:(int64_t)topicId payload:(NSData *)payload bizType:(NSString *)bizType;
-- (NSString *)sendUnlimitedGroupMessage:(int64_t)topicId payload:(NSData *)payload bizType:(NSString *)bizType isStore:(Boolean)isStore;
+- (NSString *)sendUnlimitedGroupMessage:(int64_t)topicId payload:(NSData *)payload bizType:(NSString *)bizType isStore:(BOOL)isStore;
 
 - (int)getChid;
 - (NSString *)getUuid;
@@ -254,6 +256,11 @@ static NSString *join(NSMutableDictionary *kvs) {
 - (int)getRecvBufferSize;
 - (void)clearRecvBuffer;
 - (float)getRecvBufferUsageRate;
+- (void)enableSSO:(BOOL)enableSSO;
+- (BOOL)isSSOEnabled;
+- (void)setPingUcInterval:(int)pingUcInterval;
+- (int)getPingUcInterval;
+- (BOOL)getPermitLogin;
 
 - (void)setBaseOfBackoffWhenFetchToken:(TimeUnit)timeUnit andBase:(int64_t)base;
 - (void)setCapOfBackoffWhenFetchToken:(TimeUnit)timeUnit andCap:(int64_t)cap;

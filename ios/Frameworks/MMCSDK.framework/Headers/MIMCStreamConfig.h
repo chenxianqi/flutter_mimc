@@ -13,9 +13,9 @@ extern int const STRATEGY_ACK;
 
 @interface MIMCStreamConfig : NSObject
 
-- (id)initWithStrategy:(int)strategy andAckWaitTimeMs:(int)ackWaitTimeMs andIsEncrypt:(Boolean)isEncrypt;
+- (id)initWithStrategy:(int)strategy andAckWaitTimeMs:(int)ackWaitTimeMs andIsEncrypt:(BOOL)isEncrypt;
 - (int)getStrategy;
 - (int)getAckWaitTimeMs;
-- (Boolean)getIsEncrypt;
+- (BOOL)getIsEncrypt;
 
 @end

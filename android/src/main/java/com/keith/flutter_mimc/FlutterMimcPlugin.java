@@ -144,10 +144,6 @@ public class FlutterMimcPlugin implements FlutterPlugin, MethodCallHandler {
       // 通过服务端的鉴权获得的String 初始化
       case "init": {
         String token = call.argument("token");
-        Boolean isDebug = call.argument("debug");
-        if (isDebug) {
-          mimcUserManager.openLog();
-        }
         mimcUserManager.init(token);
         result.success(null);
         break;
